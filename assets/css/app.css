@@ -2,9 +2,12 @@
    https://tailwindcss.com/docs/configuration */
 
 @import "tailwindcss" source(none);
+@source "../../deps/ash_authentication_phoenix";
 @source "../css";
 @source "../js";
 @source "../../lib/invoice_goblin_web";
+@source "../../deps/fluxon/**/*.*ex";
+@import "../../deps/fluxon/priv/static/theme";
 
 /* A Tailwind plugin that makes "hero-#{ICON}" classes available.
    The heroicons installation itself is managed by your mix.exs */
@@ -15,6 +18,14 @@
    Make sure to look at the daisyUI changelog: https://daisyui.com/docs/changelog/ */
 @plugin "../vendor/daisyui" {
   themes: false;
+}
+
+:root {
+  --earth-yellow: oklch(75.452% 0.10942 68.35);
+  --tigers-eye: oklch(60.63% 0.12975 56.993);
+  --pakistan-green: oklch(30.805% 0.05162 130.111);
+  --dark-moss-green: oklch(50.808% 0.07729 119.743);
+  --cornsilk: oklch(98.164% 0.0328 99.56);
 }
 
 /* daisyUI theme plugin. You can update this file by fetching the latest version with:
@@ -65,12 +76,12 @@
   --color-base-200: oklch(96% 0.001 286.375);
   --color-base-300: oklch(92% 0.004 286.32);
   --color-base-content: oklch(21% 0.006 285.885);
-  --color-primary: oklch(70% 0.213 47.604);
-  --color-primary-content: oklch(98% 0.016 73.684);
-  --color-secondary: oklch(55% 0.027 264.364);
-  --color-secondary-content: oklch(98% 0.002 247.839);
-  --color-accent: oklch(0% 0 0);
-  --color-accent-content: oklch(100% 0 0);
+  --color-primary: var(--dark-moss-green);
+  --color-primary-content: var(--cornsilk);
+  --color-secondary: var(--tigers-eye);
+  --color-secondary-content: var(--cornsilk);
+  --color-accent: var(--pakistan-green);
+  --color-accent-content: var(--cornsilk);
   --color-neutral: oklch(44% 0.017 285.786);
   --color-neutral-content: oklch(98% 0 0);
   --color-info: oklch(62% 0.214 259.815);
@@ -100,6 +111,9 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 /* Make LiveView wrapper divs transparent for layout */
-[data-phx-session], [data-phx-teleported-src] { display: contents }
+[data-phx-session],
+[data-phx-teleported-src] {
+  display: contents;
+}
 
 /* This file is for your main application CSS */

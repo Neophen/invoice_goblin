@@ -1,4 +1,5 @@
 import Config
+config :ash, policies: [show_policy_breakdowns?: true]
 
 # Configure your database
 config :invoice_goblin, InvoiceGoblin.Repo,
@@ -64,7 +65,7 @@ config :invoice_goblin, InvoiceGoblinWeb.Endpoint,
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :invoice_goblin, dev_routes: true
+config :invoice_goblin, dev_routes: true, token_signing_secret: "fiAuYnwPUxW99N37LkBVUzsV8NQggqYM"
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :default_formatter, format: "[$level] $message\n"

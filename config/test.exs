@@ -1,4 +1,8 @@
 import Config
+config :invoice_goblin, Oban, testing: :manual
+config :invoice_goblin, token_signing_secret: "E+1b1pNb8avYRvoBCeV1q5SMNybY4nOk"
+config :bcrypt_elixir, log_rounds: 1
+config :ash, policies: [show_policy_breakdowns?: true], disable_async?: true
 
 # Configure your database
 #

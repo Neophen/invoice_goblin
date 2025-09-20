@@ -16,6 +16,18 @@ import Config
 #
 # Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
 # script that automatically sets the env var above.
+config :invoice_goblin,
+  oauth_client_id: System.get_env("OAUTH_CLIENT_ID"),
+  oauth_client_secret: System.get_env("OAUTH_CLIENT_SECRET"),
+  oauth_redirect_uri: System.get_env("OAUTH_REDIRECT_URI")
+
+# S3 bucket config
+config :invoice_goblin,
+  s3_access_key_id: System.get_env("S3_ACCESS_KEY_ID"),
+  s3_secret_access_key: System.get_env("S3_SECRET_ACCESS_KEY"),
+  s3_bucket: System.get_env("S3_BUCKET_NAME"),
+  s3_region: System.get_env("S3_REGION")
+
 if System.get_env("PHX_SERVER") do
   config :invoice_goblin, InvoiceGoblinWeb.Endpoint, server: true
 end
@@ -66,6 +78,11 @@ if config_env() == :prod do
       port: port
     ],
     secret_key_base: secret_key_base
+
+  config :invoice_goblin,
+    token_signing_secret:
+      System.get_env("TOKEN_SIGNING_SECRET") ||
+        raise("Missing environment variable `TOKEN_SIGNING_SECRET`!")
 
   # ## SSL Support
   #

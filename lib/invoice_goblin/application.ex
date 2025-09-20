@@ -11,11 +11,17 @@ defmodule InvoiceGoblin.Application do
       InvoiceGoblinWeb.Telemetry,
       InvoiceGoblin.Repo,
       {DNSCluster, query: Application.get_env(:invoice_goblin, :dns_cluster_query) || :ignore},
+      {Oban,
+       AshOban.config(
+         Application.fetch_env!(:invoice_goblin, :ash_domains),
+         Application.fetch_env!(:invoice_goblin, Oban)
+       )},
       {Phoenix.PubSub, name: InvoiceGoblin.PubSub},
       # Start a worker by calling: InvoiceGoblin.Worker.start_link(arg)
       # {InvoiceGoblin.Worker, arg},
       # Start to serve requests, typically the last entry
-      InvoiceGoblinWeb.Endpoint
+      InvoiceGoblinWeb.Endpoint,
+      {AshAuthentication.Supervisor, [otp_app: :invoice_goblin]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

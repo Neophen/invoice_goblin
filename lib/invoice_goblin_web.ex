@@ -22,6 +22,7 @@ defmodule InvoiceGoblinWeb do
   def router do
     quote do
       use Phoenix.Router, helpers: false
+      use InvoiceGoblinCldr.Routes, helpers: false
 
       # Import common connection and controller functions to use in pipelines
       import Plug.Conn
@@ -52,6 +53,10 @@ defmodule InvoiceGoblinWeb do
     quote do
       use Phoenix.LiveView
 
+      import InvoiceGoblinWeb.SocketHelpers
+
+      alias Phoenix.LiveView
+
       unquote(html_helpers())
     end
   end
@@ -59,6 +64,10 @@ defmodule InvoiceGoblinWeb do
   def live_component do
     quote do
       use Phoenix.LiveComponent
+
+      import InvoiceGoblinWeb.SocketHelpers
+
+      alias Phoenix.LiveComponent
 
       unquote(html_helpers())
     end
@@ -85,11 +94,10 @@ defmodule InvoiceGoblinWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components
-      import InvoiceGoblinWeb.CoreComponents
+      use UI, :components
 
       # Common modules used in templates
       alias Phoenix.LiveView.JS
-      alias InvoiceGoblinWeb.Layouts
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())
@@ -98,7 +106,7 @@ defmodule InvoiceGoblinWeb do
 
   def verified_routes do
     quote do
-      use Phoenix.VerifiedRoutes,
+      use InvoiceGoblinCldr.VerifiedRoutes,
         endpoint: InvoiceGoblinWeb.Endpoint,
         router: InvoiceGoblinWeb.Router,
         statics: InvoiceGoblinWeb.static_paths()
