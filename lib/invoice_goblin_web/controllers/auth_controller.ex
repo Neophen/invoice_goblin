@@ -3,7 +3,7 @@ defmodule InvoiceGoblinWeb.AuthController do
   use AshAuthentication.Phoenix.Controller
 
   def success(conn, activity, user, _token) do
-    return_to = get_session(conn, :return_to) || ~p"/"
+    return_to = get_session(conn, :return_to) || ~q"/admin/:locale/dashboard"
 
     message =
       case activity do
@@ -41,11 +41,11 @@ defmodule InvoiceGoblinWeb.AuthController do
 
     conn
     |> put_flash(:error, message)
-    |> redirect(to: ~p"/sign-in")
+    |> redirect(to: ~q"/sign-in")
   end
 
   def sign_out(conn, _params) do
-    return_to = get_session(conn, :return_to) || ~p"/"
+    return_to = get_session(conn, :return_to) || ~q"/"
 
     conn
     |> clear_session(:invoice_goblin)
