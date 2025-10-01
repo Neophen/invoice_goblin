@@ -76,7 +76,10 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
                   :if={@statement.account_iban}
                   class="mt-2 flex items-center text-sm text-gray-500"
                 >
-                  <Icon.icon name="hero-credit-card" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                  <Icon.icon
+                    name="hero-credit-card"
+                    class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                  />
                   {@statement.account_iban}
                 </div>
                 <div

@@ -12,12 +12,6 @@ defmodule InvoiceGoblin.Finance.Invoice do
     repo InvoiceGoblin.Repo
   end
 
-  multitenancy do
-    strategy :attribute
-    attribute :organisation_id
-    global? false
-  end
-
   oban do
     triggers do
       trigger :process_uploaded_invoice do
@@ -256,6 +250,12 @@ defmodule InvoiceGoblin.Finance.Invoice do
         :ok
       end
     end
+  end
+
+  multitenancy do
+    strategy :attribute
+    attribute :organisation_id
+    global? false
   end
 
   attributes do

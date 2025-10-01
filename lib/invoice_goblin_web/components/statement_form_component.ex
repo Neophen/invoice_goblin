@@ -336,7 +336,7 @@ defmodule InvoiceGoblinWeb.Components.StatementFormComponent do
     ~H"""
     <ul>
       <%= for entry <- @upload.entries do %>
-          <.error :for={err <- upload_errors(@upload, entry)}>{error_to_string(err)}</.error>
+        <.error :for={err <- upload_errors(@upload, entry)}>{error_to_string(err)}</.error>
       <% end %>
 
       <.error :for={err <- upload_errors(@upload)}>{error_to_string(err)}</.error>

@@ -61,7 +61,7 @@ defmodule InvoiceGoblinWeb.Router do
     end
   end
 
-  scope "/admin", InvoiceGoblinWeb.Admin do
+  scope "/admin", InvoiceGoblinWeb do
     pipe_through :browser_admin
 
     ash_authentication_live_session :admin_routes,
@@ -71,18 +71,19 @@ defmodule InvoiceGoblinWeb.Router do
       ] do
       localize do
         live "/#{locale}/dashboard", DashboardLive
+        live "/#{locale}/onboarding", Admin.OnboardingUploadLive
 
         # Finance routes
-        live "/#{locale}/invoices", InvoiceGoblinWeb.InvoiceListLive
-        live "/#{locale}/invoices/upload", InvoiceGoblinWeb.InvoiceUploadLive
-        live "/#{locale}/invoices/processing", InvoiceGoblinWeb.InvoiceProcessingDashboardLive
-        live "/#{locale}/invoices/:id", InvoiceGoblinWeb.InvoiceDetailLive
+        live "/#{locale}/invoices", InvoiceListLive
+        live "/#{locale}/invoices/upload", InvoiceUploadLive
+        live "/#{locale}/invoices/processing", InvoiceProcessingDashboardLive
+        live "/#{locale}/invoices/:id", InvoiceDetailLive
 
-        live "/#{locale}/statements", InvoiceGoblinWeb.StatementListLive
-        live "/#{locale}/statements/upload", InvoiceGoblinWeb.BankStatementUploadLive
-        live "/#{locale}/statements/:id", InvoiceGoblinWeb.StatementDetailLive
+        live "/#{locale}/statements", StatementListLive
+        live "/#{locale}/statements/upload", BankStatementUploadLive
+        live "/#{locale}/statements/:id", StatementDetailLive
 
-        live "/#{locale}/transactions", InvoiceGoblinWeb.TransactionListLive
+        live "/#{locale}/transactions", TransactionListLive
         # live "/#{locale}/analytics", AnalyticsLive
         # live "/#{locale}/posts", PostsLive
         # live "/#{locale}/users", UsersLive

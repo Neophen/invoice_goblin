@@ -90,7 +90,8 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
         []
       end
 
-    {:ok, invoices} = Ash.read(Finance.Invoice, filter: filter, load: [:counter_party], tenant: tenant)
+    {:ok, invoices} =
+      Ash.read(Finance.Invoice, filter: filter, load: [:counter_party], tenant: tenant)
 
     {:noreply, assign(socket, :invoices, invoices)}
   end
@@ -107,7 +108,8 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
         []
       end
 
-    {:ok, invoices} = Ash.read(Finance.Invoice, filter: filter, load: [:counter_party], tenant: tenant)
+    {:ok, invoices} =
+      Ash.read(Finance.Invoice, filter: filter, load: [:counter_party], tenant: tenant)
 
     {:noreply,
      socket

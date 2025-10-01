@@ -14,11 +14,31 @@ defmodule InvoiceGoblin.Accounts.Organisation do
     defaults [:read, :destroy]
 
     create :create do
-      accept [:name]
+      accept [:name, :is_placeholder]
+    end
+
+    create :create_placeholder do
+      accept []
+
+      change fn changeset, _context ->
+        changeset
+        |> Ash.Changeset.force_change_attribute(:name, "Temporary Organization")
+        |> Ash.Changeset.force_change_attribute(:is_placeholder, true)
+      end
     end
 
     update :update do
       accept [:name]
+    end
+
+    read :list_placeholders do
+      filter expr(is_placeholder == true)
+    end
+  end
+
+  policies do
+    policy always() do
+      authorize_if always()
     end
   end
 
@@ -27,6 +47,12 @@ defmodule InvoiceGoblin.Accounts.Organisation do
 
     attribute :name, :string do
       allow_nil? false
+      public? true
+    end
+
+    attribute :is_placeholder, :boolean do
+      allow_nil? false
+      default false
       public? true
     end
 
@@ -42,12 +68,6 @@ defmodule InvoiceGoblin.Accounts.Organisation do
 
     has_many :memberships, InvoiceGoblin.Accounts.OrganisationMembership do
       destination_attribute :organisation_id
-    end
-  end
-
-  policies do
-    policy always() do
-      authorize_if always()
     end
   end
 end

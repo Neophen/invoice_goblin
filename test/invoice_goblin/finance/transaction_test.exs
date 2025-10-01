@@ -36,7 +36,8 @@ defmodule InvoiceGoblin.Finance.TransactionTest do
         source_row_hash: "test_hash_#{System.unique_integer()}"
       }
 
-      assert {:error, %Ash.Error.Invalid{}} = Ash.create(Transaction, attrs, action: :ingest, tenant: tenant)
+      assert {:error, %Ash.Error.Invalid{}} =
+               Ash.create(Transaction, attrs, action: :ingest, tenant: tenant)
     end
 
     test "requires direction", %{tenant: tenant} do
@@ -46,7 +47,8 @@ defmodule InvoiceGoblin.Finance.TransactionTest do
         source_row_hash: "test_hash_#{System.unique_integer()}"
       }
 
-      assert {:error, %Ash.Error.Invalid{}} = Ash.create(Transaction, attrs, action: :ingest, tenant: tenant)
+      assert {:error, %Ash.Error.Invalid{}} =
+               Ash.create(Transaction, attrs, action: :ingest, tenant: tenant)
     end
 
     test "requires amount", %{tenant: tenant} do
@@ -56,7 +58,8 @@ defmodule InvoiceGoblin.Finance.TransactionTest do
         source_row_hash: "test_hash_#{System.unique_integer()}"
       }
 
-      assert {:error, %Ash.Error.Invalid{}} = Ash.create(Transaction, attrs, action: :ingest, tenant: tenant)
+      assert {:error, %Ash.Error.Invalid{}} =
+               Ash.create(Transaction, attrs, action: :ingest, tenant: tenant)
     end
   end
 

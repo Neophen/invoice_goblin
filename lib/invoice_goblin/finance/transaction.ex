@@ -13,12 +13,6 @@ defmodule InvoiceGoblin.Finance.Transaction do
     identity_wheres_to_sql by_source_row: "source_row_hash IS NOT NULL"
   end
 
-  multitenancy do
-    strategy :attribute
-    attribute :organisation_id
-    global? false
-  end
-
   actions do
     defaults [:read, :destroy]
 
@@ -71,6 +65,12 @@ defmodule InvoiceGoblin.Finance.Transaction do
 
       filter expr(booking_date >= ^arg(:start_date) and booking_date <= ^arg(:end_date))
     end
+  end
+
+  multitenancy do
+    strategy :attribute
+    attribute :organisation_id
+    global? false
   end
 
   attributes do

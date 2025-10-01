@@ -9,12 +9,6 @@ defmodule InvoiceGoblin.Finance.InvoiceLineItem do
     repo InvoiceGoblin.Repo
   end
 
-  multitenancy do
-    strategy :attribute
-    attribute :organisation_id
-    global? false
-  end
-
   actions do
     defaults [:read, :destroy]
 
@@ -38,6 +32,12 @@ defmodule InvoiceGoblin.Finance.InvoiceLineItem do
         )
       end
     end
+  end
+
+  multitenancy do
+    strategy :attribute
+    attribute :organisation_id
+    global? false
   end
 
   attributes do

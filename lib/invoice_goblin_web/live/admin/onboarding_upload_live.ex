@@ -1,0 +1,453 @@
+defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
+  use InvoiceGoblinWeb, :live_view
+
+  alias InvoiceGoblin.Accounts.Onboarding
+  alias InvoiceGoblin.Finance.{Statement, Camt}
+  alias InvoiceGoblin.Finance.Transaction
+  alias UI.Components.Layout
+
+  on_mount {InvoiceGoblinWeb.LiveUserAuth, :live_user_required}
+
+  @impl true
+  def mount(_params, _session, socket) do
+    # Check if user has only placeholder organization
+    has_only_placeholder =
+      Onboarding.has_only_placeholder_organization?(socket.assigns.current_user.id)
+
+    if has_only_placeholder do
+      socket
+      |> assign(:page_title, "Welcome! Upload your first bank statement")
+      |> assign(:show_org_confirmation_modal, false)
+      |> assign(:extracted_org_data, nil)
+      |> assign(:statement_id, nil)
+      |> assign(:placeholder_org_id, nil)
+      |> allow_upload(:statement,
+        accept: [".xml"],
+        max_entries: 1,
+        max_file_size: 10_000_000,
+        auto_upload: true,
+        external: &presign_upload/2
+      )
+      |> ok()
+    else
+      # User already has a real organization, redirect to dashboard
+      socket
+      |> put_flash(:info, "Welcome back!")
+      |> push_navigate(to: ~p"/admin/en/dashboard")
+      |> ok()
+    end
+  end
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <Layout.admin flash={@flash} current_user={@current_user}>
+      <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+        <div class="max-w-2xl w-full">
+          <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to Invoice Goblin!</h1>
+            <p class="text-lg text-gray-600">
+              Let's get started by uploading your first bank statement.
+              We'll extract your organization details automatically.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-xl p-8">
+            <.form
+              for={%{}}
+              id="onboarding-statement-form"
+              phx-submit="upload_statement"
+              class="space-y-6"
+            >
+              <div class="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-indigo-500 transition-colors">
+                <.live_file_input upload={@uploads.statement} class="sr-only" />
+
+                <div :if={@uploads.statement.entries == []} phx-drop-target={@uploads.statement.ref}>
+                  <svg
+                    class="mx-auto h-16 w-16 text-gray-400 mb-4"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+
+                  <label
+                    for={@uploads.statement.ref}
+                    class="cursor-pointer text-indigo-600 hover:text-indigo-500 font-semibold"
+                  >
+                    Upload your bank statement
+                  </label>
+                  <span class="text-gray-600"> or drag and drop</span>
+
+                  <p class="text-sm text-gray-500 mt-2">
+                    XML file (CAMT.053 or CAMT.054) up to 10MB
+                  </p>
+                </div>
+
+                <div
+                  :if={@uploads.statement.entries != []}
+                  class="flex items-center justify-center gap-4"
+                >
+                  <div :for={entry <- @uploads.statement.entries} class="flex items-center gap-2">
+                    <svg
+                      class="h-8 w-8 text-green-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span class="text-gray-700 font-medium">{entry.client_name}</span>
+
+                    <button
+                      type="button"
+                      phx-click="cancel-upload"
+                      phx-value-ref={entry.ref}
+                      class="ml-4 text-red-600 hover:text-red-800"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <.upload_errors_list upload={@uploads.statement} />
+
+              <div :if={@uploads.statement.entries != []} class="flex justify-center">
+                <button
+                  type="submit"
+                  class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
+                >
+                  Process Statement
+                </button>
+              </div>
+            </.form>
+          </div>
+
+          <div class="mt-6 text-center text-sm text-gray-600">
+            <p>Don't have a bank statement handy?</p>
+            <button
+              phx-click="skip_onboarding"
+              class="text-indigo-600 hover:text-indigo-800 font-medium"
+            >
+              Skip for now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <%!-- Organization confirmation modal --%>
+      <div
+        :if={@show_org_confirmation_modal}
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+        phx-click="close_modal"
+      >
+        <div
+          class="relative top-20 mx-auto p-8 border w-full max-w-md shadow-2xl rounded-2xl bg-white"
+          phx-click="stop_propagation"
+        >
+          <div class="text-center">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+              <svg
+                class="h-10 w-10 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Is this your organization?</h3>
+
+            <div class="bg-gray-50 rounded-lg p-6 mb-6 text-left">
+              <dl class="space-y-3">
+                <div>
+                  <dt class="text-sm font-medium text-gray-500">Organization Name</dt>
+                  <dd class="mt-1 text-lg font-semibold text-gray-900">
+                    {@extracted_org_data && @extracted_org_data.name}
+                  </dd>
+                </div>
+                <div>
+                  <dt class="text-sm font-medium text-gray-500">Bank Account (IBAN)</dt>
+                  <dd class="mt-1 text-sm font-mono text-gray-900">
+                    {@extracted_org_data && @extracted_org_data.account_iban}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="flex gap-4">
+              <button
+                phx-click="confirm_organization"
+                class="flex-1 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Yes, that's correct
+              </button>
+              <button
+                phx-click="reject_organization"
+                class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors"
+              >
+                No, let me enter manually
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Layout.admin>
+    """
+  end
+
+  @impl true
+  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
+    socket
+    |> cancel_upload(:statement, ref)
+    |> noreply()
+  end
+
+  @impl true
+  def handle_event("upload_statement", _params, socket) do
+    case consume_uploaded_entries(socket, :statement, &process_file_entry/2) do
+      [file_info | _] ->
+        process_statement_and_extract_org(socket, file_info)
+
+      [] ->
+        socket
+        |> put_flash(:error, "No file uploaded")
+        |> noreply()
+    end
+  end
+
+  @impl true
+  def handle_event("confirm_organization", _params, socket) do
+    %{
+      extracted_org_data: org_data,
+      statement_id: statement_id,
+      placeholder_org_id: placeholder_org_id,
+      current_user: current_user
+    } = socket.assigns
+
+    case Onboarding.replace_placeholder_organization(
+           current_user.id,
+           placeholder_org_id,
+           org_data,
+           statement_id
+         ) do
+      {:ok, _new_org} ->
+        socket
+        |> put_flash(:info, "Welcome! Your organization has been set up successfully.")
+        |> push_navigate(to: ~p"/admin/en/dashboard")
+        |> noreply()
+
+      {:error, error} ->
+        socket
+        |> put_flash(:error, "Failed to set up organization: #{inspect(error)}")
+        |> assign(:show_org_confirmation_modal, false)
+        |> noreply()
+    end
+  end
+
+  @impl true
+  def handle_event("reject_organization", _params, socket) do
+    # For now, just close modal and redirect to dashboard
+    # In a full implementation, you'd show a form to manually enter org details
+    socket
+    |> put_flash(:info, "You can set up your organization details later in settings.")
+    |> push_navigate(to: ~p"/admin/en/dashboard")
+    |> noreply()
+  end
+
+  @impl true
+  def handle_event("skip_onboarding", _params, socket) do
+    socket
+    |> put_flash(:info, "You can upload your bank statement anytime from the dashboard.")
+    |> push_navigate(to: ~p"/admin/en/dashboard")
+    |> noreply()
+  end
+
+  @impl true
+  def handle_event("close_modal", _params, socket) do
+    socket
+    |> assign(:show_org_confirmation_modal, false)
+    |> noreply()
+  end
+
+  @impl true
+  def handle_event("stop_propagation", _params, socket) do
+    noreply(socket)
+  end
+
+  # Private functions
+
+  defp presign_upload(entry, socket) do
+    meta = S3Uploader.meta(entry, socket.assigns.uploads)
+    {:ok, meta, socket}
+  end
+
+  defp process_file_entry(_meta, entry) do
+    file_url = S3Uploader.entry_url(entry)
+
+    case Req.get(file_url) do
+      {:ok, %{status: 200, body: file_content}} ->
+        {:ok,
+         %{
+           url: file_url,
+           content: file_content,
+           name: entry.client_name,
+           size: entry.client_size
+         }}
+
+      {:error, _} = error ->
+        error
+    end
+  end
+
+  defp process_statement_and_extract_org(socket, file_info) do
+    # Get user's placeholder organization
+    case Onboarding.get_user_organization(socket.assigns.current_user.id) do
+      {:ok, placeholder_org} ->
+        if placeholder_org.is_placeholder do
+          do_process_statement(socket, file_info, placeholder_org.id)
+        else
+          # User already has a real org, shouldn't be here
+          socket
+          |> put_flash(:info, "You already have an organization set up!")
+          |> push_navigate(to: ~p"/admin/en/dashboard")
+          |> noreply()
+        end
+
+      {:error, _} ->
+        socket
+        |> put_flash(:error, "Could not find your organization. Please contact support.")
+        |> noreply()
+    end
+  end
+
+  defp do_process_statement(socket, file_info, placeholder_org_id) do
+    format = Camt.detect(file_info.content)
+
+    case format do
+      :unknown ->
+        socket
+        |> put_flash(
+          :error,
+          "Unsupported file format. Please upload a valid CAMT.053 or CAMT.054 XML file."
+        )
+        |> noreply()
+
+      _ ->
+        # Extract organization data
+        case Onboarding.extract_organization_from_statement(file_info.content) do
+          {:ok, org_data} ->
+            # Create statement in placeholder org
+            case create_statement(file_info, format, placeholder_org_id) do
+              {:ok, statement} ->
+                # Show confirmation modal
+                socket
+                |> assign(:extracted_org_data, org_data)
+                |> assign(:statement_id, statement.id)
+                |> assign(:placeholder_org_id, placeholder_org_id)
+                |> assign(:show_org_confirmation_modal, true)
+                |> noreply()
+
+              {:error, error} ->
+                socket
+                |> put_flash(:error, "Failed to process statement: #{inspect(error)}")
+                |> noreply()
+            end
+
+          {:error, :unsupported_format} ->
+            socket
+            |> put_flash(:error, "Could not extract organization data from statement.")
+            |> noreply()
+        end
+    end
+  end
+
+  defp create_statement(file_info, format, org_id) do
+    metadata = Camt.parse_statement_metadata(file_info.content, format)
+
+    statement_attrs = %{
+      file_url: file_info.url,
+      file_name: file_info.name,
+      file_size: file_info.size,
+      account_iban: metadata[:account_iban],
+      statement_date: metadata[:statement_date],
+      statement_period_start: metadata[:period_start],
+      statement_period_end: metadata[:period_end]
+    }
+
+    statement_attrs = Map.put(statement_attrs, :title, Statement.generate_title(statement_attrs))
+
+    # Create with tenant context
+    case Ash.create(Statement, statement_attrs, action: :create, tenant: org_id) do
+      {:ok, statement} ->
+        # Process transactions
+        entries = Camt.parse_entries(file_info.content, format)
+        process_transactions_for_statement(entries, statement.id, org_id)
+        {:ok, statement}
+
+      error ->
+        error
+    end
+  end
+
+  defp process_transactions_for_statement(entries, statement_id, org_id) do
+    Enum.each(entries, fn entry ->
+      transaction_attrs = %{
+        booking_date: entry.booking_date,
+        direction: entry.direction,
+        amount: entry.amount,
+        bank_mark: entry.bank_mark,
+        doc_number: entry.doc_number,
+        code: entry.code,
+        counterparty_name: entry.counterparty_name,
+        counterparty_reg_code: entry.counterparty_reg_code,
+        payment_purpose: entry.payment_purpose,
+        counterparty_iban: entry.counterparty_iban,
+        payment_code: entry.payment_code,
+        source_row_hash: entry.source_row_hash,
+        statement_id: statement_id
+      }
+
+      Ash.create(Transaction, transaction_attrs, action: :ingest, tenant: org_id)
+    end)
+  end
+
+  attr :upload, :map, required: true
+
+  defp upload_errors_list(assigns) do
+    ~H"""
+    <div :if={@upload.errors != []} class="mt-4">
+      <div :for={err <- @upload.errors} class="text-red-600 text-sm">
+        {error_to_string(err)}
+      </div>
+    </div>
+    """
+  end
+
+  defp error_to_string(:too_large), do: "File is too large (max 10MB)"
+  defp error_to_string(:not_accepted), do: "File type not accepted. Please upload an XML file."
+
+  defp error_to_string(:external_client_failure),
+    do: "Upload failed. Please check your connection and try again."
+
+  defp error_to_string(_), do: "Something went wrong with the upload."
+end

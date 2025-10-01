@@ -14,18 +14,18 @@ defmodule InvoiceGoblin.Ledger.Transfer do
     repo InvoiceGoblin.Repo
   end
 
-  multitenancy do
-    strategy :attribute
-    attribute :organisation_id
-    global? false
-  end
-
   actions do
     defaults [:read]
 
     create :transfer do
       accept [:amount, :timestamp, :from_account_id, :to_account_id]
     end
+  end
+
+  multitenancy do
+    strategy :attribute
+    attribute :organisation_id
+    global? false
   end
 
   attributes do

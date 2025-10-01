@@ -9,12 +9,6 @@ defmodule InvoiceGoblin.Finance.CounterParty do
     repo InvoiceGoblin.Repo
   end
 
-  multitenancy do
-    strategy :attribute
-    attribute :organisation_id
-    global? false
-  end
-
   actions do
     defaults [:read, :destroy]
 
@@ -78,6 +72,12 @@ defmodule InvoiceGoblin.Finance.CounterParty do
   validations do
     validate string_length(:name, max: 255)
     validate string_length(:notes, max: 1000)
+  end
+
+  multitenancy do
+    strategy :attribute
+    attribute :organisation_id
+    global? false
   end
 
   attributes do

@@ -14,12 +14,6 @@ defmodule InvoiceGoblin.Ledger.Balance do
     repo InvoiceGoblin.Repo
   end
 
-  multitenancy do
-    strategy :attribute
-    attribute :organisation_id
-    global? false
-  end
-
   actions do
     defaults [:read]
 
@@ -42,6 +36,12 @@ defmodule InvoiceGoblin.Ledger.Balance do
 
       change {AshDoubleEntry.Balance.Changes.AdjustBalance, can_add_money?: true}
     end
+  end
+
+  multitenancy do
+    strategy :attribute
+    attribute :organisation_id
+    global? false
   end
 
   attributes do

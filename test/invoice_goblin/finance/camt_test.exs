@@ -72,9 +72,10 @@ defmodule InvoiceGoblin.Finance.CamtTest do
       entries = Camt.parse_entries(xml, :camt053)
 
       # Find entry with counterparty info (like TELIA payment)
-      entry_with_counterparty = Enum.find(entries, fn e ->
-        e.counterparty_name && e.counterparty_name =~ "TELIA"
-      end)
+      entry_with_counterparty =
+        Enum.find(entries, fn e ->
+          e.counterparty_name && e.counterparty_name =~ "TELIA"
+        end)
 
       assert entry_with_counterparty.counterparty_name == "TELIA LIETUVA AB"
       assert entry_with_counterparty.counterparty_iban == "LT137300010000561355"
@@ -97,9 +98,10 @@ defmodule InvoiceGoblin.Finance.CamtTest do
       entries = Camt.parse_entries(xml, :camt053)
 
       # Find the 6686 EUR income from Marko Switzerland AG
-      large_income = Enum.find(entries, fn e ->
-        e.amount == Money.new(:EUR, "6686.00")
-      end)
+      large_income =
+        Enum.find(entries, fn e ->
+          e.amount == Money.new(:EUR, "6686.00")
+        end)
 
       assert large_income.direction == :income
       # Counterparty name extraction depends on XML structure

@@ -38,7 +38,8 @@ defmodule InvoiceGoblin.Finance.StatementTest do
         file_size: 12345
       }
 
-      assert {:error, %Ash.Error.Invalid{}} = Ash.create(Statement, attrs, action: :create, tenant: tenant)
+      assert {:error, %Ash.Error.Invalid{}} =
+               Ash.create(Statement, attrs, action: :create, tenant: tenant)
     end
 
     test "generates title if not provided", %{tenant: tenant} do
@@ -142,7 +143,8 @@ defmodule InvoiceGoblin.Finance.StatementTest do
             amount: Money.new(:EUR, "100.00"),
             source_row_hash: "stmt_tx1_#{System.unique_integer()}"
           },
-          action: :ingest, tenant: tenant
+          action: :ingest,
+          tenant: tenant
         )
 
       {:ok, _tx2} =
@@ -155,7 +157,8 @@ defmodule InvoiceGoblin.Finance.StatementTest do
             amount: Money.new(:EUR, "50.00"),
             source_row_hash: "stmt_tx2_#{System.unique_integer()}"
           },
-          action: :ingest, tenant: tenant
+          action: :ingest,
+          tenant: tenant
         )
 
       # Load statement with transactions

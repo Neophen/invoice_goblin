@@ -70,6 +70,33 @@ defmodule InvoiceGoblin.Accounts.User do
   actions do
     defaults [:read]
 
+    create :register_with_password do
+      description "Register a new user with email and password."
+      accept [:email]
+
+      argument :password, :string,
+        allow_nil?: false,
+        constraints: [min_length: 8],
+        sensitive?: true
+
+      argument :password_confirmation, :string,
+        allow_nil?: false,
+        sensitive?: true
+
+      validate {AshAuthentication.Strategy.Password.PasswordConfirmationValidation,
+                strategy_name: :password}
+
+      change {AshAuthentication.Strategy.Password.HashPasswordChange, strategy_name: :password}
+      change AshAuthentication.GenerateTokenChange
+
+      # Create placeholder organization for new users
+      change InvoiceGoblin.Accounts.User.Changes.CreatePlaceholderOrganization
+
+      metadata :token, :string do
+        allow_nil? false
+      end
+    end
+
     read :get_by_subject do
       description "Get a user by the subject claim in a JWT"
       argument :subject, :string, allow_nil?: false
@@ -220,6 +247,9 @@ defmodule InvoiceGoblin.Accounts.User do
       # Uses the information from the token to create or sign in the user
       change AshAuthentication.Strategy.MagicLink.SignInChange
 
+      # Create placeholder organization for new users
+      change InvoiceGoblin.Accounts.User.Changes.CreatePlaceholderOrganization
+
       metadata :token, :string do
         allow_nil? false
       end
@@ -254,6 +284,9 @@ defmodule InvoiceGoblin.Accounts.User do
 
       # Required if you're using the password & confirmation strategies
       change set_attribute(:confirmed_at, &DateTime.utc_now/0)
+
+      # Create placeholder organization for new users
+      change InvoiceGoblin.Accounts.User.Changes.CreatePlaceholderOrganization
     end
   end
 

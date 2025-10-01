@@ -2,8 +2,18 @@ defmodule InvoiceGoblinWeb.AuthController do
   use InvoiceGoblinWeb, :controller
   use AshAuthentication.Phoenix.Controller
 
+  alias InvoiceGoblin.Accounts.Onboarding
+
   def success(conn, activity, user, _token) do
-    return_to = get_session(conn, :return_to) || ~q"/admin/dashboard"
+    # Check if user has only placeholder organization
+    default_route =
+      if Onboarding.has_only_placeholder_organization?(user.id) do
+        ~q"/admin/en/onboarding"
+      else
+        ~q"/admin/en/dashboard"
+      end
+
+    return_to = get_session(conn, :return_to) || default_route
 
     message =
       case activity do

@@ -9,12 +9,6 @@ defmodule InvoiceGoblin.Finance.Statement do
     repo InvoiceGoblin.Repo
   end
 
-  multitenancy do
-    strategy :attribute
-    attribute :organisation_id
-    global? false
-  end
-
   actions do
     defaults [:read, :destroy]
 
@@ -67,6 +61,12 @@ defmodule InvoiceGoblin.Finance.Statement do
       where present(:account_iban)
       message "must be a valid IBAN format"
     end
+  end
+
+  multitenancy do
+    strategy :attribute
+    attribute :organisation_id
+    global? false
   end
 
   attributes do

@@ -110,7 +110,7 @@ defmodule InvoiceGoblin.Accounts.OrganisationTest do
 
   describe "organisation membership roles" do
     @tag :skip
-    
+
     @tag :skip
     test "creates membership with owner role" do
       {:ok, user} =
@@ -131,7 +131,6 @@ defmodule InvoiceGoblin.Accounts.OrganisationTest do
       assert membership.role == :owner
     end
 
-    
     @tag :skip
     test "creates membership with admin role" do
       {:ok, user} =
@@ -152,7 +151,6 @@ defmodule InvoiceGoblin.Accounts.OrganisationTest do
       assert membership.role == :admin
     end
 
-    
     @tag :skip
     test "creates membership with member role (default)" do
       {:ok, user} =
@@ -173,7 +171,6 @@ defmodule InvoiceGoblin.Accounts.OrganisationTest do
       assert membership.role == :member
     end
 
-    
     @tag :skip
     test "rejects invalid role" do
       {:ok, user} =

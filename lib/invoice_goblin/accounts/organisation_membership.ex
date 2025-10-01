@@ -22,6 +22,12 @@ defmodule InvoiceGoblin.Accounts.OrganisationMembership do
     end
   end
 
+  policies do
+    policy always() do
+      authorize_if always()
+    end
+  end
+
   attributes do
     uuid_primary_key :id
 
@@ -48,11 +54,5 @@ defmodule InvoiceGoblin.Accounts.OrganisationMembership do
 
   identities do
     identity :unique_user_organisation, [:user_id, :organisation_id]
-  end
-
-  policies do
-    policy always() do
-      authorize_if always()
-    end
   end
 end
