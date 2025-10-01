@@ -13,7 +13,7 @@ config :ash_oban, pro?: false
 config :invoice_goblin, Oban,
   engine: Oban.Engines.Basic,
   notifier: Oban.Notifiers.Postgres,
-  queues: [default: 10],
+  queues: [default: 10, invoice_process_uploaded_invoice: 5],
   repo: InvoiceGoblin.Repo,
   plugins: [{Oban.Plugins.Cron, []}]
 

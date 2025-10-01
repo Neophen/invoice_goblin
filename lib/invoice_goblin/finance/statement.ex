@@ -30,6 +30,16 @@ defmodule InvoiceGoblin.Finance.Statement do
         :statement_period_end,
         :processing_errors
       ]
+
+      change fn changeset, _context ->
+        if Ash.Changeset.get_attribute(changeset, :title) do
+          changeset
+        else
+          attrs = changeset.attributes
+          title = generate_title(attrs)
+          Ash.Changeset.force_change_attribute(changeset, :title, title)
+        end
+      end
     end
 
     update :update do
@@ -63,7 +73,7 @@ defmodule InvoiceGoblin.Finance.Statement do
     uuid_primary_key :id
 
     attribute :title, :string do
-      allow_nil? false
+      allow_nil? true
       public? true
       constraints max_length: 255
     end
@@ -134,11 +144,11 @@ defmodule InvoiceGoblin.Finance.Statement do
   end
 
   def generate_title(params) do
-    account_iban = params.account_iban
-    statement_period_start = params.statement_period_start
-    statement_period_end = params.statement_period_end
-    statement_date = params.statement_date
-    file_name = params.file_name
+    account_iban = Map.get(params, :account_iban)
+    statement_period_start = Map.get(params, :statement_period_start)
+    statement_period_end = Map.get(params, :statement_period_end)
+    statement_date = Map.get(params, :statement_date)
+    file_name = Map.get(params, :file_name)
     inserted_at = DateTime.utc_now()
 
     cond do
@@ -149,10 +159,12 @@ defmodule InvoiceGoblin.Finance.Statement do
         "Bank Statement - #{account_iban} - #{statement_date}"
 
       file_name ->
-        "Bank Statement - #{file_name} - #{Date.from_iso8601!(to_string(inserted_at)) |> elem(1)}"
+        date = DateTime.to_date(inserted_at)
+        "Bank Statement - #{file_name} - #{date}"
 
       true ->
-        "Bank Statement - #{Date.from_iso8601!(to_string(inserted_at)) |> elem(1)}"
+        date = DateTime.to_date(inserted_at)
+        "Bank Statement - #{date}"
     end
   end
 
