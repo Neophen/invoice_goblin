@@ -19,4 +19,9 @@ defmodule InvoiceGoblin.Repo do
   def min_pg_version do
     %Version{major: 16, minor: 0, patch: 0}
   end
+
+  @impl true
+  def default_options(_resource) do
+    []
+  end
 end

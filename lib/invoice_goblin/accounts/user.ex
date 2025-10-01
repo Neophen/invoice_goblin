@@ -278,6 +278,14 @@ defmodule InvoiceGoblin.Accounts.User do
     attribute :confirmed_at, :utc_datetime_usec
   end
 
+  relationships do
+    many_to_many :organisations, InvoiceGoblin.Accounts.Organisation do
+      through InvoiceGoblin.Accounts.OrganisationMembership
+      source_attribute_on_join_resource :user_id
+      destination_attribute_on_join_resource :organisation_id
+    end
+  end
+
   identities do
     identity :unique_email, [:email]
   end

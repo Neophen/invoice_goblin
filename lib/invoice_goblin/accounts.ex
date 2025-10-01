@@ -6,6 +6,8 @@ defmodule InvoiceGoblin.Accounts do
   end
 
   resources do
+    resource InvoiceGoblin.Accounts.Organisation
+    resource InvoiceGoblin.Accounts.OrganisationMembership
     resource InvoiceGoblin.Accounts.Token
     resource InvoiceGoblin.Accounts.User
     resource InvoiceGoblin.Accounts.Waitlist

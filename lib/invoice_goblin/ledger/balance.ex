@@ -14,6 +14,12 @@ defmodule InvoiceGoblin.Ledger.Balance do
     repo InvoiceGoblin.Repo
   end
 
+  multitenancy do
+    strategy :attribute
+    attribute :organisation_id
+    global? false
+  end
+
   actions do
     defaults [:read]
 
@@ -43,6 +49,10 @@ defmodule InvoiceGoblin.Ledger.Balance do
 
     attribute :balance, :money do
       constraints storage_type: :money_with_currency
+    end
+
+    attribute :organisation_id, :uuid do
+      allow_nil? false
     end
   end
 

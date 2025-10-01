@@ -20,6 +20,12 @@ defmodule InvoiceGoblin.Ledger.Account do
     repo InvoiceGoblin.Repo
   end
 
+  multitenancy do
+    strategy :attribute
+    attribute :organisation_id
+    global? false
+  end
+
   actions do
     defaults [:read]
 
@@ -41,6 +47,10 @@ defmodule InvoiceGoblin.Ledger.Account do
     end
 
     attribute :currency, :string do
+      allow_nil? false
+    end
+
+    attribute :organisation_id, :uuid do
       allow_nil? false
     end
 
