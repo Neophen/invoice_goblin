@@ -186,6 +186,7 @@ defmodule InvoiceGoblinWeb.InvoiceUploadLive do
         end
 
       file_url = S3Uploader.entry_url(entry)
+      tenant = get_tenant(socket)
 
       # Create the invoice with the file URL
       case Ash.create(
@@ -198,7 +199,8 @@ defmodule InvoiceGoblinWeb.InvoiceUploadLive do
                file_type: entry.client_type
              },
              action: :upload_and_process,
-             actor: socket.assigns.current_user
+             actor: socket.assigns.current_user,
+             tenant: tenant
            ) do
         {:ok, invoice} ->
           {:ok, %{status: :success, invoice: invoice, error: nil}}
@@ -217,7 +219,7 @@ defmodule InvoiceGoblinWeb.InvoiceUploadLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layout.app flash={@flash} current_user={@current_user}>
+    <Layout.admin flash={@flash} current_user={@current_user}>
       <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold mb-8">Bulk Invoice Upload</h1>
 
@@ -487,7 +489,7 @@ defmodule InvoiceGoblinWeb.InvoiceUploadLive do
           </div>
         </div>
       </div>
-    </Layout.app>
+    </Layout.admin>
     """
   end
 

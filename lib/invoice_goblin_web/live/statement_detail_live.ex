@@ -11,7 +11,9 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
 
   @impl true
   def mount(%{"id" => statement_id}, _session, socket) do
-    case Ash.get(Statement, statement_id, load: [:transactions]) do
+    tenant = get_tenant(socket)
+
+    case Ash.get(Statement, statement_id, load: [:transactions], tenant: tenant) do
       {:ok, statement} ->
         socket
         |> assign(:statement, statement)
@@ -19,7 +21,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
         |> assign(:page, 1)
         |> assign(:page_size, 25)
         |> assign(:loading, false)
-        |> assign(:total_revenue, calculate_total_revenue(statement.id))
+        |> assign(:total_revenue, calculate_total_revenue(statement.id, tenant))
         |> load_transactions()
         |> ok()
 
@@ -50,14 +52,14 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layout.app flash={@flash} current_user={@current_user}>
+    <Layout.admin flash={@flash} current_user={@current_user}>
       <!-- Header -->
       <div class="flex items-center space-x-4">
         <.link
           navigate={~p"/statements"}
           class="inline-flex items-center text-gray-500 hover:text-gray-700"
         >
-          <.icon name="hero-arrow-left" class="h-5 w-5 mr-1" /> Back to Statements
+          <Icon.icon name="hero-arrow-left" class="h-5 w-5 mr-1" /> Back to Statements
         </.link>
       </div>
       
@@ -74,21 +76,21 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
                   :if={@statement.account_iban}
                   class="mt-2 flex items-center text-sm text-gray-500"
                 >
-                  <.icon name="hero-credit-card" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                  <Icon.icon name="hero-credit-card" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
                   {@statement.account_iban}
                 </div>
                 <div
                   :if={@statement.statement_date}
                   class="mt-2 flex items-center text-sm text-gray-500"
                 >
-                  <.icon name="hero-calendar" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                  <Icon.icon name="hero-calendar" class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
                   {@statement.statement_date}
                 </div>
                 <div
                   :if={@statement.statement_period_start && @statement.statement_period_end}
                   class="mt-2 flex items-center text-sm text-gray-500"
                 >
-                  <.icon
+                  <Icon.icon
                     name="hero-calendar-days"
                     class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                   />
@@ -98,7 +100,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
                   :if={@statement.file_size}
                   class="mt-2 flex items-center text-sm text-gray-500"
                 >
-                  <.icon
+                  <Icon.icon
                     name="hero-document"
                     class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                   />
@@ -112,7 +114,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
                 download
                 class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                <.icon name="hero-arrow-down-tray" class="h-4 w-4 mr-1" /> Download File
+                <Icon.icon name="hero-arrow-down-tray" class="h-4 w-4 mr-1" /> Download File
               </a>
             </div>
           </div>
@@ -122,7 +124,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
             <div class="bg-gray-50 rounded-lg p-4">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
-                  <.icon name="hero-banknotes" class="h-6 w-6 text-gray-400" />
+                  <Icon.icon name="hero-banknotes" class="h-6 w-6 text-gray-400" />
                 </div>
                 <div class="ml-3">
                   <p class="text-sm font-medium text-gray-500">Transactions</p>
@@ -136,7 +138,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
             <div class="bg-gray-50 rounded-lg p-4">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
-                  <.icon name="hero-chart-bar" class="h-6 w-6 text-gray-400" />
+                  <Icon.icon name="hero-chart-bar" class="h-6 w-6 text-gray-400" />
                 </div>
                 <div class="ml-3">
                   <p class="text-sm font-medium text-gray-500">Total Revenue</p>
@@ -153,7 +155,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
             <div class="bg-gray-50 rounded-lg p-4">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
-                  <.icon name="hero-clock" class="h-6 w-6 text-gray-400" />
+                  <Icon.icon name="hero-clock" class="h-6 w-6 text-gray-400" />
                 </div>
                 <div class="ml-3">
                   <p class="text-sm font-medium text-gray-500">Uploaded</p>
@@ -169,12 +171,12 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
       
     <!-- Transactions List -->
       <div :if={@loading} class="text-center py-8">
-        <.icon name="hero-arrow-path" class="h-8 w-8 animate-spin mx-auto text-gray-400" />
+        <Icon.icon name="hero-arrow-path" class="h-8 w-8 animate-spin mx-auto text-gray-400" />
         <p class="text-gray-500 mt-2">Loading transactions...</p>
       </div>
 
       <div :if={!@loading && Enum.empty?(@transactions)} class="text-center py-8">
-        <.icon name="hero-banknotes" class="h-12 w-12 mx-auto text-gray-400" />
+        <Icon.icon name="hero-banknotes" class="h-12 w-12 mx-auto text-gray-400" />
         <h3 class="mt-2 text-sm font-medium text-gray-900">No transactions</h3>
         <p class="mt-1 text-sm text-gray-500">
           This statement doesn't contain any transactions.
@@ -263,7 +265,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
           base_path={~p"/statements/#{@statement.id}"}
         />
       </div>
-    </Layout.app>
+    </Layout.admin>
     """
   end
 
@@ -278,6 +280,8 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
        ) do
     socket = assign(socket, :loading, true)
 
+    tenant = get_tenant(socket)
+
     query =
       Transaction
       |> Ash.Query.filter(statement_id == ^statement.id)
@@ -285,11 +289,11 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
       |> Ash.Query.limit(page_size)
       |> Ash.Query.offset((page - 1) * page_size)
 
-    case Ash.read(query) do
+    case Ash.read(query, tenant: tenant) do
       {:ok, transactions} ->
         socket
         |> assign(:transactions, transactions)
-        |> assign(:total_revenue, calculate_total_revenue(statement.id))
+        |> assign(:total_revenue, calculate_total_revenue(statement.id, tenant))
         |> assign(:loading, false)
 
       {:error, _error} ->
@@ -301,12 +305,12 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
     end
   end
 
-  defp calculate_total_revenue(statement_id) do
+  defp calculate_total_revenue(statement_id, tenant) do
     query =
       Transaction
       |> Ash.Query.filter(statement_id == ^statement_id)
 
-    case Ash.read(query) do
+    case Ash.read(query, tenant: tenant) do
       {:ok, transactions} ->
         zero_eur = Money.new(:EUR, 0)
 
@@ -395,7 +399,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
               class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
               <span class="sr-only">Previous</span>
-              <.icon name="hero-chevron-left" class="h-5 w-5" aria-hidden="true" />
+              <Icon.icon name="hero-chevron-left" class="h-5 w-5" aria-hidden="true" />
             </.link>
             <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
               {@page}
@@ -406,7 +410,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
               class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
               <span class="sr-only">Next</span>
-              <.icon name="hero-chevron-right" class="h-5 w-5" aria-hidden="true" />
+              <Icon.icon name="hero-chevron-right" class="h-5 w-5" aria-hidden="true" />
             </.link>
           </nav>
         </div>

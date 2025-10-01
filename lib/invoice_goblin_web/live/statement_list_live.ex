@@ -33,14 +33,14 @@ defmodule InvoiceGoblinWeb.StatementListLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layout.app flash={@flash} current_user={@current_user}>
+    <Layout.admin flash={@flash} current_user={@current_user}>
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
           <.link
             navigate={~p"/dashboard"}
             class="inline-flex items-center text-gray-500 hover:text-gray-700"
           >
-            <.icon name="hero-arrow-left" class="h-5 w-5 mr-1" /> Back to Dashboard
+            <Icon.icon name="hero-arrow-left" class="h-5 w-5 mr-1" /> Back to Dashboard
           </.link>
         </div>
         
@@ -55,9 +55,9 @@ defmodule InvoiceGoblinWeb.StatementListLive do
             </p>
           </div>
           <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-3">
-            <.button type="button" phx-click={show_modal("upload-statement-modal")}>
-              <.icon name="hero-plus" class="h-4 w-4 mr-1" /> Upload Statement
-            </.button>
+            <Action.button type="button" phx-click={show_modal("upload-statement-modal")}>
+              <Icon.icon name="hero-plus" class="h-4 w-4 mr-1" /> Upload Statement
+            </Action.button>
           </div>
         </div>
         
@@ -65,20 +65,20 @@ defmodule InvoiceGoblinWeb.StatementListLive do
         <div class="bg-white shadow rounded-lg">
           <div class="px-4 py-5 sm:p-6">
             <div :if={@loading} class="text-center py-8">
-              <.icon name="hero-arrow-path" class="h-8 w-8 animate-spin mx-auto text-gray-400" />
+              <Icon.icon name="hero-arrow-path" class="h-8 w-8 animate-spin mx-auto text-gray-400" />
               <p class="text-gray-500 mt-2">Loading statements...</p>
             </div>
 
             <div :if={!@loading && Enum.empty?(@statements)} class="text-center py-8">
-              <.icon name="hero-document-text" class="h-12 w-12 mx-auto text-gray-400" />
+              <Icon.icon name="hero-document-text" class="h-12 w-12 mx-auto text-gray-400" />
               <h3 class="mt-2 text-sm font-medium text-gray-900">No statements</h3>
               <p class="mt-1 text-sm text-gray-500">
                 Get started by uploading your first bank statement.
               </p>
               <div class="mt-6">
-                <.button type="button" phx-click={show_modal("upload-statement-modal")}>
-                  <.icon name="hero-plus" class="h-4 w-4 mr-1" /> Upload Statement
-                </.button>
+                <Action.button type="button" phx-click={show_modal("upload-statement-modal")}>
+                  <Icon.icon name="hero-plus" class="h-4 w-4 mr-1" /> Upload Statement
+                </Action.button>
               </div>
             </div>
 
@@ -91,7 +91,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
                   <div class="flex-1 min-w-0">
                     <div class="flex items-center space-x-3">
                       <div class="flex-shrink-0">
-                        <.icon name="hero-document-text" class="h-5 w-5 text-gray-400" />
+                        <Icon.icon name="hero-document-text" class="h-5 w-5 text-gray-400" />
                       </div>
                       <div class="flex-1 min-w-0">
                         <h3 class="text-sm font-medium text-gray-900 truncate">
@@ -134,7 +134,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
                         target="_blank"
                         class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       >
-                        <.icon name="hero-arrow-down-tray" class="h-3 w-3 mr-1" /> Download
+                        <Icon.icon name="hero-arrow-down-tray" class="h-3 w-3 mr-1" /> Download
                       </.link>
                     </div>
                   </div>
@@ -155,7 +155,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
       </div>
       
     <!-- Upload Modal -->
-      <.modal
+      <Modal.root
         :if={@upload_modal_open}
         id="upload-statement-modal"
         on_cancel={hide_modal("upload-statement-modal")}
@@ -164,12 +164,14 @@ defmodule InvoiceGoblinWeb.StatementListLive do
           <h3 class="text-lg font-medium text-gray-900 mb-4">Upload Bank Statement</h3>
           <StatementFormComponent.show id="statement-form" current_user={@current_user} />
         </div>
-      </.modal>
-    </Layout.app>
+      </Modal.root>
+    </Layout.admin>
     """
   end
 
   defp load_statements(%{assigns: %{page: page, page_size: page_size}} = socket) do
+    tenant = get_tenant(socket)
+
     query =
       Statement
       |> Ash.Query.load([:transactions])
@@ -177,7 +179,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
       |> Ash.Query.limit(page_size)
       |> Ash.Query.offset((page - 1) * page_size)
 
-    case Ash.read(query) do
+    case Ash.read(query, tenant: tenant) do
       {:ok, statements} ->
         socket
         |> assign(:statements, statements)
@@ -240,7 +242,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
               class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
               <span class="sr-only">Previous</span>
-              <.icon name="hero-chevron-left" class="h-5 w-5" aria-hidden="true" />
+              <Icon.icon name="hero-chevron-left" class="h-5 w-5" aria-hidden="true" />
             </.link>
             <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
               {@page}
@@ -251,7 +253,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
               class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
               <span class="sr-only">Next</span>
-              <.icon name="hero-chevron-right" class="h-5 w-5" aria-hidden="true" />
+              <Icon.icon name="hero-chevron-right" class="h-5 w-5" aria-hidden="true" />
             </.link>
           </nav>
         </div>

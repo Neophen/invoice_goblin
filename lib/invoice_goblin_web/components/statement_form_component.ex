@@ -32,7 +32,7 @@ defmodule InvoiceGoblinWeb.Components.StatementFormComponent do
         class="grid min-w-0 gap-y-8"
       >
         <.statement_input id="statement" upload={@uploads.statement} value={@form[:statement].value} />
-        <.button type="submit" phx-disable-with="Saving...">Save Statement</.button>
+        <Action.button type="submit" phx-disable-with="Saving...">Save Statement</Action.button>
       </.form>
     </div>
     """
@@ -336,7 +336,7 @@ defmodule InvoiceGoblinWeb.Components.StatementFormComponent do
     ~H"""
     <ul>
       <%= for entry <- @upload.entries do %>
-        <.error :for={err <- upload_errors(@upload, entry)}>{error_to_string(err)}</.error>
+          <.error :for={err <- upload_errors(@upload, entry)}>{error_to_string(err)}</.error>
       <% end %>
 
       <.error :for={err <- upload_errors(@upload)}>{error_to_string(err)}</.error>
@@ -357,7 +357,7 @@ defmodule InvoiceGoblinWeb.Components.StatementFormComponent do
   def error(assigns) do
     ~H"""
     <p class="mt-3 flex gap-3 text-sm leading-6 text-rose-600">
-      <.icon name="hero-exclamation-circle-mini" class="mt-0.5 h-5 w-5 flex-none" />
+      <Icon.icon name="hero-exclamation-circle-mini" class="mt-0.5 h-5 w-5 flex-none" />
       {render_slot(@inner_block)}
     </p>
     """

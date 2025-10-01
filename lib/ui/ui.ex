@@ -39,9 +39,14 @@ defmodule UI do
       alias UI.Components.Flash
       alias UI.Components.Icon
       alias UI.Components.Layout
+      alias UI.Components.Modal
       alias UI.Components.RichText
       alias UI.Components.Text
       alias UI.Components.UIForm
+
+      # Add helper functions for modal
+      def show_modal(id), do: UI.open_dialog(id)
+      def hide_modal(id), do: UI.close_dialog(id)
     end
   end
 

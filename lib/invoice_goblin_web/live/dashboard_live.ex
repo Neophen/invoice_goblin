@@ -14,7 +14,7 @@ defmodule InvoiceGoblinWeb.DashboardLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layout.app flash={@flash} current_user={@current_user}>
+    <Layout.admin flash={@flash} current_user={@current_user}>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <button type="button" class="block text-left" phx-click={show_modal("upload-statement-modal")}>
           <.action_card
@@ -62,10 +62,10 @@ defmodule InvoiceGoblinWeb.DashboardLive do
 
       <.empty_state />
 
-      <.modal id="upload-statement-modal">
+      <Modal.root id="upload-statement-modal" on_cancel={hide_modal("upload-statement-modal")}>
         <StatementFormComponent.show id="statement-form" current_user={@current_user} />
-      </.modal>
-    </Layout.app>
+      </Modal.root>
+    </Layout.admin>
     """
   end
 
@@ -78,7 +78,7 @@ defmodule InvoiceGoblinWeb.DashboardLive do
     <div class="relative block w-full bg-white border border-gray-300 rounded-lg p-6 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
       <div class="flex items-center">
         <div class="flex-shrink-0">
-          <.icon name={@icon} class="h-6 w-6 text-gray-400" />
+          <Icon.icon name={@icon} class="h-6 w-6 text-gray-400" />
         </div>
         <div class="ml-4">
           <h4 class="text-sm font-medium text-gray-900">{@title}</h4>

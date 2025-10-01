@@ -13,7 +13,7 @@ defmodule InvoiceGoblinWeb.BankStatementUploadLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layout.app flash={@flash} current_user={@current_user}>
+    <Layout.admin flash={@flash} current_user={@current_user}>
       <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold mb-6">Upload Bank Statement</h1>
 
@@ -21,7 +21,7 @@ defmodule InvoiceGoblinWeb.BankStatementUploadLive do
           <StatementFormComponent.show id="statement-form" current_user={@current_user} />
         </div>
       </div>
-    </Layout.app>
+    </Layout.admin>
     """
   end
 end

@@ -8,11 +8,13 @@ defmodule InvoiceGoblinWeb.TransactionListLive do
 
   @impl true
   def mount(_params, _session, socket) do
+    tenant = get_tenant(socket)
+
     {:ok, transactions} =
       Finance.Transaction
       |> Ash.Query.load(:counter_party)
       |> Ash.Query.sort(booking_date: :desc)
-      |> Ash.read()
+      |> Ash.read(tenant: tenant)
 
     {:ok,
      socket
@@ -22,6 +24,7 @@ defmodule InvoiceGoblinWeb.TransactionListLive do
 
   @impl true
   def handle_event("filter", %{"direction" => direction}, socket) do
+    tenant = get_tenant(socket)
     filter_direction = if direction == "all", do: nil, else: String.to_existing_atom(direction)
 
     filter =
@@ -35,7 +38,8 @@ defmodule InvoiceGoblinWeb.TransactionListLive do
       Ash.read(Finance.Transaction,
         filter: filter,
         load: [:counter_party],
-        sort: [booking_date: :desc]
+        sort: [booking_date: :desc],
+        tenant: tenant
       )
 
     {:noreply,
@@ -47,7 +51,7 @@ defmodule InvoiceGoblinWeb.TransactionListLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layout.app flash={@flash} current_user={@current_user}>
+    <Layout.admin flash={@flash} current_user={@current_user}>
       <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold mb-6">Transactions</h1>
 
@@ -131,7 +135,7 @@ defmodule InvoiceGoblinWeb.TransactionListLive do
           </div>
         </div>
       </div>
-    </Layout.app>
+    </Layout.admin>
     """
   end
 

@@ -71,6 +71,18 @@ defmodule InvoiceGoblinWeb.Router do
       ] do
       localize do
         live "/#{locale}/dashboard", DashboardLive
+
+        # Finance routes
+        live "/#{locale}/invoices", InvoiceGoblinWeb.InvoiceListLive
+        live "/#{locale}/invoices/upload", InvoiceGoblinWeb.InvoiceUploadLive
+        live "/#{locale}/invoices/processing", InvoiceGoblinWeb.InvoiceProcessingDashboardLive
+        live "/#{locale}/invoices/:id", InvoiceGoblinWeb.InvoiceDetailLive
+
+        live "/#{locale}/statements", InvoiceGoblinWeb.StatementListLive
+        live "/#{locale}/statements/upload", InvoiceGoblinWeb.BankStatementUploadLive
+        live "/#{locale}/statements/:id", InvoiceGoblinWeb.StatementDetailLive
+
+        live "/#{locale}/transactions", InvoiceGoblinWeb.TransactionListLive
         # live "/#{locale}/analytics", AnalyticsLive
         # live "/#{locale}/posts", PostsLive
         # live "/#{locale}/users", UsersLive

@@ -94,7 +94,7 @@ defmodule InvoiceGoblinWeb.InvoiceDetailLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layout.app flash={@flash} current_user={@current_user}>
+    <Layout.admin flash={@flash} current_user={@current_user}>
       <div class="container mx-auto px-4 py-8">
         <div class="mb-6 flex items-center justify-between">
           <h1 class="text-3xl font-bold">Invoice Details</h1>
@@ -275,7 +275,7 @@ defmodule InvoiceGoblinWeb.InvoiceDetailLive do
           </div>
         </div>
       </div>
-    </Layout.app>
+    </Layout.admin>
     """
   end
 

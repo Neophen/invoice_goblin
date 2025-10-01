@@ -8,13 +8,15 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
 
   @impl true
   def mount(_params, _session, socket) do
+    tenant = get_tenant(socket)
+
     # Load recent invoices grouped by status
     processing =
       Finance.Invoice
       |> Ash.Query.filter(status == :processing)
       |> Ash.Query.sort(inserted_at: :desc)
       |> Ash.Query.limit(50)
-      |> Ash.read!()
+      |> Ash.read!(tenant: tenant)
 
     recent_parsed =
       Finance.Invoice
@@ -22,17 +24,17 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
       |> Ash.Query.sort(updated_at: :desc)
       |> Ash.Query.limit(20)
       |> Ash.Query.load(:counter_party)
-      |> Ash.read!()
+      |> Ash.read!(tenant: tenant)
 
     recent_errors =
       Finance.Invoice
       |> Ash.Query.filter(status == :error)
       |> Ash.Query.sort(updated_at: :desc)
       |> Ash.Query.limit(20)
-      |> Ash.read!()
+      |> Ash.read!(tenant: tenant)
 
     # Get statistics
-    stats = get_processing_stats()
+    stats = get_processing_stats(tenant)
 
     if connected?(socket) do
       # Subscribe to invoice updates
@@ -50,18 +52,20 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
 
   @impl true
   def handle_info(:refresh_data, socket) do
+    tenant = get_tenant(socket)
+
     # Refresh processing invoices
     processing =
       Finance.Invoice
       |> Ash.Query.filter(status == :processing)
       |> Ash.Query.sort(inserted_at: :desc)
       |> Ash.Query.limit(50)
-      |> Ash.read!()
+      |> Ash.read!(tenant: tenant)
 
     # Only refresh stats if processing count changed
     stats =
       if length(processing) != length(socket.assigns.processing_invoices) do
-        get_processing_stats()
+        get_processing_stats(tenant)
       else
         socket.assigns.stats
       end
@@ -74,7 +78,9 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
 
   @impl true
   def handle_event("retry_invoice", %{"id" => invoice_id}, socket) do
-    case Ash.get(Finance.Invoice, invoice_id) do
+    tenant = get_tenant(socket)
+
+    case Ash.get(Finance.Invoice, invoice_id, tenant: tenant) do
       {:ok, invoice} ->
         # Reset status to processing to trigger re-processing
         case Ash.update(invoice, %{status: :processing, processing_errors: nil}) do
@@ -101,7 +107,9 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
 
   @impl true
   def handle_event("process_invoice_now", %{"id" => invoice_id}, socket) do
-    case Ash.get(Finance.Invoice, invoice_id) do
+    tenant = get_tenant(socket)
+
+    case Ash.get(Finance.Invoice, invoice_id, tenant: tenant) do
       {:ok, invoice} ->
         try do
           # Trigger the parse_with_ai_trigger action directly
@@ -151,7 +159,7 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layout.app flash={@flash} current_user={@current_user}>
+    <Layout.admin flash={@flash} current_user={@current_user}>
       <div class="container mx-auto px-4 py-8">
         <div class="mb-6 flex items-center justify-between">
           <h1 class="text-3xl font-bold">Invoice Processing Dashboard</h1>
@@ -465,34 +473,34 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
           </div>
         </div>
       </div>
-    </Layout.app>
+    </Layout.admin>
     """
   end
 
-  defp get_processing_stats do
+  defp get_processing_stats(tenant) do
     today = Date.utc_today()
 
     # Get counts for each status
     processing_count =
       Finance.Invoice
       |> Ash.Query.filter(status == :processing)
-      |> Ash.count!()
+      |> Ash.count!(tenant: tenant)
 
     error_count =
       Finance.Invoice
       |> Ash.Query.filter(status == :error)
-      |> Ash.count!()
+      |> Ash.count!(tenant: tenant)
 
     matched_count =
       Finance.Invoice
       |> Ash.Query.filter(status == :matched)
-      |> Ash.count!()
+      |> Ash.count!(tenant: tenant)
 
     # Count parsed today - we'll use a simpler approach
     all_parsed =
       Finance.Invoice
       |> Ash.Query.filter(status == :parsed)
-      |> Ash.read!()
+      |> Ash.read!(tenant: tenant)
 
     parsed_today_count =
       Enum.count(all_parsed, fn invoice ->
