@@ -1,5 +1,6 @@
 defmodule InvoiceGoblinWeb.DashboardLive do
   use InvoiceGoblinWeb, :live_view
+  alias UI.Components.Layout
 
   alias InvoiceGoblinWeb.Components.StatementFormComponent
 
@@ -13,7 +14,7 @@ defmodule InvoiceGoblinWeb.DashboardLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_user}>
+    <Layout.app flash={@flash} current_user={@current_user}>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <button type="button" class="block text-left" phx-click={show_modal("upload-statement-modal")}>
           <.action_card
@@ -64,7 +65,7 @@ defmodule InvoiceGoblinWeb.DashboardLive do
       <.modal id="upload-statement-modal">
         <StatementFormComponent.show id="statement-form" current_user={@current_user} />
       </.modal>
-    </Layouts.app>
+    </Layout.app>
     """
   end
 

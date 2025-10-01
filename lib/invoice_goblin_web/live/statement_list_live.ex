@@ -1,5 +1,6 @@
 defmodule InvoiceGoblinWeb.StatementListLive do
   use InvoiceGoblinWeb, :live_view
+  alias UI.Components.Layout
 
   on_mount {InvoiceGoblinWeb.LiveUserAuth, :live_user_required}
 
@@ -32,7 +33,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_user}>
+    <Layout.app flash={@flash} current_user={@current_user}>
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
           <.link
@@ -164,7 +165,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
           <StatementFormComponent.show id="statement-form" current_user={@current_user} />
         </div>
       </.modal>
-    </Layouts.app>
+    </Layout.app>
     """
   end
 
@@ -257,5 +258,14 @@ defmodule InvoiceGoblinWeb.StatementListLive do
       </div>
     </div>
     """
+  end
+
+  defp get_tenant(socket) do
+    # Get the first organisation from the current user
+    # TODO: Add proper organisation selection in production
+    case socket.assigns.current_user do
+      %{organisations: [%{id: org_id} | _]} -> org_id
+      _ -> nil
+    end
   end
 end

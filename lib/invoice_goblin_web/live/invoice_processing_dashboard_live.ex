@@ -1,5 +1,6 @@
 defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
   use InvoiceGoblinWeb, :live_view
+  alias UI.Components.Layout
   alias InvoiceGoblin.Finance
   require Ash.Query
 
@@ -150,7 +151,7 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_user}>
+    <Layout.app flash={@flash} current_user={@current_user}>
       <div class="container mx-auto px-4 py-8">
         <div class="mb-6 flex items-center justify-between">
           <h1 class="text-3xl font-bold">Invoice Processing Dashboard</h1>
@@ -464,7 +465,7 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
           </div>
         </div>
       </div>
-    </Layouts.app>
+    </Layout.app>
     """
   end
 
@@ -524,6 +525,15 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
 
       _ ->
         Calendar.strftime(datetime, "%B %d at %I:%M %p")
+    end
+  end
+
+  defp get_tenant(socket) do
+    # Get the first organisation from the current user
+    # TODO: Add proper organisation selection in production
+    case socket.assigns.current_user do
+      %{organisations: [%{id: org_id} | _]} -> org_id
+      _ -> nil
     end
   end
 end

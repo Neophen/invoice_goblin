@@ -1,13 +1,15 @@
 defmodule InvoiceGoblinWeb.InvoiceListLive do
   use InvoiceGoblinWeb, :live_view
   alias InvoiceGoblin.Finance
+  alias UI.Components.Layout
   import Ash.Expr
 
   on_mount {InvoiceGoblinWeb.LiveUserAuth, :live_user_required}
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, invoices} = Ash.read(Finance.Invoice, load: [:counter_party])
+    tenant = get_tenant(socket)
+    {:ok, invoices} = Ash.read(Finance.Invoice, load: [:counter_party], tenant: tenant)
 
     {:ok,
      socket
@@ -76,6 +78,8 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
 
   @impl true
   def handle_event("search", %{"query" => query}, socket) do
+    tenant = get_tenant(socket)
+
     filter =
       if query != "" do
         expr(
@@ -86,13 +90,14 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
         []
       end
 
-    {:ok, invoices} = Ash.read(Finance.Invoice, filter: filter, load: [:counter_party])
+    {:ok, invoices} = Ash.read(Finance.Invoice, filter: filter, load: [:counter_party], tenant: tenant)
 
     {:noreply, assign(socket, :invoices, invoices)}
   end
 
   @impl true
   def handle_event("filter", %{"status" => status}, socket) do
+    tenant = get_tenant(socket)
     filter_status = if status == "all", do: nil, else: String.to_existing_atom(status)
 
     filter =
@@ -102,7 +107,7 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
         []
       end
 
-    {:ok, invoices} = Ash.read(Finance.Invoice, filter: filter, load: [:counter_party])
+    {:ok, invoices} = Ash.read(Finance.Invoice, filter: filter, load: [:counter_party], tenant: tenant)
 
     {:noreply,
      socket
@@ -113,7 +118,7 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_user}>
+    <Layout.app flash={@flash} current_user={@current_user}>
       <div class="container mx-auto px-4 py-8" id="invoice-list" phx-hook="Download">
         <div class="mb-6 flex items-center justify-between">
           <h1 class="text-3xl font-bold">Invoices</h1>
@@ -245,7 +250,7 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
           </div>
         </div>
       </div>
-    </Layouts.app>
+    </Layout.app>
     """
   end
 
@@ -294,9 +299,11 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
   end
 
   defp delete_invoices(socket, invoice_ids) do
+    tenant = get_tenant(socket)
+
     results =
       Enum.map(invoice_ids, fn id ->
-        case Ash.get(Finance.Invoice, id) do
+        case Ash.get(Finance.Invoice, id, tenant: tenant) do
           {:ok, invoice} -> Ash.destroy(invoice)
           error -> error
         end
@@ -304,7 +311,7 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
 
     success_count = Enum.count(results, &match?({:ok, _}, &1))
 
-    {:ok, remaining_invoices} = Ash.read(Finance.Invoice, load: [:counter_party])
+    {:ok, remaining_invoices} = Ash.read(Finance.Invoice, load: [:counter_party], tenant: tenant)
 
     {:noreply,
      socket
@@ -314,9 +321,11 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
   end
 
   defp update_status(socket, invoice_ids, new_status) do
+    tenant = get_tenant(socket)
+
     results =
       Enum.map(invoice_ids, fn id ->
-        case Ash.get(Finance.Invoice, id) do
+        case Ash.get(Finance.Invoice, id, tenant: tenant) do
           {:ok, invoice} -> Ash.update(invoice, %{status: new_status})
           error -> error
         end
@@ -324,12 +333,21 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
 
     success_count = Enum.count(results, &match?({:ok, _}, &1))
 
-    {:ok, updated_invoices} = Ash.read(Finance.Invoice, load: [:counter_party])
+    {:ok, updated_invoices} = Ash.read(Finance.Invoice, load: [:counter_party], tenant: tenant)
 
     {:noreply,
      socket
      |> put_flash(:info, "Updated #{success_count} invoice(s)")
      |> assign(:invoices, updated_invoices)
      |> assign(:selected_invoices, MapSet.new())}
+  end
+
+  defp get_tenant(socket) do
+    # Get the first organisation from the current user
+    # TODO: Add proper organisation selection in production
+    case socket.assigns.current_user do
+      %{organisations: [%{id: org_id} | _]} -> org_id
+      _ -> nil
+    end
   end
 end

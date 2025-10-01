@@ -1,13 +1,16 @@
 defmodule InvoiceGoblinWeb.InvoiceDetailLive do
   use InvoiceGoblinWeb, :live_view
   alias InvoiceGoblin.Finance
+  alias UI.Components.Layout
   require Ash.Query
 
   on_mount {InvoiceGoblinWeb.LiveUserAuth, :live_user_required}
 
   @impl true
   def mount(%{"id" => id}, _session, socket) do
-    case Ash.get(Finance.Invoice, id, load: [:counter_party, :transaction]) do
+    tenant = get_tenant(socket)
+
+    case Ash.get(Finance.Invoice, id, load: [:counter_party, :transaction], tenant: tenant) do
       {:ok, invoice} ->
         {:ok,
          socket
@@ -42,6 +45,8 @@ defmodule InvoiceGoblinWeb.InvoiceDetailLive do
 
   @impl true
   def handle_event("search_transactions", %{"amount" => amount_str}, socket) do
+    tenant = get_tenant(socket)
+
     # Parse amount and search for similar transactions
     case Decimal.parse(amount_str) do
       {amount, _} ->
@@ -51,7 +56,7 @@ defmodule InvoiceGoblinWeb.InvoiceDetailLive do
 
         query = Finance.Transaction |> Ash.Query.limit(1000)
 
-        {:ok, all} = Ash.read(query)
+        {:ok, all} = Ash.read(query, tenant: tenant)
 
         transactions =
           Enum.filter(all, fn t ->
@@ -89,7 +94,7 @@ defmodule InvoiceGoblinWeb.InvoiceDetailLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_user}>
+    <Layout.app flash={@flash} current_user={@current_user}>
       <div class="container mx-auto px-4 py-8">
         <div class="mb-6 flex items-center justify-between">
           <h1 class="text-3xl font-bold">Invoice Details</h1>
@@ -270,7 +275,7 @@ defmodule InvoiceGoblinWeb.InvoiceDetailLive do
           </div>
         </div>
       </div>
-    </Layouts.app>
+    </Layout.app>
     """
   end
 
@@ -296,6 +301,15 @@ defmodule InvoiceGoblinWeb.InvoiceDetailLive do
       "image/jpeg" -> "jpg"
       "image/jpg" -> "jpg"
       _ -> "bin"
+    end
+  end
+
+  defp get_tenant(socket) do
+    # Get the first organisation from the current user
+    # TODO: Add proper organisation selection in production
+    case socket.assigns.current_user do
+      %{organisations: [%{id: org_id} | _]} -> org_id
+      _ -> nil
     end
   end
 end

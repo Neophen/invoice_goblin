@@ -1,5 +1,6 @@
 defmodule InvoiceGoblinWeb.HomeLive do
   use InvoiceGoblinWeb, :live_view
+  alias UI.Components.Layout
 
   on_mount {InvoiceGoblinWeb.LiveUserAuth, :live_no_user}
 

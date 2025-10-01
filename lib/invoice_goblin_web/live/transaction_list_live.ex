@@ -1,5 +1,6 @@
 defmodule InvoiceGoblinWeb.TransactionListLive do
   use InvoiceGoblinWeb, :live_view
+  alias UI.Components.Layout
   alias InvoiceGoblin.Finance
   import Ash.Expr
 
@@ -46,7 +47,7 @@ defmodule InvoiceGoblinWeb.TransactionListLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_user}>
+    <Layout.app flash={@flash} current_user={@current_user}>
       <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold mb-6">Transactions</h1>
 
@@ -130,7 +131,16 @@ defmodule InvoiceGoblinWeb.TransactionListLive do
           </div>
         </div>
       </div>
-    </Layouts.app>
+    </Layout.app>
     """
+  end
+
+  defp get_tenant(socket) do
+    # Get the first organisation from the current user
+    # TODO: Add proper organisation selection in production
+    case socket.assigns.current_user do
+      %{organisations: [%{id: org_id} | _]} -> org_id
+      _ -> nil
+    end
   end
 end
