@@ -25,10 +25,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
       |> allow_upload(:statement,
         accept: [".xml"],
         max_entries: 1,
-        max_file_size: 10_000_000,
-        auto_upload: true,
-        progress: &handle_progress/3,
-        external: &presign_upload/2
+        max_file_size: 10_000_000
       )
       |> ok()
     else
@@ -61,7 +58,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
 
         <%!-- Upload section --%>
         <div :if={@show_upload} class="bg-white rounded-2xl shadow-xl p-8">
-          <.form for={%{}} phx-change="validate" id="upload-form">
+          <.form for={%{}} phx-change="validate" phx-submit="submit" id="upload-form">
             <div class="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-indigo-500 transition-colors">
               <.live_file_input upload={@uploads.statement} class="sr-only" />
 
@@ -96,6 +93,14 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
             </div>
 
             <.upload_errors_list upload={@uploads.statement} />
+
+            <button
+              :if={@uploads.statement.entries != []}
+              type="submit"
+              class="mt-6 w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Process Statement
+            </button>
           </.form>
 
           <div class="mt-6 text-center text-sm text-gray-600">
@@ -178,17 +183,34 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
 
   @impl true
   def handle_event("validate", _params, socket) do
-    # Show processing state when file is selected
-    socket =
-      if socket.assigns.uploads.statement.entries != [] do
-        socket
-        |> assign(:show_upload, false)
-        |> assign(:processing, true)
-      else
-        socket
-      end
-
+    # When file is selected, trigger form submit to start upload
     noreply(socket)
+  end
+
+  @impl true
+  def handle_event("submit", _params, socket) do
+    # Form submitted, show processing and consume uploads
+    uploaded_files =
+      consume_uploaded_entries(socket, :statement, fn meta, entry ->
+        {:ok, process_file_entry(meta, entry)}
+      end)
+
+    socket =
+      socket
+      |> assign(:show_upload, false)
+      |> assign(:processing, true)
+
+    case uploaded_files do
+      [file_info | _] ->
+        process_statement_and_extract_org(socket, file_info)
+
+      [] ->
+        socket
+        |> assign(:show_upload, true)
+        |> assign(:processing, false)
+        |> put_flash(:error, "No file uploaded")
+        |> noreply()
+    end
   end
 
   @impl true
@@ -238,55 +260,108 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
     |> noreply()
   end
 
-  @impl true
-  def handle_info(:process_uploaded_file, socket) do
-    # Upload is complete, now consume and process
-    case consume_uploaded_entries(socket, :statement, &process_file_entry/2) do
-      [file_info | _] ->
-        process_statement_and_extract_org(socket, file_info)
-
-      [] ->
-        socket
-        |> assign(:show_upload, true)
-        |> assign(:processing, false)
-        |> put_flash(:error, "No file uploaded")
-        |> noreply()
-    end
-  end
-
   # Private functions
 
-  defp handle_progress(:statement, entry, socket) do
-    if entry.done? do
-      # Upload is complete, now process it
-      send(self(), :process_uploaded_file)
-      socket
-    else
-      socket
+  defp process_file_entry(meta, entry) do
+    # Read the uploaded file from temp storage
+    file_content = File.read!(meta.path)
+
+    # Generate S3 key and URL
+    s3_key = "statements/#{entry.uuid}.xml"
+    bucket = S3Uploader.bucket()
+    region = S3Uploader.region()
+    file_url = "https://#{bucket}.#{region}.digitaloceanspaces.com/#{s3_key}"
+
+    # Generate authorization headers for S3 PUT
+    auth_headers = generate_s3_put_headers(s3_key, entry.client_type, byte_size(file_content))
+
+    # Upload to S3 using PUT
+    case Req.put(file_url, body: file_content, headers: auth_headers) do
+      {:ok, %{status: status}} when status in 200..299 ->
+        %{
+          url: file_url,
+          content: file_content,
+          name: entry.client_name,
+          size: entry.client_size
+        }
+
+      {:ok, %{status: status, body: body}} ->
+        raise "Failed to upload to S3: HTTP #{status}, body: #{inspect(body)}"
+
+      {:error, reason} ->
+        raise "Failed to upload to S3: #{inspect(reason)}"
     end
   end
 
-  defp presign_upload(entry, socket) do
-    meta = S3Uploader.meta(entry, socket.assigns.uploads)
-    {:ok, meta, socket}
+  defp generate_s3_put_headers(key, content_type, content_length) do
+    bucket = S3Uploader.bucket()
+    region = S3Uploader.region()
+    access_key_id = Application.fetch_env!(:invoice_goblin, :s3_access_key_id)
+    secret_access_key = Application.fetch_env!(:invoice_goblin, :s3_secret_access_key)
+
+    now = DateTime.utc_now()
+    amz_date = format_amz_date(now)
+    datestamp = format_date_stamp(now)
+
+    host = "#{bucket}.#{region}.digitaloceanspaces.com"
+    canonical_uri = "/#{key}"
+    canonical_query = ""
+
+    payload_hash = "UNSIGNED-PAYLOAD"
+
+    canonical_headers = "content-type:#{content_type}\nhost:#{host}\nx-amz-content-sha256:#{payload_hash}\nx-amz-date:#{amz_date}\n"
+    signed_headers = "content-type;host;x-amz-content-sha256;x-amz-date"
+
+    canonical_request = "PUT\n#{canonical_uri}\n#{canonical_query}\n#{canonical_headers}\n#{signed_headers}\n#{payload_hash}"
+
+    credential_scope = "#{datestamp}/#{region}/s3/aws4_request"
+    string_to_sign = "AWS4-HMAC-SHA256\n#{amz_date}\n#{credential_scope}\n#{sha256_hex(canonical_request)}"
+
+    signing_key = get_signature_key(secret_access_key, datestamp, region, "s3")
+    signature = hmac_sha256_hex(signing_key, string_to_sign)
+
+    authorization = "AWS4-HMAC-SHA256 Credential=#{access_key_id}/#{credential_scope}, SignedHeaders=#{signed_headers}, Signature=#{signature}"
+
+    [
+      {"Authorization", authorization},
+      {"Content-Type", content_type},
+      {"x-amz-content-sha256", payload_hash},
+      {"x-amz-date", amz_date}
+    ]
   end
 
-  defp process_file_entry(_meta, entry) do
-    file_url = S3Uploader.entry_url(entry)
+  defp format_amz_date(datetime) do
+    datetime
+    |> DateTime.to_naive()
+    |> NaiveDateTime.to_iso8601()
+    |> String.replace(~r/[:\-]/, "")
+    |> String.replace(~r/\.\d+/, "")
+    |> Kernel.<>("Z")
+  end
 
-    case Req.get(file_url) do
-      {:ok, %{status: 200, body: file_content}} ->
-        {:ok,
-         %{
-           url: file_url,
-           content: file_content,
-           name: entry.client_name,
-           size: entry.client_size
-         }}
+  defp format_date_stamp(datetime) do
+    datetime
+    |> DateTime.to_date()
+    |> Date.to_iso8601(:basic)
+  end
 
-      {:error, _} = error ->
-        error
-    end
+  defp sha256_hex(data) do
+    :crypto.hash(:sha256, data) |> Base.encode16(case: :lower)
+  end
+
+  defp hmac_sha256(key, data) do
+    :crypto.mac(:hmac, :sha256, key, data)
+  end
+
+  defp hmac_sha256_hex(key, data) do
+    hmac_sha256(key, data) |> Base.encode16(case: :lower)
+  end
+
+  defp get_signature_key(secret, datestamp, region, service) do
+    k_date = hmac_sha256("AWS4#{secret}", datestamp)
+    k_region = hmac_sha256(k_date, region)
+    k_service = hmac_sha256(k_region, service)
+    hmac_sha256(k_service, "aws4_request")
   end
 
   defp process_statement_and_extract_org(socket, file_info) do

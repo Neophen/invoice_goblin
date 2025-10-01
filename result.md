@@ -1,0 +1,6 @@
+IBAN: LT697300010178072190
+Currency: EUR
+Company Name: MB THE MYKOLAS
+Country Code: LT
+Adress Line: UKMERGĖS G. 300H-42, VILNIUS
+Componany code: 306310457
