@@ -22,6 +22,9 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
       |> assign(:statement_id, nil)
       |> assign(:placeholder_org_id, nil)
       |> assign(:processing, false)
+      |> assign(:vat_id, "")
+      |> assign(:has_vat_id, true)
+      |> assign(:selected_currency, nil)
       |> allow_upload(:statement,
         accept: [".xml"],
         max_entries: 1,
@@ -151,29 +154,116 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
                     {@extracted_org_data && @extracted_org_data.name}
                   </dd>
                 </div>
+                <div :if={@extracted_org_data && @extracted_org_data.company_code}>
+                  <dt class="text-sm font-medium text-gray-500">Company Code</dt>
+                  <dd class="mt-1 text-sm text-gray-900">
+                    {@extracted_org_data.company_code}
+                  </dd>
+                </div>
+                <div :if={@extracted_org_data && @extracted_org_data.address}>
+                  <dt class="text-sm font-medium text-gray-500">Address</dt>
+                  <dd class="mt-1 text-sm text-gray-900">
+                    {@extracted_org_data.address}
+                  </dd>
+                </div>
+                <div :if={@extracted_org_data && @extracted_org_data.country}>
+                  <dt class="text-sm font-medium text-gray-500">Country</dt>
+                  <dd class="mt-1 text-sm text-gray-900">
+                    {@extracted_org_data.country}
+                  </dd>
+                </div>
                 <div>
                   <dt class="text-sm font-medium text-gray-500">Bank Account (IBAN)</dt>
                   <dd class="mt-1 text-sm font-mono text-gray-900">
                     {@extracted_org_data && @extracted_org_data.account_iban}
                   </dd>
                 </div>
+                <div :if={@extracted_org_data && @extracted_org_data.account_currency}>
+                  <dt class="text-sm font-medium text-gray-500">Account Currency</dt>
+                  <dd class="mt-1 text-sm text-gray-900">
+                    {@extracted_org_data.account_currency}
+                  </dd>
+                </div>
               </dl>
             </div>
 
-            <div class="flex gap-4">
-              <button
-                phx-click="confirm_organization"
-                class="flex-1 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                Yes, that's correct
-              </button>
-              <button
-                phx-click="reject_organization"
-                class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors"
-              >
-                No, let me enter manually
-              </button>
-            </div>
+            <.form
+              for={%{}}
+              phx-submit="confirm_organization"
+              phx-change="update_form_fields"
+              id="vat-form"
+            >
+              <div :if={@extracted_org_data && !@extracted_org_data.account_currency} class="mb-6">
+                <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">
+                  Account Currency <span class="text-red-500">*</span>
+                </label>
+                <select
+                  name="currency"
+                  id="currency"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">Select currency...</option>
+                  <option value="EUR" selected={@selected_currency == "EUR"}>EUR - Euro</option>
+                  <option value="USD" selected={@selected_currency == "USD"}>USD - US Dollar</option>
+                  <option value="GBP" selected={@selected_currency == "GBP"}>GBP - British Pound</option>
+                  <option value="PLN" selected={@selected_currency == "PLN"}>PLN - Polish Zloty</option>
+                  <option value="CZK" selected={@selected_currency == "CZK"}>CZK - Czech Koruna</option>
+                  <option value="SEK" selected={@selected_currency == "SEK"}>SEK - Swedish Krona</option>
+                  <option value="NOK" selected={@selected_currency == "NOK"}>NOK - Norwegian Krone</option>
+                  <option value="DKK" selected={@selected_currency == "DKK"}>DKK - Danish Krone</option>
+                  <option value="CHF" selected={@selected_currency == "CHF"}>CHF - Swiss Franc</option>
+                  <option value="JPY" selected={@selected_currency == "JPY"}>JPY - Japanese Yen</option>
+                  <option value="CAD" selected={@selected_currency == "CAD"}>CAD - Canadian Dollar</option>
+                  <option value="AUD" selected={@selected_currency == "AUD"}>AUD - Australian Dollar</option>
+                </select>
+              </div>
+
+              <div class="mb-6">
+                <label class="flex items-center mb-3">
+                  <input
+                    type="checkbox"
+                    name="has_vat_id"
+                    checked={@has_vat_id}
+                    phx-click="toggle_vat_id"
+                    class="mr-2 h-4 w-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
+                  />
+                  <span class="text-sm font-medium text-gray-700">
+                    I have a VAT ID
+                  </span>
+                </label>
+
+                <div :if={@has_vat_id}>
+                  <label for="vat_id" class="block text-sm font-medium text-gray-700 mb-2">
+                    VAT ID
+                  </label>
+                  <input
+                    type="text"
+                    name="vat_id"
+                    id="vat_id"
+                    value={@vat_id}
+                    placeholder="e.g., LT100123456789"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              </div>
+
+              <div class="flex gap-4">
+                <button
+                  type="submit"
+                  class="flex-1 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
+                >
+                  Yes, that's correct
+                </button>
+                <button
+                  type="button"
+                  phx-click="reject_organization"
+                  class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  No, let me enter manually
+                </button>
+              </div>
+            </.form>
           </div>
         </div>
       </div>
@@ -214,31 +304,78 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
   end
 
   @impl true
-  def handle_event("confirm_organization", _params, socket) do
+  def handle_event("toggle_vat_id", _params, socket) do
+    has_vat_id = !socket.assigns.has_vat_id
+
+    socket =
+      socket
+      |> assign(:has_vat_id, has_vat_id)
+      |> assign(:vat_id, "")
+
+    noreply(socket)
+  end
+
+  @impl true
+  def handle_event("update_form_fields", params, socket) do
+    socket =
+      socket
+      |> assign(:vat_id, params["vat_id"] || socket.assigns.vat_id)
+      |> assign(:selected_currency, params["currency"] || socket.assigns.selected_currency)
+
+    noreply(socket)
+  end
+
+  @impl true
+  def handle_event("confirm_organization", params, socket) do
     %{
       extracted_org_data: org_data,
       statement_id: statement_id,
       placeholder_org_id: placeholder_org_id,
-      current_user: current_user
+      current_user: current_user,
+      has_vat_id: has_vat_id,
+      selected_currency: selected_currency
     } = socket.assigns
 
-    case Onboarding.replace_placeholder_organization(
-           current_user.id,
-           placeholder_org_id,
-           org_data,
-           statement_id
-         ) do
-      {:ok, _new_org} ->
-        socket
-        |> put_flash(:info, "Welcome! Your organization has been set up successfully.")
-        |> push_navigate(to: ~q"/admin/:locale/dashboard")
-        |> noreply()
+    # Add VAT ID to org_data if provided
+    org_data =
+      if has_vat_id && params["vat_id"] && params["vat_id"] != "" do
+        Map.put(org_data, :vat_id, params["vat_id"])
+      else
+        org_data
+      end
 
-      {:error, error} ->
-        socket
-        |> put_flash(:error, "Failed to set up organization: #{inspect(error)}")
-        |> assign(:show_org_confirmation, false)
-        |> noreply()
+    # Add currency if it wasn't extracted but user selected one
+    org_data =
+      if !org_data.account_currency && params["currency"] && params["currency"] != "" do
+        Map.put(org_data, :account_currency, params["currency"])
+      else
+        org_data
+      end
+
+    # Validate that currency is present
+    if !org_data.account_currency || org_data.account_currency == "" do
+      socket
+      |> put_flash(:error, "Please select an account currency.")
+      |> noreply()
+    else
+      case Onboarding.replace_placeholder_organization(
+             current_user.id,
+             placeholder_org_id,
+             org_data,
+             statement_id
+           ) do
+        {:ok, _new_org} ->
+          socket
+          |> put_flash(:info, "Welcome! Your organization has been set up successfully.")
+          |> push_navigate(to: ~q"/admin/:locale/dashboard")
+          |> noreply()
+
+        {:error, error} ->
+          socket
+          |> put_flash(:error, "Failed to set up organization: #{inspect(error)}")
+          |> assign(:show_org_confirmation, false)
+          |> noreply()
+      end
     end
   end
 
@@ -293,7 +430,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
     end
   end
 
-  defp generate_s3_put_headers(key, content_type, content_length) do
+  defp generate_s3_put_headers(key, content_type, _content_length) do
     bucket = S3Uploader.bucket()
     region = S3Uploader.region()
     access_key_id = Application.fetch_env!(:invoice_goblin, :s3_access_key_id)

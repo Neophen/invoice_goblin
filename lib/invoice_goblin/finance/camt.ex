@@ -74,9 +74,16 @@ defmodule InvoiceGoblin.Finance.Camt do
       iex> InvoiceGoblin.Finance.Camt.parse_statement_metadata(xml_content, :camt053)
       %{
         account_iban: "LT123456789012345678",
+        account_currency: "EUR",
         statement_date: ~D[2025-09-13],
         period_start: ~D[2025-09-01],
-        period_end: ~D[2025-09-13]
+        period_end: ~D[2025-09-13],
+        account_owner: %{
+          name: "MB THE MYKOLAS",
+          address: "UKMERGĖS G. 300H-42, VILNIUS",
+          country: "LT",
+          company_code: "306310457"
+        }
       }
   """
   @spec parse_statement_metadata(binary(), :camt053 | :camt054) :: map()
@@ -296,9 +303,11 @@ defmodule InvoiceGoblin.Finance.Camt do
 
     %{
       account_iban: extract_account_iban(statement_node),
+      account_currency: extract_account_currency(statement_node),
       statement_date: extract_creation_date(statement_node),
       period_start: extract_period_start(statement_node),
-      period_end: extract_period_end(statement_node)
+      period_end: extract_period_end(statement_node),
+      account_owner: extract_account_owner(statement_node)
     }
   end
 
@@ -309,9 +318,11 @@ defmodule InvoiceGoblin.Finance.Camt do
 
     %{
       account_iban: extract_account_iban(notification_node),
+      account_currency: extract_account_currency(notification_node),
       statement_date: extract_creation_date(notification_node),
       period_start: nil,
-      period_end: nil
+      period_end: nil,
+      account_owner: extract_account_owner(notification_node)
     }
   end
 
@@ -322,6 +333,17 @@ defmodule InvoiceGoblin.Finance.Camt do
     |> case do
       "" -> nil
       iban -> iban
+    end
+  end
+
+  defp extract_account_currency(statement_node) do
+    # Acct/Ccy
+    currency = statement_node |> xpath(~x"./Acct/Ccy/text()"s)
+
+    if currency && currency != "" do
+      currency
+    else
+      nil
     end
   end
 
@@ -383,6 +405,32 @@ defmodule InvoiceGoblin.Finance.Camt do
     case String.split(datetime_str, "T") do
       [date_portion | _] -> Date.from_iso8601(date_portion)
       _ -> :error
+    end
+  end
+
+  defp extract_account_owner(statement_node) do
+    # Extract account owner information from Acct/Ownr
+    # Path: Acct/Ownr/Nm, Acct/Ownr/PstlAdr/AdrLine, Acct/Ownr/PstlAdr/Ctry, Acct/Ownr/Id/OrgId/Othr/Id
+    owner_name = statement_node |> xpath(~x"./Acct/Ownr/Nm/text()"s)
+
+    # Address can be in AdrLine or split into multiple components
+    address_line = statement_node |> xpath(~x"./Acct/Ownr/PstlAdr/AdrLine/text()"s)
+    country = statement_node |> xpath(~x"./Acct/Ownr/PstlAdr/Ctry/text()"s)
+
+    # Company code from organization ID
+    company_code = statement_node |> xpath(~x"./Acct/Ownr/Id/OrgId/Othr/Id/text()"s)
+
+    cond do
+      owner_name && owner_name != "" ->
+        %{
+          name: owner_name,
+          address: if(address_line && address_line != "", do: address_line, else: nil),
+          country: if(country && country != "", do: country, else: nil),
+          company_code: if(company_code && company_code != "", do: company_code, else: nil)
+        }
+
+      true ->
+        nil
     end
   end
 end

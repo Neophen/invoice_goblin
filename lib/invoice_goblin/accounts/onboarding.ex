@@ -30,8 +30,12 @@ defmodule InvoiceGoblin.Accounts.Onboarding do
   Extracts organization information from a bank statement XML content.
 
   Returns a map with organization details:
-  - name: extracted from statement metadata
+  - name: extracted from account owner name or generated from IBAN
   - account_iban: the IBAN from the statement
+  - account_currency: the currency of the account (e.g., EUR, USD)
+  - address: the account owner's address (if available)
+  - country: the account owner's country (if available)
+  - company_code: the account owner's company registration code (if available)
   """
   def extract_organization_from_statement(xml_content) do
     format = Camt.detect(xml_content)
@@ -42,10 +46,15 @@ defmodule InvoiceGoblin.Accounts.Onboarding do
 
       _ ->
         metadata = Camt.parse_statement_metadata(xml_content, format)
+        account_owner = metadata[:account_owner]
 
         org_data = %{
-          name: build_organization_name(metadata),
-          account_iban: metadata[:account_iban]
+          name: build_organization_name(metadata, account_owner),
+          account_iban: metadata[:account_iban],
+          account_currency: metadata[:account_currency],
+          address: account_owner && account_owner[:address],
+          country: account_owner && account_owner[:country],
+          company_code: account_owner && account_owner[:company_code]
         }
 
         {:ok, org_data}
@@ -191,14 +200,19 @@ defmodule InvoiceGoblin.Accounts.Onboarding do
     )
   end
 
-  defp build_organization_name(%{account_iban: iban}) when not is_nil(iban) do
+  defp build_organization_name(_metadata, %{name: name}) when not is_nil(name) and name != "" do
+    # Use account owner name if available
+    name
+  end
+
+  defp build_organization_name(%{account_iban: iban}, _account_owner) when not is_nil(iban) do
     # Extract country code and bank code from IBAN for a friendly name
     # IBAN format: CC2!n4!a...
     country = String.slice(iban, 0..1)
     "Organization - #{country} #{String.slice(iban, -4..-1)}"
   end
 
-  defp build_organization_name(_metadata) do
+  defp build_organization_name(_metadata, _account_owner) do
     "Your Organization"
   end
 
