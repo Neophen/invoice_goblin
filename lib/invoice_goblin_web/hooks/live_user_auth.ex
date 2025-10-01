@@ -41,7 +41,7 @@ defmodule InvoiceGoblinWeb.LiveUserAuth do
   def on_mount(:live_no_user, _params, session, socket) do
     if socket.assigns[:current_user] do
       socket
-      |> Phoenix.LiveView.redirect(to: ~q"/admin/:locale/dashboard")
+      |> Phoenix.LiveView.redirect(to: ~q"/admin/dashboard")
       |> assign_extras(session)
       |> halt()
     else

@@ -39,41 +39,9 @@ defmodule UI do
       alias UI.Components.Flash
       alias UI.Components.Icon
       alias UI.Components.Layout
-      alias UI.Components.Page
       alias UI.Components.RichText
       alias UI.Components.Text
       alias UI.Components.UIForm
-
-      # old components
-      # alias UI.Accordion
-      # alias UI.Alert
-      # alias UI.Autocomplete
-      # alias UI.Badge
-      # alias UI.Breadcrumb
-      # alias UI.Card
-      # alias UI.Dialog
-      # alias UI.Dropdown
-      # alias UI.Field
-      # alias UI.FieldImage
-      # alias UI.FieldInput
-      # alias UI.FieldTag
-      # alias UI.FieldTextarea
-      # alias UI.FieldTranslated
-      # alias UI.FileUploader
-      # alias UI.Form
-      # alias UI.Loading
-      # alias UI.Menu
-      # alias UI.Modal
-      # alias UI.Page
-      # alias UI.Popover
-      # alias UI.Radio
-      # alias UI.Select
-      # alias UI.Separator
-      # alias UI.Sheet
-      # alias UI.Switch
-      # alias UI.Table
-      # alias UI.Tabs
-      # alias UI.Tooltip
     end
   end
 

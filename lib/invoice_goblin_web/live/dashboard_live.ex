@@ -6,7 +6,7 @@ defmodule InvoiceGoblinWeb.Admin.DashboardLive do
   def render(assigns) do
     ~H"""
     <Layout.admin flash={@flash} current_user={@current_user}>
-      <Page.header title={@page_title} />
+      <Layout.header title={@page_title} />
     </Layout.admin>
     """
   end
