@@ -65,10 +65,10 @@ defmodule InvoiceGoblin.Accounts.Onboarding do
   """
   def replace_placeholder_organization(user_id, placeholder_org_id, org_data, statement_id) do
     # Verify the organization is actually a placeholder
-    case Ash.get(Organisation, placeholder_org_id) do
+    case Ash.get(Organisation, placeholder_org_id, authorize?: false) do
       {:ok, org} ->
         if org.is_placeholder do
-          do_replace_organization(user_id, placeholder_org_id, org_data, statement_id)
+          do_replace_organization(user_id, org, org_data, statement_id)
         else
           {:error, :not_a_placeholder}
         end
@@ -78,22 +78,38 @@ defmodule InvoiceGoblin.Accounts.Onboarding do
     end
   end
 
-  defp do_replace_organization(user_id, placeholder_org_id, org_data, statement_id) do
+  defp do_replace_organization(user_id, placeholder_org, org_data, statement_id) do
     # Create new organization
-    case Ash.create(Organisation, Map.put(org_data, :is_placeholder, false), authorize?: false) do
+    # Only include fields that Organisation accepts
+    org_attrs = %{
+      name: org_data.name,
+      is_placeholder: false
+    }
+
+    case Ash.create(Organisation, org_attrs, action: :create, authorize?: false) do
       {:ok, new_org} ->
         # Create owner membership for user
         case create_membership(user_id, new_org.id, :owner) do
           {:ok, _membership} ->
             # Transfer statement to new organization
-            transfer_statement_result = transfer_statement_to_org(statement_id, new_org.id)
+            case transfer_statement_to_org(statement_id, new_org.id) do
+              :ok ->
+                # Delete memberships associated with placeholder org
+                case delete_org_memberships(placeholder_org.id) do
+                  :ok ->
+                    # Delete placeholder organization
+                    case Ash.destroy(placeholder_org, authorize?: false) do
+                      :ok -> {:ok, new_org}
+                      {:ok, _} -> {:ok, new_org}
+                      error -> error
+                    end
 
-            # Delete placeholder organization (will cascade delete membership)
-            Ash.destroy(placeholder_org_id, resource: Organisation, authorize?: false)
+                  error ->
+                    error
+                end
 
-            case transfer_statement_result do
-              :ok -> {:ok, new_org}
-              error -> error
+              error ->
+                error
             end
 
           error ->
@@ -117,13 +133,17 @@ defmodule InvoiceGoblin.Accounts.Onboarding do
       {:error, _} ->
         # Statement may not exist yet, or may be in placeholder org
         # Try to update via raw SQL since we're changing tenant
+        # Convert UUIDs to binary format for Postgres
+        org_id_binary = Ecto.UUID.dump!(new_org_id)
+        statement_id_binary = Ecto.UUID.dump!(statement_id)
+
         query = """
         UPDATE statements
         SET organisation_id = $1
         WHERE id = $2
         """
 
-        case InvoiceGoblin.Repo.query(query, [new_org_id, statement_id]) do
+        case InvoiceGoblin.Repo.query(query, [org_id_binary, statement_id_binary]) do
           {:ok, _} ->
             # Also update transactions
             tx_query = """
@@ -132,7 +152,7 @@ defmodule InvoiceGoblin.Accounts.Onboarding do
             WHERE statement_id = $2
             """
 
-            case InvoiceGoblin.Repo.query(tx_query, [new_org_id, statement_id]) do
+            case InvoiceGoblin.Repo.query(tx_query, [org_id_binary, statement_id_binary]) do
               {:ok, _} -> :ok
               error -> error
             end
@@ -143,12 +163,32 @@ defmodule InvoiceGoblin.Accounts.Onboarding do
     end
   end
 
+  defp delete_org_memberships(org_id) do
+    # Find and delete all memberships for this organization
+    case Ash.read(OrganisationMembership, authorize?: false) do
+      {:ok, memberships} ->
+        memberships
+        |> Enum.filter(fn m -> m.organisation_id == org_id end)
+        |> Enum.each(fn m -> Ash.destroy(m, authorize?: false) end)
+
+        :ok
+
+      error ->
+        error
+    end
+  end
+
   defp create_membership(user_id, org_id, role) do
-    Ash.create(OrganisationMembership, %{
-      user_id: user_id,
-      organisation_id: org_id,
-      role: role
-    }, authorize?: false)
+    Ash.create(
+      OrganisationMembership,
+      %{
+        user_id: user_id,
+        organisation_id: org_id,
+        role: role
+      },
+      action: :create,
+      authorize?: false
+    )
   end
 
   defp build_organization_name(%{account_iban: iban}) when not is_nil(iban) do
@@ -168,7 +208,7 @@ defmodule InvoiceGoblin.Accounts.Onboarding do
   or the placeholder if that's all they have.
   """
   def get_user_organization(user_id) do
-    case Ash.get(User, user_id, load: [:organisations]) do
+    case Ash.get(User, user_id, load: [:organisations], authorize?: false) do
       {:ok, user} ->
         organizations = user.organisations || []
 
@@ -194,7 +234,7 @@ defmodule InvoiceGoblin.Accounts.Onboarding do
   Checks if a user has only a placeholder organization.
   """
   def has_only_placeholder_organization?(user_id) do
-    case Ash.get(User, user_id, load: [:organisations]) do
+    case Ash.get(User, user_id, load: [:organisations], authorize?: false) do
       {:ok, user} ->
         organizations = user.organisations || []
 

@@ -4,17 +4,17 @@ defmodule InvoiceGoblin.Accounts.OnboardingTest do
   alias InvoiceGoblin.Accounts.{Onboarding, Organisation, User}
 
   describe "create_placeholder_organization_for_user/1" do
-    test "creates a placeholder organization for a user" do
+    test "creates a placeholder organization automatically during user registration" do
+      # When user is created via register_with_password, placeholder org is created automatically
       user = create_user()
 
-      assert {:ok, org} = Onboarding.create_placeholder_organization_for_user(user.id)
+      # Verify placeholder organization was created
+      user = Ash.load!(user, [:organisations], authorize?: false)
+      assert length(user.organisations) == 1
+
+      org = hd(user.organisations)
       assert org.name == "Temporary Organization"
       assert org.is_placeholder == true
-
-      # Verify membership was created
-      user = Ash.load!(user, [:organisations])
-      assert length(user.organisations) == 1
-      assert hd(user.organisations).id == org.id
     end
 
     test "returns error if user doesn't exist" do
@@ -56,7 +56,8 @@ defmodule InvoiceGoblin.Accounts.OnboardingTest do
   describe "replace_placeholder_organization/4" do
     setup do
       user = create_user()
-      {:ok, placeholder_org} = Onboarding.create_placeholder_organization_for_user(user.id)
+      # User already has a placeholder org from registration, get it
+      {:ok, placeholder_org} = Onboarding.get_user_organization(user.id)
 
       %{user: user, placeholder_org: placeholder_org}
     end
@@ -96,7 +97,7 @@ defmodule InvoiceGoblin.Accounts.OnboardingTest do
     test "returns error if trying to replace non-placeholder org", %{user: user} do
       # Create a non-placeholder org
       {:ok, real_org} =
-        Ash.create(Organisation, %{name: "Real Org", is_placeholder: false}, authorize?: false)
+        Ash.create(Organisation, %{name: "Real Org", is_placeholder: false}, action: :create, authorize?: false)
 
       org_data = %{name: "Another Org"}
       statement_id = create_test_statement(real_org.id)
@@ -114,15 +115,20 @@ defmodule InvoiceGoblin.Accounts.OnboardingTest do
   describe "get_user_organization/1" do
     test "returns user's non-placeholder organization if they have one" do
       user = create_user()
-      {:ok, placeholder_org} = Onboarding.create_placeholder_organization_for_user(user.id)
+      # User already has placeholder org from registration
 
-      {:ok, real_org} = Ash.create(Organisation, %{name: "Real Org", is_placeholder: false}, authorize?: false)
+      {:ok, real_org} = Ash.create(Organisation, %{name: "Real Org", is_placeholder: false}, action: :create, authorize?: false)
 
-      Ash.create(InvoiceGoblin.Accounts.OrganisationMembership, %{
-        user_id: user.id,
-        organisation_id: real_org.id,
-        role: :owner
-      }, authorize?: false)
+      Ash.create(
+        InvoiceGoblin.Accounts.OrganisationMembership,
+        %{
+          user_id: user.id,
+          organisation_id: real_org.id,
+          role: :owner
+        },
+        action: :create,
+        authorize?: false
+      )
 
       assert {:ok, org} = Onboarding.get_user_organization(user.id)
       assert org.id == real_org.id
@@ -130,42 +136,50 @@ defmodule InvoiceGoblin.Accounts.OnboardingTest do
 
     test "returns placeholder organization if that's all user has" do
       user = create_user()
-      {:ok, placeholder_org} = Onboarding.create_placeholder_organization_for_user(user.id)
+      # User already has placeholder org from registration
 
       assert {:ok, org} = Onboarding.get_user_organization(user.id)
-      assert org.id == placeholder_org.id
+      assert org.is_placeholder == true
     end
 
-    test "returns error if user has no organizations" do
+    test "returns placeholder organization when user is newly created" do
       user = create_user()
-      assert {:error, :no_organization} = Onboarding.get_user_organization(user.id)
+      # User gets placeholder org automatically during registration
+      assert {:ok, org} = Onboarding.get_user_organization(user.id)
+      assert org.is_placeholder == true
     end
   end
 
   describe "has_only_placeholder_organization?/1" do
     test "returns true when user has only placeholder organization" do
       user = create_user()
-      {:ok, _placeholder_org} = Onboarding.create_placeholder_organization_for_user(user.id)
+      # User already has a placeholder org from registration
 
       assert Onboarding.has_only_placeholder_organization?(user.id) == true
     end
 
     test "returns false when user has real organization" do
       user = create_user()
-      {:ok, real_org} = Ash.create(Organisation, %{name: "Real Org", is_placeholder: false}, authorize?: false)
+      {:ok, real_org} = Ash.create(Organisation, %{name: "Real Org", is_placeholder: false}, action: :create, authorize?: false)
 
-      Ash.create(InvoiceGoblin.Accounts.OrganisationMembership, %{
-        user_id: user.id,
-        organisation_id: real_org.id,
-        role: :owner
-      }, authorize?: false)
+      Ash.create(
+        InvoiceGoblin.Accounts.OrganisationMembership,
+        %{
+          user_id: user.id,
+          organisation_id: real_org.id,
+          role: :owner
+        },
+        action: :create,
+        authorize?: false
+      )
 
       assert Onboarding.has_only_placeholder_organization?(user.id) == false
     end
 
-    test "returns false when user has no organizations" do
+    test "returns true when user has only placeholder organization (created during registration)" do
       user = create_user()
-      assert Onboarding.has_only_placeholder_organization?(user.id) == false
+      # User now has placeholder org automatically
+      assert Onboarding.has_only_placeholder_organization?(user.id) == true
     end
   end
 
@@ -197,7 +211,9 @@ defmodule InvoiceGoblin.Accounts.OnboardingTest do
           file_size: 1024,
           title: "Test Statement"
         },
-        tenant: org_id
+        action: :create,
+        tenant: org_id,
+        authorize?: false
       )
 
     statement.id
