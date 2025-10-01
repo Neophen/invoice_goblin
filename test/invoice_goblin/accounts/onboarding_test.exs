@@ -97,7 +97,10 @@ defmodule InvoiceGoblin.Accounts.OnboardingTest do
     test "returns error if trying to replace non-placeholder org", %{user: user} do
       # Create a non-placeholder org
       {:ok, real_org} =
-        Ash.create(Organisation, %{name: "Real Org", is_placeholder: false}, action: :create, authorize?: false)
+        Ash.create(Organisation, %{name: "Real Org", is_placeholder: false},
+          action: :create,
+          authorize?: false
+        )
 
       org_data = %{name: "Another Org"}
       statement_id = create_test_statement(real_org.id)
@@ -117,7 +120,11 @@ defmodule InvoiceGoblin.Accounts.OnboardingTest do
       user = create_user()
       # User already has placeholder org from registration
 
-      {:ok, real_org} = Ash.create(Organisation, %{name: "Real Org", is_placeholder: false}, action: :create, authorize?: false)
+      {:ok, real_org} =
+        Ash.create(Organisation, %{name: "Real Org", is_placeholder: false},
+          action: :create,
+          authorize?: false
+        )
 
       Ash.create(
         InvoiceGoblin.Accounts.OrganisationMembership,
@@ -160,7 +167,12 @@ defmodule InvoiceGoblin.Accounts.OnboardingTest do
 
     test "returns false when user has real organization" do
       user = create_user()
-      {:ok, real_org} = Ash.create(Organisation, %{name: "Real Org", is_placeholder: false}, action: :create, authorize?: false)
+
+      {:ok, real_org} =
+        Ash.create(Organisation, %{name: "Real Org", is_placeholder: false},
+          action: :create,
+          authorize?: false
+        )
 
       Ash.create(
         InvoiceGoblin.Accounts.OrganisationMembership,
@@ -189,14 +201,16 @@ defmodule InvoiceGoblin.Accounts.OnboardingTest do
     email = "test#{System.unique_integer([:positive])}@example.com"
 
     {:ok, user} =
-      Ash.create(User, %{
-        email: email,
-        password: "test1234test",
-        password_confirmation: "test1234test"
-      },
-      action: :register_with_password,
-      authorize?: false
-    )
+      Ash.create(
+        User,
+        %{
+          email: email,
+          password: "test1234test",
+          password_confirmation: "test1234test"
+        },
+        action: :register_with_password,
+        authorize?: false
+      )
 
     user
   end

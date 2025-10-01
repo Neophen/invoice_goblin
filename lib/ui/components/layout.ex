@@ -263,7 +263,7 @@ defmodule UI.Components.Layout do
         <li class="flex">
           <div class="flex items-center">
             <a
-              href={~q"/admin/dashboard"}
+              href={~q"/admin/:locale/dashboard"}
               class="text-base-content/60 hover:text-base-content"
             >
               <svg

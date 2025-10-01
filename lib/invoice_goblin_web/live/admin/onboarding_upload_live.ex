@@ -4,7 +4,6 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
   alias InvoiceGoblin.Accounts.Onboarding
   alias InvoiceGoblin.Finance.{Statement, Camt}
   alias InvoiceGoblin.Finance.Transaction
-  alias UI.Components.Layout
 
   on_mount {InvoiceGoblinWeb.LiveUserAuth, :live_user_required}
 
@@ -17,10 +16,12 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
     if has_only_placeholder do
       socket
       |> assign(:page_title, "Welcome! Upload your first bank statement")
-      |> assign(:show_org_confirmation_modal, false)
+      |> assign(:show_upload, true)
+      |> assign(:show_org_confirmation, false)
       |> assign(:extracted_org_data, nil)
       |> assign(:statement_id, nil)
       |> assign(:placeholder_org_id, nil)
+      |> assign(:processing, false)
       |> allow_upload(:statement,
         accept: [".xml"],
         max_entries: 1,
@@ -41,100 +42,60 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layout.admin flash={@flash} current_user={@current_user}>
-      <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
-        <div class="max-w-2xl w-full">
-          <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to Invoice Goblin!</h1>
-            <p class="text-lg text-gray-600">
-              Let's get started by uploading your first bank statement.
-              We'll extract your organization details automatically.
-            </p>
-          </div>
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+      <div class="max-w-2xl w-full">
+        <div class="text-center mb-8">
+          <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to Invoice Goblin!</h1>
+          <p :if={@show_upload} class="text-lg text-gray-600">
+            Let's get started by uploading your first bank statement.
+            We'll extract your organization details automatically.
+          </p>
+          <p :if={@processing} class="text-lg text-gray-600">
+            Processing your statement...
+          </p>
+          <p :if={@show_org_confirmation} class="text-lg text-gray-600">
+            We've extracted your organization details from the statement.
+          </p>
+        </div>
 
-          <div class="bg-white rounded-2xl shadow-xl p-8">
-            <.form
-              for={%{}}
-              id="onboarding-statement-form"
-              phx-submit="upload_statement"
-              class="space-y-6"
-            >
-              <div class="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-indigo-500 transition-colors">
-                <.live_file_input upload={@uploads.statement} class="sr-only" />
+        <%!-- Upload section --%>
+        <div :if={@show_upload} class="bg-white rounded-2xl shadow-xl p-8">
+          <.form for={%{}} phx-change="validate" id="upload-form">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-indigo-500 transition-colors">
+              <.live_file_input upload={@uploads.statement} class="sr-only" />
 
-                <div :if={@uploads.statement.entries == []} phx-drop-target={@uploads.statement.ref}>
-                  <svg
-                    class="mx-auto h-16 w-16 text-gray-400 mb-4"
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 48 48"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-
-                  <label
-                    for={@uploads.statement.ref}
-                    class="cursor-pointer text-indigo-600 hover:text-indigo-500 font-semibold"
-                  >
-                    Upload your bank statement
-                  </label>
-                  <span class="text-gray-600"> or drag and drop</span>
-
-                  <p class="text-sm text-gray-500 mt-2">
-                    XML file (CAMT.053 or CAMT.054) up to 10MB
-                  </p>
-                </div>
-
-                <div
-                  :if={@uploads.statement.entries != []}
-                  class="flex items-center justify-center gap-4"
+              <div phx-drop-target={@uploads.statement.ref}>
+                <svg
+                  class="mx-auto h-16 w-16 text-gray-400 mb-4"
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 48 48"
+                  aria-hidden="true"
                 >
-                  <div :for={entry <- @uploads.statement.entries} class="flex items-center gap-2">
-                    <svg
-                      class="h-8 w-8 text-green-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <span class="text-gray-700 font-medium">{entry.client_name}</span>
+                  <path
+                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
 
-                    <button
-                      type="button"
-                      phx-click="cancel-upload"
-                      phx-value-ref={entry.ref}
-                      class="ml-4 text-red-600 hover:text-red-800"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <.upload_errors_list upload={@uploads.statement} />
-
-              <div :if={@uploads.statement.entries != []} class="flex justify-center">
-                <button
-                  type="submit"
-                  class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
+                <label
+                  for={@uploads.statement.ref}
+                  class="cursor-pointer text-indigo-600 hover:text-indigo-500 font-semibold"
                 >
-                  Process Statement
-                </button>
+                  Upload your bank statement
+                </label>
+                <span class="text-gray-600"> or drag and drop</span>
+
+                <p class="text-sm text-gray-500 mt-2">
+                  XML file (CAMT.053 or CAMT.054) up to 10MB
+                </p>
               </div>
-            </.form>
-          </div>
+            </div>
+
+            <.upload_errors_list upload={@uploads.statement} />
+          </.form>
 
           <div class="mt-6 text-center text-sm text-gray-600">
             <p>Don't have a bank statement handy?</p>
@@ -146,18 +107,17 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
             </button>
           </div>
         </div>
-      </div>
 
-      <%!-- Organization confirmation modal --%>
-      <div
-        :if={@show_org_confirmation_modal}
-        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
-        phx-click="close_modal"
-      >
-        <div
-          class="relative top-20 mx-auto p-8 border w-full max-w-md shadow-2xl rounded-2xl bg-white"
-          phx-click="stop_propagation"
-        >
+        <%!-- Processing state --%>
+        <div :if={@processing} class="bg-white rounded-2xl shadow-xl p-8">
+          <div class="flex flex-col items-center justify-center py-12">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600 mb-4"></div>
+            <p class="text-gray-600">Extracting organization details...</p>
+          </div>
+        </div>
+
+        <%!-- Organization confirmation --%>
+        <div :if={@show_org_confirmation} class="bg-white rounded-2xl shadow-xl p-8">
           <div class="text-center">
             <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
               <svg
@@ -211,28 +171,18 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
           </div>
         </div>
       </div>
-    </Layout.admin>
+    </div>
     """
   end
 
   @impl true
-  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
-    socket
-    |> cancel_upload(:statement, ref)
-    |> noreply()
-  end
-
-  @impl true
-  def handle_event("upload_statement", _params, socket) do
-    case consume_uploaded_entries(socket, :statement, &process_file_entry/2) do
-      [file_info | _] ->
-        process_statement_and_extract_org(socket, file_info)
-
-      [] ->
-        socket
-        |> put_flash(:error, "No file uploaded")
-        |> noreply()
+  def handle_event("validate", _params, socket) do
+    # Auto-process when file is uploaded
+    if socket.assigns.uploads.statement.entries != [] do
+      send(self(), :process_uploaded_file)
     end
+
+    noreply(socket)
   end
 
   @impl true
@@ -259,7 +209,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
       {:error, error} ->
         socket
         |> put_flash(:error, "Failed to set up organization: #{inspect(error)}")
-        |> assign(:show_org_confirmation_modal, false)
+        |> assign(:show_org_confirmation, false)
         |> noreply()
     end
   end
@@ -283,15 +233,23 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
   end
 
   @impl true
-  def handle_event("close_modal", _params, socket) do
-    socket
-    |> assign(:show_org_confirmation_modal, false)
-    |> noreply()
-  end
+  def handle_info(:process_uploaded_file, socket) do
+    socket =
+      socket
+      |> assign(:show_upload, false)
+      |> assign(:processing, true)
 
-  @impl true
-  def handle_event("stop_propagation", _params, socket) do
-    noreply(socket)
+    case consume_uploaded_entries(socket, :statement, &process_file_entry/2) do
+      [file_info | _] ->
+        process_statement_and_extract_org(socket, file_info)
+
+      [] ->
+        socket
+        |> assign(:show_upload, true)
+        |> assign(:processing, false)
+        |> put_flash(:error, "No file uploaded")
+        |> noreply()
+    end
   end
 
   # Private functions
@@ -346,6 +304,8 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
     case format do
       :unknown ->
         socket
+        |> assign(:show_upload, true)
+        |> assign(:processing, false)
         |> put_flash(
           :error,
           "Unsupported file format. Please upload a valid CAMT.053 or CAMT.054 XML file."
@@ -359,22 +319,27 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
             # Create statement in placeholder org
             case create_statement(file_info, format, placeholder_org_id) do
               {:ok, statement} ->
-                # Show confirmation modal
+                # Show confirmation state
                 socket
                 |> assign(:extracted_org_data, org_data)
                 |> assign(:statement_id, statement.id)
                 |> assign(:placeholder_org_id, placeholder_org_id)
-                |> assign(:show_org_confirmation_modal, true)
+                |> assign(:processing, false)
+                |> assign(:show_org_confirmation, true)
                 |> noreply()
 
               {:error, error} ->
                 socket
+                |> assign(:show_upload, true)
+                |> assign(:processing, false)
                 |> put_flash(:error, "Failed to process statement: #{inspect(error)}")
                 |> noreply()
             end
 
           {:error, :unsupported_format} ->
             socket
+            |> assign(:show_upload, true)
+            |> assign(:processing, false)
             |> put_flash(:error, "Could not extract organization data from statement.")
             |> noreply()
         end

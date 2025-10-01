@@ -21,7 +21,7 @@ defmodule InvoiceGoblinWeb.Navigation do
         %{
           label: "Dashboard",
           icon_name: "hero-home",
-          navigate: ~q"/admin/dashboard"
+          navigate: ~q"/admin/:locale/dashboard"
         }
         # %{
         #   label: "Analytics",
