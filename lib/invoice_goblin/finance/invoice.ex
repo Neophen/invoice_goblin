@@ -21,6 +21,9 @@ defmodule InvoiceGoblin.Finance.Invoice do
         scheduler_cron "* * * * *"
         worker_module_name InvoiceGoblin.Oban.ProcessInvoiceWorker
         scheduler_module_name InvoiceGoblin.Oban.ProcessInvoiceScheduler
+        # Disable the scheduler by default to prevent errors in multi-tenant setup
+        # The worker will still process jobs when they're explicitly enqueued
+        scheduler_queue false
       end
     end
   end

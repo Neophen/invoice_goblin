@@ -27,6 +27,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
         max_entries: 1,
         max_file_size: 10_000_000,
         auto_upload: true,
+        progress: &handle_progress/3,
         external: &presign_upload/2
       )
       |> ok()
@@ -34,7 +35,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
       # User already has a real organization, redirect to dashboard
       socket
       |> put_flash(:info, "Welcome back!")
-      |> push_navigate(to: ~p"/admin/en/dashboard")
+      |> push_navigate(to: ~q"/admin/:locale/dashboard")
       |> ok()
     end
   end
@@ -177,10 +178,15 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
 
   @impl true
   def handle_event("validate", _params, socket) do
-    # Auto-process when file is uploaded
-    if socket.assigns.uploads.statement.entries != [] do
-      send(self(), :process_uploaded_file)
-    end
+    # Show processing state when file is selected
+    socket =
+      if socket.assigns.uploads.statement.entries != [] do
+        socket
+        |> assign(:show_upload, false)
+        |> assign(:processing, true)
+      else
+        socket
+      end
 
     noreply(socket)
   end
@@ -203,7 +209,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
       {:ok, _new_org} ->
         socket
         |> put_flash(:info, "Welcome! Your organization has been set up successfully.")
-        |> push_navigate(to: ~p"/admin/en/dashboard")
+        |> push_navigate(to: ~q"/admin/:locale/dashboard")
         |> noreply()
 
       {:error, error} ->
@@ -220,7 +226,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
     # In a full implementation, you'd show a form to manually enter org details
     socket
     |> put_flash(:info, "You can set up your organization details later in settings.")
-    |> push_navigate(to: ~p"/admin/en/dashboard")
+    |> push_navigate(to: ~q"/admin/:locale/dashboard")
     |> noreply()
   end
 
@@ -228,17 +234,13 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
   def handle_event("skip_onboarding", _params, socket) do
     socket
     |> put_flash(:info, "You can upload your bank statement anytime from the dashboard.")
-    |> push_navigate(to: ~p"/admin/en/dashboard")
+    |> push_navigate(to: ~q"/admin/:locale/dashboard")
     |> noreply()
   end
 
   @impl true
   def handle_info(:process_uploaded_file, socket) do
-    socket =
-      socket
-      |> assign(:show_upload, false)
-      |> assign(:processing, true)
-
+    # Upload is complete, now consume and process
     case consume_uploaded_entries(socket, :statement, &process_file_entry/2) do
       [file_info | _] ->
         process_statement_and_extract_org(socket, file_info)
@@ -253,6 +255,16 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
   end
 
   # Private functions
+
+  defp handle_progress(:statement, entry, socket) do
+    if entry.done? do
+      # Upload is complete, now process it
+      send(self(), :process_uploaded_file)
+      socket
+    else
+      socket
+    end
+  end
 
   defp presign_upload(entry, socket) do
     meta = S3Uploader.meta(entry, socket.assigns.uploads)
@@ -287,7 +299,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
           # User already has a real org, shouldn't be here
           socket
           |> put_flash(:info, "You already have an organization set up!")
-          |> push_navigate(to: ~p"/admin/en/dashboard")
+          |> push_navigate(to: ~q"/admin/:locale/dashboard")
           |> noreply()
         end
 
