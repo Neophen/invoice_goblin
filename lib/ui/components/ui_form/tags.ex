@@ -1,4 +1,4 @@
-defmodule UI.Components.UIForm.Tags do
+defmodule UI.Components.FormUI.Tags do
   @moduledoc false
   use UI, :component
 

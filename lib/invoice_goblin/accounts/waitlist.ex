@@ -10,23 +10,23 @@ defmodule InvoiceGoblin.Accounts.Waitlist do
   end
 
   actions do
-    defaults [:read]
+    defaults [:read, :destroy]
 
     create :create do
       accept [:email]
     end
+
+    update :update do
+      accept [:email]
+      require_atomic? false
+    end
   end
 
   validations do
-    validate fn changeset, _context ->
-      email = Ash.Changeset.get_attribute(changeset, :email)
+    validate present(:email)
 
-      if email && !match?(~r/^[^\s]+@[^\s]+\.[^\s]+$/, email) do
-        [email: "must be a valid email address"]
-      else
-        []
-      end
-    end
+    validate match(:email, ~r/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
+      message: "must be a valid email address"
   end
 
   attributes do

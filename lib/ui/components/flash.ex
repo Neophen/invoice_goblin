@@ -62,7 +62,7 @@ defmodule UI.Components.Flash do
 
   def group(assigns) do
     ~H"""
-    <div id={@id} aria-live="polite">
+    <div id={@id} aria-live="polite" class="fixed top-0 left-0 w-full z-50 p-4">
       <.item kind={:info} flash={@flash} />
       <.item kind={:error} flash={@flash} />
       <.item

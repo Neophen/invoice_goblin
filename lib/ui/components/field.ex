@@ -48,7 +48,7 @@ defmodule UI.Components.Field do
           {Phoenix.HTML.Form.options_for_select(@options, @value)}
         </select>
       </label>
-      <UIForm.error :for={msg <- @errors}>{msg}</UIForm.error>
+      <FormUI.error :for={msg <- @errors}>{msg}</FormUI.error>
     </fieldset>
     """
   end

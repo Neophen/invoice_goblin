@@ -1,4 +1,4 @@
-defmodule UI.Components.UIForm do
+defmodule UI.Components.FormUI do
   @moduledoc false
   use UI, :component
 
@@ -9,13 +9,13 @@ defmodule UI.Components.UIForm do
 
   ## Examples
 
-      <UIForm.root for={@form} phx-change="validate" phx-submit="save">
-        <UIForm.input field={@form[:email]} label="Email"/>
-        <UIForm.input field={@form[:username]} label="Username" />
+      <FormUI.root for={@form} phx-change="validate" phx-submit="save">
+        <FormUI.input field={@form[:email]} label="Email"/>
+        <FormUI.input field={@form[:username]} label="Username" />
         <:actions>
           <Action.button>Save</Action.button>
         </:actions>
-      </UIForm.root>
+      </FormUI.root>
   """
   attr :for, :any, required: true, doc: "the data structure for the form"
   attr :as, :any, default: nil, doc: "the server side parameter to collect all input under"
@@ -58,8 +58,8 @@ defmodule UI.Components.UIForm do
 
   ## Examples
 
-      <UIForm.input field={@form[:email]} type="email" />
-      <UIForm.input name="my-input" errors={["oh no!"]} />
+      <FormUI.input field={@form[:email]} type="email" />
+      <FormUI.input name="my-input" errors={["oh no!"]} />
   """
   attr :id, :any, default: nil
   attr :name, :any
@@ -195,6 +195,67 @@ defmodule UI.Components.UIForm do
       </label>
       <.error :for={msg <- @errors}>{msg}</.error>
     </fieldset>
+    """
+  end
+
+  attr :id, :any, default: nil
+  attr :name, :any
+  attr :label, :string, default: nil
+  attr :value, :any
+
+  attr :type, :string,
+    default: "text",
+    values: ~w(checkbox color date datetime-local email file month number password
+                search select tel text textarea time url week hidden)
+
+  attr :field, FormField,
+    doc: "a form field struct retrieved from the form, for example: @form[:email]"
+
+  attr :errors, :list, default: []
+  attr :checked, :boolean, doc: "the checked flag for checkbox inputs"
+  attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
+  attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
+  attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
+  attr :class, :string, default: nil, doc: "the fieldset class to use over defaults"
+  attr :input_class, :string, default: nil, doc: "the input class to use over defaults"
+  attr :error_class, :string, default: nil, doc: "the input error class to use over defaults"
+  attr :debounce, :any, default: 250, doc: "the debounce time in milliseconds"
+
+  attr :rest, :global,
+    include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
+                 multiple pattern placeholder readonly required rows size step)
+
+  def simple_input(%{field: %FormField{} = field} = assigns) do
+    errors = if Phoenix.Component.used_input?(field), do: field.errors, else: []
+
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(:errors, Enum.map(errors, &UI.translate_error(&1)))
+    |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
+    |> assign_new(:value, fn -> field.value end)
+    |> simple_input()
+  end
+
+  def simple_input(assigns) do
+    ~H"""
+    <div class={@class}>
+      <label>
+        <span :if={@label} class="label mb-1">{@label}</span>
+        <input
+          type={@type}
+          name={@name}
+          id={@id}
+          value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+          phx-debounce={@debounce}
+          class={[
+            @input_class || "w-full input",
+            @errors != [] && (@error_class || "input-error")
+          ]}
+          {@rest}
+        />
+      </label>
+      <.error :for={msg <- @errors}>{msg}</.error>
+    </div>
     """
   end
 

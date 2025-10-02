@@ -70,7 +70,7 @@ defmodule UI.Components.RichText do
       </div>
       <div id={@id} phx-hook="TipTapHook" class="prose" />
 
-      <UIForm.input type="hidden" {@rest} field={@field} />
+      <FormUI.input type="hidden" {@rest} field={@field} />
     </div>
     """
   end

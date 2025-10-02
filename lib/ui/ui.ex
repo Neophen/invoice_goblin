@@ -42,7 +42,7 @@ defmodule UI do
       alias UI.Components.Modal
       alias UI.Components.RichText
       alias UI.Components.Text
-      alias UI.Components.UIForm
+      alias UI.Components.FormUI
 
       # Add helper functions for modal
       def show_modal(id), do: UI.open_dialog(id)

@@ -12,20 +12,20 @@ defmodule InvoiceGoblin.Finance.Invoice do
     repo InvoiceGoblin.Repo
   end
 
-  oban do
-    triggers do
-      trigger :process_uploaded_invoice do
-        action :parse_with_ai_trigger
-        where expr(status == :processing)
-        # Disabled: The scheduler cannot handle multi-tenant queries properly
-        # It tries to read invoices without tenant context which causes errors
-        # Re-enable once multi-tenant scheduler support is added
-        # scheduler_cron "* * * * *"
-        worker_module_name InvoiceGoblin.Oban.ProcessInvoiceWorker
-        scheduler_module_name InvoiceGoblin.Oban.ProcessInvoiceScheduler
-      end
-    end
-  end
+  # oban do
+  #   triggers do
+  #     trigger :process_uploaded_invoice do
+  #       action :parse_with_ai_trigger
+  #       where expr(status == :processing)
+  #       # Disabled: The scheduler cannot handle multi-tenant queries properly
+  #       # It tries to read invoices without tenant context which causes errors
+  #       # Re-enable once multi-tenant scheduler support is added
+  #       # scheduler_cron "* * * * *"
+  #       worker_module_name InvoiceGoblin.Oban.ProcessInvoiceWorker
+  #       scheduler_module_name InvoiceGoblin.Oban.ProcessInvoiceScheduler
+  #     end
+  #   end
+  # end
 
   actions do
     defaults [:read, :destroy]
