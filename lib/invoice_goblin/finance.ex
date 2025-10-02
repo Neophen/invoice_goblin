@@ -11,6 +11,7 @@ defmodule InvoiceGoblin.Finance do
     resource InvoiceGoblin.Finance.InvoiceLineItem
     resource InvoiceGoblin.Finance.Statement
     resource InvoiceGoblin.Finance.Transaction
+    resource InvoiceGoblin.Finance.BankAccount
   end
 
   @doc """

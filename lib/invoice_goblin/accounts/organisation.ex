@@ -14,25 +14,11 @@ defmodule InvoiceGoblin.Accounts.Organisation do
     defaults [:read, :destroy]
 
     create :create do
-      accept [:name, :is_placeholder]
-    end
-
-    create :create_placeholder do
-      accept []
-
-      change fn changeset, _context ->
-        changeset
-        |> Ash.Changeset.force_change_attribute(:name, "Temporary Organization")
-        |> Ash.Changeset.force_change_attribute(:is_placeholder, true)
-      end
+      accept [:name]
     end
 
     update :update do
       accept [:name]
-    end
-
-    read :list_placeholders do
-      filter expr(is_placeholder == true)
     end
   end
 
@@ -50,9 +36,51 @@ defmodule InvoiceGoblin.Accounts.Organisation do
       public? true
     end
 
-    attribute :is_placeholder, :boolean do
+    attribute :company_code, :string do
+      allow_nil? true
+      public? true
+    end
+
+    attribute :vat_id, :string do
+      allow_nil? true
+      public? true
+    end
+
+    # --- Address Fields ---
+    attribute :address_line_1, :string do
+      allow_nil? true
+      public? true
+    end
+
+    attribute :address_line_2, :string do
+      allow_nil? true
+      public? true
+    end
+
+    attribute :address_line_3, :string do
+      allow_nil? true
+      public? true
+    end
+
+    attribute :city, :string do
+      allow_nil? true
+      public? true
+    end
+
+    attribute :state_province, :string do
+      # State, Province, Region, or County depending on country
+      allow_nil? true
+      public? true
+    end
+
+    attribute :postal_code, :string do
+      # Zip/postcode/CEP etc.
+      allow_nil? true
+      public? true
+    end
+
+    attribute :country, :string do
       allow_nil? false
-      default false
       public? true
     end
 
@@ -65,6 +93,10 @@ defmodule InvoiceGoblin.Accounts.Organisation do
       source_attribute_on_join_resource :organisation_id
       destination_attribute_on_join_resource :user_id
     end
+
+    # has_many :bank_accounts, InvoiceGoblin.Finance.BankAccount do
+    #   destination_attribute :organisation_id
+    # end
 
     has_many :memberships, InvoiceGoblin.Accounts.OrganisationMembership do
       destination_attribute :organisation_id
