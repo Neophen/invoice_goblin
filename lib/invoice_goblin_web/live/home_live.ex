@@ -99,7 +99,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
                   {dgettext("home_live", "will find everything for you")}
                 </span>
               </h1>
-              <p class="text-xl lg:text-2xl text-muted-foreground max-w-2xl leading-relaxed font-inter">
+              <p class="text-xl lg:text-2xl text-base-content max-w-2xl leading-relaxed font-inter">
                 {dgettext(
                   "home_live",
                   "No more searching for all invoices at the end of the month and sending them to your accountant – the goblin collects and organizes everything for you."
@@ -117,14 +117,14 @@ defmodule InvoiceGoblinWeb.HomeLive do
                 <input type="hidden" name="location" value="hero" />
                 <input
                   type="email"
-                  class="flex w-full bg-background py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-xl md:rounded-2xl border-2 border-primary/20 focus:border-primary shadow-card-goblin h-12 md:h-16 text-base md:text-lg px-4 md:px-6"
+                  class="flex w-full bg-background py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-base-content/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-xl md:rounded-2xl border-2 border-primary/20 focus:border-primary shadow-card-goblin h-12 md:h-16 text-base md:text-lg px-4 md:px-6 min-w-[240px]"
                   placeholder={dgettext("home_live", "Enter your email")}
                   name={@form[:email].name}
                   value={@form[:email].value}
                   autocomplete="email"
                 />
                 <button
-                  class="inline-flex items-center justify-center gap-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-gradient-primary text-white shadow-button-goblin hover:shadow-goblin hover:scale-105 transition-all duration-200 rounded-xl py-2 whitespace-nowrap font-bold h-12 md:h-16 text-lg md:text-xl px-5 md:px-7 md:rounded-2xl"
+                  class="flex flex-1 items-center justify-center gap-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gradient-primary text-white shadow-button-goblin hover:shadow-goblin hover:scale-105 transition-all duration-200 rounded-xl py-2 whitespace-nowrap font-bold h-12 md:h-16 text-lg md:text-xl px-5 md:px-7 md:rounded-2xl"
                   type="submit"
                   phx-disable-with={dgettext("home_live", "Summoning..")}
                 >
@@ -132,7 +132,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
                 </button>
               </FormUI.root>
 
-              <p class="text-sm text-muted-foreground">
+              <p class="text-sm text-base-content">
                 {dgettext(
                   "home_live",
                   "Join other businesses that have already tamed invoice chaos"
@@ -174,7 +174,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
       </:block_start>
       <div class="rounded-2xl bg-white shadow-card-goblin p-6 lg:p-10">
         <div class="space-y-10 md:space-y-32">
-          <.how_it_works_item :for={item <- how_it_works_items()} {item} />
+          <.how_it_works_card :for={item <- how_it_works_items()} {item} />
         </div>
       </div>
     </.section>
@@ -190,7 +190,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
   attr :title, :string, required: true
   attr :description, :string, required: true
 
-  defp how_it_works_item(assigns) do
+  defp how_it_works_card(assigns) do
     ~H"""
     <div class="grid md:grid-cols-2 gap-6 items-stretch">
       <div
@@ -206,17 +206,17 @@ defmodule InvoiceGoblinWeb.HomeLive do
         />
       </div>
       <div
-        class="text-left space-y-4 p-6 rounded-2xl bg-goblin-green shadow-card-goblin h-full md:order-first data-flip:md:order-last"
+        class="text-left space-y-4 p-6 rounded-2xl bg-brand shadow-card-goblin h-full md:order-first data-flip:md:order-last text-brand-content"
         data-flip={@flip?}
       >
-        <div class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-button-goblin bg-white/20 border border-white/20">
-          <Icon.icon name={@icon_name} class="w-8 h-8 text-white" />
+        <div class="size-16 rounded-2xl flex items-center justify-center shadow-button-goblin bg-white/20 border border-white/20">
+          <Icon.icon name={@icon_name} class="size-8 " />
         </div>
         <div class="space-y-3">
-          <h3 class="text-2xl md:text-3xl font-bold text-white">
+          <h3 class="text-2xl md:text-3xl font-bold">
             {@title}
           </h3>
-          <p class="font-light text-lg md:text-2xl text-white/90 leading-relaxed">
+          <p class="font-light text-lg md:text-2xl text-brand-content leading-relaxed">
             {@description}
           </p>
         </div>
@@ -263,7 +263,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
           <h3 class="text-xl font-bold text-foreground">
             {@title}
           </h3>
-          <p class="text-muted-foreground leading-relaxed">
+          <p class="text-base-content leading-relaxed">
             {@description}
           </p>
         </div>
@@ -314,7 +314,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
       </div>
 
       <div class="space-y-4">
-        <p class="text-muted-foreground italic leading-relaxed">
+        <p class="text-base-content italic leading-relaxed">
           {@text}
         </p>
         <div class="flex items-center space-x-3">
@@ -323,7 +323,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
           </div>
           <div>
             <p class="font-bold text-foreground">{@name}</p>
-            <p class="text-sm text-muted-foreground">{@job}</p>
+            <p class="text-sm text-base-content">{@job}</p>
           </div>
         </div>
       </div>
@@ -374,7 +374,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
               <input type="hidden" name="location" value="cta_bottom" />
               <input
                 type="email"
-                class="flex w-full bg-background py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-xl md:rounded-2xl border-2 border-primary/20 focus:border-primary shadow-card-goblin h-12 md:h-16 text-base md:text-lg px-4 md:px-6 min-w-[200px]"
+                class="flex w-full bg-background py-2 ring-offset-background placeholder:text-base-content/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 flex-1 rounded-xl md:rounded-2xl border-2 border-primary/20 focus:border-primary shadow-card-goblin h-12 md:h-16 text-base md:text-lg px-4 md:px-6 min-w-[240px]"
                 placeholder={dgettext("home_live", "Enter your email")}
                 value={@form[:email].value}
                 name={@form[:email].name}
@@ -388,7 +388,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
                 {dgettext("home_live", "🎯 Get early access")}
               </button>
             </FormUI.root>
-            <div class="flex flex-wrap justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
+            <div class="flex flex-wrap justify-center lg:justify-start gap-6 text-sm text-base-content">
               <div class="flex items-center space-x-2">
                 <span class="text-green-500">✓</span><span>{dgettext("home_live", "Try it free")}</span>
               </div>
@@ -428,7 +428,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
 
   defp section_subtitle(assigns) do
     ~H"""
-    <p class="text-xl text-muted-foreground max-w-2xl mx-auto font-inter">
+    <p class="text-xl text-base-content max-w-2xl mx-auto font-inter">
       {@text}
     </p>
     """
