@@ -21,7 +21,7 @@ defmodule UI.Components.Layout do
   def root_app(assigns) do
     ~H"""
     <!DOCTYPE html>
-    <html lang="en" class="overscroll-contain min-h-svh">
+    <html lang={InvoiceGoblinGettext.get_locale()} class="overscroll-contain min-h-svh">
       <head>
         {Application.get_env(:live_debugger, :live_debugger_tags)}
 
@@ -51,7 +51,7 @@ defmodule UI.Components.Layout do
   def root_admin(assigns) do
     ~H"""
     <!DOCTYPE html>
-    <html lang="en" class="overscroll-contain">
+    <html lang={InvoiceGoblinGettext.get_locale()} class="overscroll-contain">
       <head>
         {Application.get_env(:live_debugger, :live_debugger_tags)}
 

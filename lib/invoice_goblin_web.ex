@@ -40,7 +40,7 @@ defmodule InvoiceGoblinWeb do
     quote do
       use Phoenix.Controller, formats: [:html, :json]
 
-      use Gettext, backend: InvoiceGoblinWeb.Gettext
+      use InvoiceGoblinGettext
 
       import Plug.Conn
 
@@ -88,7 +88,7 @@ defmodule InvoiceGoblinWeb do
   defp html_helpers do
     quote do
       # Translation
-      use Gettext, backend: InvoiceGoblinWeb.Gettext
+      use InvoiceGoblinGettext
 
       # HTML escaping functionality
       import Phoenix.HTML

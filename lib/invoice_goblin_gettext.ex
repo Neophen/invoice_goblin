@@ -8,7 +8,7 @@ defmodule InvoiceGoblinGettext do
 
   defmacro __using__(_opts) do
     quote do
-      use Gettext, backend: InvoiceGoblinGettext.Backend
+      use InvoiceGoblinGettext
 
       import InvoiceGoblinGettext
 
@@ -17,7 +17,8 @@ defmodule InvoiceGoblinGettext do
   end
 
   @spec put_locale(Gettext.locale()) :: Gettext.locale() | nil
-  def put_locale(locale), do: Gettext.put_locale(Backend, locale)
+  def put_locale(locale) when is_binary(locale), do: Gettext.put_locale(Backend, locale)
+  def put_locale(locale), do: Gettext.put_locale(Backend, to_string(locale))
 
   @spec get_locale() :: Gettext.locale()
   def get_locale, do: Gettext.get_locale(Backend)

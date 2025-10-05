@@ -22,6 +22,8 @@ defmodule InvoiceGoblinWeb.HomeLive do
 
   @impl LiveView
   def mount(_params, session, socket) do
+    InvoiceGoblinGettext.put_locale(socket.assigns.locale)
+
     socket
     |> assign(:submitted, false)
     |> assign(:plausible_session, session["plausible_session"])
@@ -31,6 +33,8 @@ defmodule InvoiceGoblinWeb.HomeLive do
 
   @impl LiveView
   def handle_event("validate", %{"form" => params}, socket) do
+    InvoiceGoblinGettext.put_locale(socket.assigns.locale)
+
     socket
     |> validate_form(params)
     |> noreply()
@@ -38,7 +42,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
 
   @impl LiveView
   def handle_event("save", %{"form" => params} = raw_params, socket) do
-    IO.inspect(raw_params, label: "__home:raw_params")
+    InvoiceGoblinGettext.put_locale(socket.assigns.locale)
 
     case submit_form(socket, params) do
       {:ok, _waitlist} ->
@@ -104,6 +108,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
             </div>
             <div class="space-y-6">
               <FormUI.root
+                id="hero-form"
                 for={@form}
                 phx-change="validate"
                 phx-submit="save"
@@ -360,6 +365,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
           </div>
           <div class="space-y-6">
             <FormUI.root
+              id="cta-form"
               class="flex flex-wrap gap-3 md:gap-4"
               for={@form}
               phx-validate="validate"

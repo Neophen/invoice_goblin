@@ -4,7 +4,12 @@
       "Bash(mix gettext.extract:*)",
       "Bash(mix phx.server:*)",
       "Bash(mix compile)",
-      "Bash(mix hex.info:*)"
+      "Bash(mix hex.info:*)",
+      "Bash(mix test:*)",
+      "Bash(mix gettext.merge:*)",
+      "Bash(mix compile:*)",
+      "Bash(mix clean:*)",
+      "Bash(mix run:*)"
     ],
     "deny": [],
     "ask": []
