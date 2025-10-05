@@ -61,14 +61,5 @@ defmodule InvoiceGoblinWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-
-  plug Cldr.Plug.AcceptLanguage,
-    cldr_backend: InvoiceGoblinCldr
-
-  plug Cldr.Plug.PutLocale,
-    apps: [:cldr, :gettext],
-    from: [:accept_language],
-    cldr_backend: InvoiceGoblinCldr
-
   plug InvoiceGoblinWeb.Router
 end

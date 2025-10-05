@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(mix gettext.extract:*)",
-      "Bash(mix phx.server:*)"
+      "Bash(mix phx.server:*)",
+      "Bash(mix compile)",
+      "Bash(mix hex.info:*)"
     ],
     "deny": [],
     "ask": []

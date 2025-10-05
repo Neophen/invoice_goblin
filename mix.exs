@@ -48,7 +48,6 @@ defmodule InvoiceGoblin.MixProject do
       {:ex_cldr_numbers, "~> 2.0"},
       {:ex_cldr_locale_display, "~> 1.0"},
       {:ex_cldr_plugs, "~> 1.0"},
-      {:ex_cldr_routes, "~> 1.0"},
       {:ex_cldr, "~> 2.0"},
       {:bcrypt_elixir, "~> 3.0"},
       {:picosat_elixir, "~> 0.2"},

@@ -22,7 +22,6 @@ defmodule InvoiceGoblinWeb do
   def router do
     quote do
       use Phoenix.Router, helpers: false
-      use Cldr.Routes, helpers: false
 
       # Import common connection and controller functions to use in pipelines
       import Plug.Conn

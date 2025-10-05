@@ -8,9 +8,9 @@ defmodule InvoiceGoblinWeb.AuthController do
     # Check if user has only placeholder organization
     default_route =
       if Onboarding.has_only_placeholder_organization?(user.id) do
-        ~p"/admin/en/onboarding"
+        ~p"/admin/onboarding"
       else
-        ~p"/admin/en/dashboard"
+        ~p"/admin/dashboard"
       end
 
     return_to = get_session(conn, :return_to) || default_route
