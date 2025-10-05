@@ -1,0 +1,288 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: lt\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100 != 11 ? 0 : n%10>=2 && (n%100<10||n%100>=20) ? 1 : 2);\n"
+
+#: lib/invoice_goblin_web/live/home_live.ex:461
+#, elixir-autogen, elixir-format
+msgid "1. Upload invoices and bank statement"
+msgstr "1. Įkelkite sąskaitas ir banko išrašą"
+
+#: lib/invoice_goblin_web/live/home_live.ex:475
+#, elixir-autogen, elixir-format
+msgid "2. The goblin reconciles everything"
+msgstr "2. Goblinas viską sulygina"
+
+#: lib/invoice_goblin_web/live/home_live.ex:489
+#, elixir-autogen, elixir-format
+msgid "3. Finds missing invoices"
+msgstr "3. Suranda praleistas sąskaitas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:508
+#, elixir-autogen, elixir-format
+msgid "All invoices in one place"
+msgstr "Visos sąskaitos vienoje vietoje"
+
+#: lib/invoice_goblin_web/live/home_live.ex:560
+#, elixir-autogen, elixir-format
+msgid "Andrius P."
+msgstr "Andrius P."
+
+#: lib/invoice_goblin_web/live/home_live.ex:572
+#, elixir-autogen, elixir-format
+msgid "Auto service manager"
+msgstr "Autoserviso vadovas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:521
+#, elixir-autogen, elixir-format
+msgid "Automatic invoice verification"
+msgstr "Automatinis sąskaitų patikrinimas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:277
+#, elixir-autogen, elixir-format
+msgid "Business experiences"
+msgstr "Verslų patirtys"
+
+#: lib/invoice_goblin_web/live/home_live.ex:561
+#, elixir-autogen, elixir-format
+msgid "Cafe owner"
+msgstr "Kavinės savininkas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:571
+#, elixir-autogen, elixir-format
+msgid "Darius K."
+msgstr "Darius K."
+
+#: lib/invoice_goblin_web/live/home_live.ex:390
+#, elixir-autogen, elixir-format
+msgid "Early adopter privileges"
+msgstr "Ankstyvųjų naudotojų privilegijos"
+
+#: lib/invoice_goblin_web/live/home_live.ex:547
+#, elixir-autogen, elixir-format
+msgid "Easy to get started"
+msgstr "Lengva pradėti"
+
+#: lib/invoice_goblin_web/live/home_live.ex:587
+#, elixir-autogen, elixir-format
+msgid "End of month used to be a real headache for me. Now I just upload the bank statement, and the goblin organizes what's paid and what's still missing."
+msgstr "Mėnesio pabaigos man būdavo tikras galvos skausmas. Dabar tiesiog įkeliu banko išrašą, o goblinas pats sudėlioja, kas apmokėta, o ko dar trūksta."
+
+#: lib/invoice_goblin_web/live/home_live.ex:116
+#: lib/invoice_goblin_web/live/home_live.ex:372
+#, elixir-autogen, elixir-format
+msgid "Enter your email"
+msgstr "Įveskite savo el. paštą"
+
+#: lib/invoice_goblin_web/live/home_live.ex:355
+#, elixir-autogen, elixir-format
+msgid "Enter your email and get early access with no risk."
+msgstr "Įrašykite savo el. paštą ir gaukite ankstyvą prieigą be jokios rizikos."
+
+#: lib/invoice_goblin_web/live/home_live.ex:534
+#, elixir-autogen, elixir-format
+msgid "Error detection"
+msgstr "Klaidų aptikimas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:565
+#, elixir-autogen, elixir-format
+msgid "Every month I used to waste half a day collecting invoices for the accountant. Now I just forward them to the Goblin and everything is sorted. Saved a lot of nerves."
+msgstr "Kiekvieną mėnesį gaišdavau pusę dienos rinkdamas sąskaitas buhalterei. Dabar tiesiog persiunčiu jas Gobliui ir viskas sutvarkyta. Sutaupau daug nervų."
+
+#: lib/invoice_goblin_web/live/home_live.ex:393
+#, elixir-autogen, elixir-format
+msgid "Finally invoices – no more headache"
+msgstr "Pagaliau sąskaitos – nebe galvos skausmas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:93
+#, elixir-autogen, elixir-format
+msgid "Forget invoice hunting, the goblin"
+msgstr "Pamirškite sąskaitų medžioklę, goblinas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:143
+#, elixir-autogen, elixir-format
+msgid "Friendly goblin organizing invoices"
+msgstr "Draugiškas goblinas, tvarkantis sąskaitas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:350
+#, elixir-autogen, elixir-format
+msgid "Goblin"
+msgstr "Goblinui"
+
+#: lib/invoice_goblin_web/live/home_live.ex:340
+#, elixir-autogen, elixir-format
+msgid "Happy goblin celebrating organized invoices"
+msgstr "Laimingas goblinas, švenčiantis sutvarkytas sąskaitas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:157
+#, elixir-autogen, elixir-format
+msgid "How it"
+msgstr "Kaip tai"
+
+#: lib/invoice_goblin_web/live/home_live.ex:487
+#, elixir-autogen, elixir-format
+msgid "Illustration: detect the tricky ones"
+msgstr "Iliustracija: aptikite klastinguosius"
+
+#: lib/invoice_goblin_web/live/home_live.ex:473
+#, elixir-autogen, elixir-format
+msgid "Illustration: magical reconciliation"
+msgstr "Iliustracija: magiškas suderinimas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:459
+#, elixir-autogen, elixir-format
+msgid "Illustration: upload or forward"
+msgstr "Iliustracija: įkėlimas arba persiuntimas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:231
+#, elixir-autogen, elixir-format
+msgid "InvoiceGoblin?"
+msgstr "InvoiceGoblin?"
+
+#: lib/invoice_goblin_web/live/home_live.ex:477
+#, elixir-autogen, elixir-format
+msgid "It checks which invoices match the payments in the bank statement."
+msgstr "Jis patikrina, kurios sąskaitos atitinka banko išraše esančius mokėjimus."
+
+#: lib/invoice_goblin_web/live/home_live.ex:282
+#, elixir-autogen, elixir-format
+msgid "Join companies that have already made life easier without lost invoices and end-of-month chaos."
+msgstr "Prisijunkite prie įmonių, kurios jau palengvino sau gyvenimą be pamestų sąskaitų ir mėnesio pabaigos chaoso."
+
+#: lib/invoice_goblin_web/live/home_live.ex:131
+#, elixir-autogen, elixir-format
+msgid "Join other businesses that have already tamed invoice chaos"
+msgstr "Prisijunkite prie kitų verslų, kurie jau sutramdė sąskaitų chaosą"
+
+#: lib/invoice_goblin_web/live/home_live.ex:347
+#, elixir-autogen, elixir-format
+msgid "Let the"
+msgstr "Leiskite"
+
+#: lib/invoice_goblin_web/live/home_live.ex:583
+#, elixir-autogen, elixir-format
+msgid "Marketing company director"
+msgstr "Marketingo įmonės vadovė"
+
+#: lib/invoice_goblin_web/live/home_live.ex:576
+#, elixir-autogen, elixir-format
+msgid "My job is to repair cars, not search for invoices. The Goblin helped me collect everything in one place. Sending to the accountant became much easier."
+msgstr "Mano darbas yra remontuoti automobilius, o ne ieškoti sąskaitų. Goblinas man padėjo viską sukaupti vienoje vietoje. Buhalterei siųsti tapo daug paprasčiau."
+
+#: lib/invoice_goblin_web/live/home_live.ex:549
+#, elixir-autogen, elixir-format
+msgid "No complicated installations or integrations – just upload the bank statement and invoices."
+msgstr "Jokių sudėtingų diegimų ar integracijų – užtenka įkelti banko išrašą ir sąskaitas."
+
+#: lib/invoice_goblin_web/live/home_live.ex:99
+#, elixir-autogen, elixir-format
+msgid "No more searching for all invoices at the end of the month and sending them to your accountant – the goblin collects and organizes everything for you."
+msgstr "Nebereikės mėnesio pabaigoje ieškoti visų sąskaitų ir siųsti jų buhalterei – goblinas viską surenka ir sudėlioja už jus."
+
+#: lib/invoice_goblin_web/live/home_live.ex:510
+#, elixir-autogen, elixir-format
+msgid "No more searching through email or folders – all invoices are neatly uploaded and accessible."
+msgstr "Nebereikės ieškoti po el. paštą ar segtuvus – visos sąskaitos tvarkingai sukeltos ir pasiekiamos."
+
+#: lib/invoice_goblin_web/live/home_live.ex:380
+#, elixir-autogen, elixir-format
+msgid "Sending..."
+msgstr "Siunčiama..."
+
+#: lib/invoice_goblin_web/live/home_live.ex:582
+#, elixir-autogen, elixir-format
+msgid "Simona V."
+msgstr "Simona V."
+
+#: lib/invoice_goblin_web/live/home_live.ex:61
+#, elixir-autogen, elixir-format
+msgid "Something went wrong. Please try again."
+msgstr "Kažkas nutiko ne taip. Prašome pabandyti dar kartą."
+
+#: lib/invoice_goblin_web/live/home_live.ex:124
+#, elixir-autogen, elixir-format
+msgid "Summoning.."
+msgstr "Iškviečiama.."
+
+#: lib/invoice_goblin_web/live/home_live.ex:48
+#, elixir-autogen, elixir-format
+msgid "Thanks! You've been added to our waitlist."
+msgstr "Ačiū! Buvote įtrauktas į mūsų laukiančiųjų sąrašą."
+
+#: lib/invoice_goblin_web/live/home_live.ex:491
+#, elixir-autogen, elixir-format
+msgid "The goblin shows which invoices are unpaid or which invoices are missing."
+msgstr "Goblinas parodo, kurios sąskaitos nesumokėtos arba kurių sąskaitų trūksta."
+
+#: lib/invoice_goblin_web/live/home_live.ex:536
+#, elixir-autogen, elixir-format
+msgid "The system immediately shows if an invoice is unpaid, duplicated, or doesn't match a payment."
+msgstr "Sistema iškart parodo, jei sąskaita neapmokėta, pasikartoja ar neatitinka mokėjimo."
+
+#: lib/invoice_goblin_web/live/home_live.ex:164
+#, elixir-autogen, elixir-format
+msgid "Three simple steps to order. You grow your business – the goblin takes care of invoices."
+msgstr "Trys paprasti žingsniai iki tvarkos. Jūs auginate verslą – goblinas pasirūpina sąskaitomis."
+
+#: lib/invoice_goblin_web/live/home_live.ex:387
+#, elixir-autogen, elixir-format
+msgid "Try it free"
+msgstr "Išbandykite nemokamai"
+
+#: lib/invoice_goblin_web/live/home_live.ex:523
+#, elixir-autogen, elixir-format
+msgid "Upload a bank statement, and the system will automatically reconcile it with invoices. You'll see what's paid and what's still pending."
+msgstr "Įkelkite banko išrašą, ir sistema pati sulygina jį su sąskaitomis. Matysite, kas apmokėta, o kas dar laukia."
+
+#: lib/invoice_goblin_web/live/home_live.ex:463
+#, elixir-autogen, elixir-format
+msgid "Upload files or forward by email. The goblin will accept everything."
+msgstr "Įkelkite failus arba persiųskite el. paštu. Goblinas viską priims."
+
+#: lib/invoice_goblin_web/live/home_live.ex:228
+#, elixir-autogen, elixir-format
+msgid "Why"
+msgstr "Kodėl"
+
+#: lib/invoice_goblin_web/live/home_live.ex:56
+#, elixir-autogen, elixir-format
+msgid "You're already on our waitlist!"
+msgstr "Jūs jau esate mūsų laukiančiųjų sąraše!"
+
+#: lib/invoice_goblin_web/live/home_live.ex:352
+#, elixir-autogen, elixir-format
+msgid "organize all invoices"
+msgstr "sutvarkyti visas sąskaitas"
+
+#: lib/invoice_goblin_web/live/home_live.ex:95
+#, elixir-autogen, elixir-format
+msgid "will find everything for you"
+msgstr "viską suras už jus"
+
+#: lib/invoice_goblin_web/live/home_live.ex:279
+#, elixir-autogen, elixir-format
+msgid "with the Goblin"
+msgstr "su Goblinu"
+
+#: lib/invoice_goblin_web/live/home_live.ex:160
+#, elixir-autogen, elixir-format
+msgid "works"
+msgstr "veikia"
+
+#: lib/invoice_goblin_web/live/home_live.ex:382
+#, elixir-autogen, elixir-format
+msgid "🎯 Get early access"
+msgstr "🎯 Gauti ankstyvą prieigą"
+
+#: lib/invoice_goblin_web/live/home_live.ex:126
+#, elixir-autogen, elixir-format
+msgid "🧙‍♂️ Summon the Goblin"
+msgstr "🧙‍♂️ Iškviesti Gobliną"

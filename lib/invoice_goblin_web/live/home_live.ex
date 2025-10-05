@@ -90,15 +90,15 @@ defmodule InvoiceGoblinWeb.HomeLive do
           <div class="text-center lg:text-left space-y-8">
             <div class="space-y-4">
               <h1 class="text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-tight">
-                {dgettext("home_live", "Pamirškite sąskaitų medžioklę, goblinas")}
+                {dgettext("home_live", "Forget invoice hunting, the goblin")}
                 <span class="text-transparent bg-gradient-primary bg-clip-text">
-                  {dgettext("home_live", "viską suras už jus")}
+                  {dgettext("home_live", "will find everything for you")}
                 </span>
               </h1>
               <p class="text-xl lg:text-2xl text-muted-foreground max-w-2xl leading-relaxed font-inter">
                 {dgettext(
                   "home_live",
-                  "Nebereikės mėnesio pabaigoje ieškoti visų sąskaitų ir siųsti jų buhalterei – goblinas viską surenka ir sudėlioja už jus."
+                  "No more searching for all invoices at the end of the month and sending them to your accountant – the goblin collects and organizes everything for you."
                 )}
               </p>
             </div>
@@ -113,7 +113,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
                 <input
                   type="email"
                   class="flex w-full bg-background py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-xl md:rounded-2xl border-2 border-primary/20 focus:border-primary shadow-card-goblin h-12 md:h-16 text-base md:text-lg px-4 md:px-6"
-                  placeholder={dgettext("home_live", "Įveskite savo el. paštą")}
+                  placeholder={dgettext("home_live", "Enter your email")}
                   name={@form[:email].name}
                   value={@form[:email].value}
                   autocomplete="email"
@@ -121,16 +121,16 @@ defmodule InvoiceGoblinWeb.HomeLive do
                 <button
                   class="inline-flex items-center justify-center gap-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-gradient-primary text-white shadow-button-goblin hover:shadow-goblin hover:scale-105 transition-all duration-200 rounded-xl py-2 whitespace-nowrap font-bold h-12 md:h-16 text-lg md:text-xl px-5 md:px-7 md:rounded-2xl"
                   type="submit"
-                  phx-disable-with={dgettext("home_live", "Iškviečiama..")}
+                  phx-disable-with={dgettext("home_live", "Summoning..")}
                 >
-                  {dgettext("home_live", "🧙‍♂️ Iškviesti Gobliną")}
+                  {dgettext("home_live", "🧙‍♂️ Summon the Goblin")}
                 </button>
               </FormUI.root>
 
               <p class="text-sm text-muted-foreground">
                 {dgettext(
                   "home_live",
-                  "Prisijunkite prie kitų verslų, kurie jau sutramdė sąskaitų chaosą"
+                  "Join other businesses that have already tamed invoice chaos"
                 )}
               </p>
             </div>
@@ -140,7 +140,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
             src={~p"/images/goblinas-hero.png"}
             src_avif={~p"/images/goblinas-hero.avif"}
             src_webp={~p"/images/goblinas-hero.webp"}
-            alt={dgettext("home_live", "Draugiškas goblinas, tvarkantis sąskaitas")}
+            alt={dgettext("home_live", "Friendly goblin organizing invoices")}
             class="w-full animate-goblin-bounce"
           />
         </div>
@@ -154,16 +154,16 @@ defmodule InvoiceGoblinWeb.HomeLive do
     <.section class="bg-background">
       <:block_start>
         <.section_header>
-          {dgettext("home_live", "Kaip tai")}
+          {dgettext("home_live", "How it")}
           <.section_header_highlight
             class="bg-gradient-primary"
-            text={dgettext("home_live", "veikia")}
+            text={dgettext("home_live", "works")}
           />
         </.section_header>
         <.section_subtitle text={
           dgettext(
             "home_live",
-            "Trys paprasti žingsniai iki tvarkos. Jūs auginate verslą – goblinas pasirūpina sąskaitomis."
+            "Three simple steps to order. You grow your business – the goblin takes care of invoices."
           )
         } />
       </:block_start>
@@ -225,7 +225,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
     <.section class="bg-muted/30">
       <:block_start>
         <.section_header>
-          {dgettext("home_live", "Kodėl")}
+          {dgettext("home_live", "Why")}
           <.section_header_highlight
             class="bg-gradient-primary"
             text={dgettext("home_live", "InvoiceGoblin?")}
@@ -274,14 +274,14 @@ defmodule InvoiceGoblinWeb.HomeLive do
         <.section_header>
           <.section_header_highlight
             class="bg-gradient-accent"
-            text={dgettext("home_live", "Verslų patirtys")}
+            text={dgettext("home_live", "Business experiences")}
           />
-          {dgettext("home_live", "su Goblinu")}
+          {dgettext("home_live", "with the Goblin")}
         </.section_header>
         <.section_subtitle text={
           dgettext(
             "home_live",
-            "Prisijunkite prie įmonių, kurios jau palengvino sau gyvenimą be pamestų sąskaitų ir mėnesio pabaigos chaoso."
+            "Join companies that have already made life easier without lost invoices and end-of-month chaos."
           )
         } />
       </:block_start>
@@ -337,24 +337,24 @@ defmodule InvoiceGoblinWeb.HomeLive do
             src={~p"/images/goblin-welcome.png"}
             src_avif={~p"/images/goblin-welcome.avif"}
             src_webp={~p"/images/goblin-welcome.webp"}
-            alt={dgettext("home_live", "Laimingas goblinas, švenčiantis sutvarkytas sąskaitas")}
+            alt={dgettext("home_live", "Happy goblin celebrating organized invoices")}
             class="w-full max-w-lg animate-goblin-wiggle"
           />
         </div>
         <div class="text-center lg:text-left space-y-8 order-1 lg:order-2">
           <div class="space-y-4 text-center lg:text-left">
             <.section_header>
-              {dgettext("home_live", "Leiskite")}
+              {dgettext("home_live", "Let the")}
               <.section_header_highlight
                 class="bg-gradient-primary"
-                text={dgettext("home_live", "Goblinui")}
+                text={dgettext("home_live", "Goblin")}
               />
-              {dgettext("home_live", "sutvarkyti visas sąskaitas")}
+              {dgettext("home_live", "organize all invoices")}
             </.section_header>
             <.section_subtitle text={
               dgettext(
                 "home_live",
-                "Įrašykite savo el. paštą ir gaukite ankstyvą prieigą be jokios rizikos."
+                "Enter your email and get early access with no risk."
               )
             } />
           </div>
@@ -369,7 +369,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
               <input
                 type="email"
                 class="flex w-full bg-background py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-xl md:rounded-2xl border-2 border-primary/20 focus:border-primary shadow-card-goblin h-12 md:h-16 text-base md:text-lg px-4 md:px-6 min-w-[200px]"
-                placeholder={dgettext("home_live", "Įveskite savo el. paštą")}
+                placeholder={dgettext("home_live", "Enter your email")}
                 value={@form[:email].value}
                 name={@form[:email].name}
                 autocomplete="email"
@@ -377,20 +377,20 @@ defmodule InvoiceGoblinWeb.HomeLive do
               <button
                 class="block ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gradient-secondary text-white shadow-button-goblin hover:shadow-goblin hover:scale-105 transition-all duration-200 rounded-xl py-2 whitespace-nowrap font-bold h-12 md:h-16 text-lg md:text-xl px-5 md:px-7 md:rounded-2xl min-w-fit flex-1"
                 type="submit"
-                phx-disable-with={dgettext("home_live", "Siunčiama...")}
+                phx-disable-with={dgettext("home_live", "Sending...")}
               >
-                {dgettext("home_live", "🎯 Gauti ankstyvą prieigą")}
+                {dgettext("home_live", "🎯 Get early access")}
               </button>
             </FormUI.root>
             <div class="flex flex-wrap justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
               <div class="flex items-center space-x-2">
-                <span class="text-green-500">✓</span><span>{dgettext("home_live", "Išbandykite nemokamai")}</span>
+                <span class="text-green-500">✓</span><span>{dgettext("home_live", "Try it free")}</span>
               </div>
               <div class="flex items-center space-x-2">
-                <span class="text-green-500">✓</span><span>{dgettext("home_live", "Ankstyvųjų naudotojų privilegijos")}</span>
+                <span class="text-green-500">✓</span><span>{dgettext("home_live", "Early adopter privileges")}</span>
               </div>
               <div class="flex items-center space-x-2">
-                <span class="text-green-500">✓</span><span>{dgettext("home_live", "Pagaliau sąskaitos – nebe galvos skausmas")}</span>
+                <span class="text-green-500">✓</span><span>{dgettext("home_live", "Finally invoices – no more headache")}</span>
               </div>
             </div>
           </div>
@@ -456,13 +456,13 @@ defmodule InvoiceGoblinWeb.HomeLive do
         img_src: ~p"/images/goblinas-dziaugiasi.png",
         img_src_avif: ~p"/images/goblinas-dziaugiasi.avif",
         img_src_webp: ~p"/images/goblinas-dziaugiasi.webp",
-        img_alt: dgettext("home_live", "Iliustracija: įkėlimas arba persiuntimas"),
+        img_alt: dgettext("home_live", "Illustration: upload or forward"),
         icon_name: "lucide-upload",
-        title: dgettext("home_live", "1. Įkelkite sąskaitas ir banko išrašą"),
+        title: dgettext("home_live", "1. Upload invoices and bank statement"),
         description:
           dgettext(
             "home_live",
-            "Įkelkite failus arba persiųskite el. paštu. Goblinas viską priims."
+            "Upload files or forward by email. The goblin will accept everything."
           ),
         flip?: false
       },
@@ -470,13 +470,13 @@ defmodule InvoiceGoblinWeb.HomeLive do
         img_src: ~p"/images/goblinas-magija.png",
         img_src_avif: ~p"/images/goblinas-magija.avif",
         img_src_webp: ~p"/images/goblinas-magija.webp",
-        img_alt: dgettext("home_live", "Iliustracija: magiškas suderinimas"),
+        img_alt: dgettext("home_live", "Illustration: magical reconciliation"),
         icon_name: "lucide-calculator",
-        title: dgettext("home_live", "2. Goblinas viską sulygina"),
+        title: dgettext("home_live", "2. The goblin reconciles everything"),
         description:
           dgettext(
             "home_live",
-            "Jis patikrina, kurios sąskaitos atitinka banko išraše esančius mokėjimus."
+            "It checks which invoices match the payments in the bank statement."
           ),
         flip?: true
       },
@@ -484,13 +484,13 @@ defmodule InvoiceGoblinWeb.HomeLive do
         img_src: ~p"/images/goblinas-iesko.png",
         img_src_avif: ~p"/images/goblinas-iesko.avif",
         img_src_webp: ~p"/images/goblinas-iesko.webp",
-        img_alt: dgettext("home_live", "Iliustracija: aptikite klastinguosius"),
+        img_alt: dgettext("home_live", "Illustration: detect the tricky ones"),
         icon_name: "lucide-search",
-        title: dgettext("home_live", "3. Suranda praleistas sąskaitas"),
+        title: dgettext("home_live", "3. Finds missing invoices"),
         description:
           dgettext(
             "home_live",
-            "Goblinas parodo, kurios sąskaitos nesumokėtos arba kurių sąskaitų trūksta."
+            "The goblin shows which invoices are unpaid or which invoices are missing."
           ),
         flip?: false
       }
@@ -505,11 +505,11 @@ defmodule InvoiceGoblinWeb.HomeLive do
         img_src_webp: ~p"/images/goblinas-visos-saskaitos.webp",
         icon_name: "lucide-shield",
         icon_bg: "bg-gradient-primary text-white",
-        title: dgettext("home_live", "Visos sąskaitos vienoje vietoje"),
+        title: dgettext("home_live", "All invoices in one place"),
         description:
           dgettext(
             "home_live",
-            "Nebereikės ieškoti po el. paštą ar segtuvus – visos sąskaitos tvarkingai sukeltos ir pasiekiamos."
+            "No more searching through email or folders – all invoices are neatly uploaded and accessible."
           )
       },
       %{
@@ -518,11 +518,11 @@ defmodule InvoiceGoblinWeb.HomeLive do
         img_src_webp: ~p"/images/goblinas-automatinis-patikrinimas.webp",
         icon_name: "lucide-zap",
         icon_bg: "bg-gradient-secondary text-white",
-        title: dgettext("home_live", "Automatinis sąskaitų patikrinimas"),
+        title: dgettext("home_live", "Automatic invoice verification"),
         description:
           dgettext(
             "home_live",
-            "Įkelkite banko išrašą, ir sistema pati sulygina jį su sąskaitomis. Matysite, kas apmokėta, o kas dar laukia."
+            "Upload a bank statement, and the system will automatically reconcile it with invoices. You'll see what's paid and what's still pending."
           )
       },
       %{
@@ -531,11 +531,11 @@ defmodule InvoiceGoblinWeb.HomeLive do
         img_src_webp: ~p"/images/goblinas-klaidu-aptikimas.webp",
         icon_name: "lucide-target",
         icon_bg: "bg-gradient-accent text-white",
-        title: dgettext("home_live", "Klaidų aptikimas"),
+        title: dgettext("home_live", "Error detection"),
         description:
           dgettext(
             "home_live",
-            "Sistema iškart parodo, jei sąskaita neapmokėta, pasikartoja ar neatitinka mokėjimo."
+            "The system immediately shows if an invoice is unpaid, duplicated, or doesn't match a payment."
           )
       },
       %{
@@ -544,11 +544,11 @@ defmodule InvoiceGoblinWeb.HomeLive do
         img_src_webp: ~p"/images/goblinas-lengvas-pradetas.webp",
         icon_name: "lucide-brain",
         icon_bg: "bg-gradient-primary text-white",
-        title: dgettext("home_live", "Lengva pradėti"),
+        title: dgettext("home_live", "Easy to get started"),
         description:
           dgettext(
             "home_live",
-            "Jokių sudėtingų diegimų ar integracijų – užtenka įkelti banko išrašą ir sąskaitas."
+            "No complicated installations or integrations – just upload the bank statement and invoices."
           )
       }
     ]
@@ -558,35 +558,35 @@ defmodule InvoiceGoblinWeb.HomeLive do
     [
       %{
         name: dgettext("home_live", "Andrius P."),
-        job: dgettext("home_live", "Kavinės savininkas"),
+        job: dgettext("home_live", "Cafe owner"),
         class: "-rotate-3 md:translate-y-8",
         icon: "🧑‍💼",
         text:
           dgettext(
             "home_live",
-            "Kiekvieną mėnesį gaišdavau pusę dienos rinkdamas sąskaitas buhalterei. Dabar tiesiog persiunčiu jas Gobliui ir viskas sutvarkyta. Sutaupau daug nervų."
+            "Every month I used to waste half a day collecting invoices for the accountant. Now I just forward them to the Goblin and everything is sorted. Saved a lot of nerves."
           )
       },
       %{
         name: dgettext("home_live", "Darius K."),
-        job: dgettext("home_live", "Autoserviso vadovas"),
+        job: dgettext("home_live", "Auto service manager"),
         class: nil,
         icon: "👨‍💻",
         text:
           dgettext(
             "home_live",
-            "Mano darbas yra remontuoti automobilius, o ne ieškoti sąskaitų. Goblinas man padėjo viską sukaupti vienoje vietoje. Buhalterei siųsti tapo daug paprasčiau."
+            "My job is to repair cars, not search for invoices. The Goblin helped me collect everything in one place. Sending to the accountant became much easier."
           )
       },
       %{
         name: dgettext("home_live", "Simona V."),
-        job: dgettext("home_live", "Marketingo įmonės vadovė"),
+        job: dgettext("home_live", "Marketing company director"),
         class: "rotate-3 md:translate-y-8",
         icon: "👩‍💼",
         text:
           dgettext(
             "home_live",
-            "Mėnesio pabaigos man būdavo tikras galvos skausmas. Dabar tiesiog įkeliu banko išrašą, o goblinas pats sudėlioja, kas apmokėta, o ko dar trūksta."
+            "End of month used to be a real headache for me. Now I just upload the bank statement, and the goblin organizes what's paid and what's still missing."
           )
       }
     ]

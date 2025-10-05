@@ -11,15 +11,7 @@ defmodule InvoiceGoblinWeb.Router do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
-
-    plug Cldr.Plug.PutLocale,
-      apps: [:cldr, :gettext],
-      from: [:path, :query],
-      gettext: InvoiceGoblinGettext.Backend,
-      cldr: InvoiceGoblinCldr
-
-    plug Cldr.Plug.PutSession, as: :string
-
+    plug InvoiceGoblinWeb.Plug.PutLocale
     plug :fetch_live_flash
     plug :put_root_layout, html: {Layout, :root_app}
     plug :protect_from_forgery
@@ -31,6 +23,7 @@ defmodule InvoiceGoblinWeb.Router do
   pipeline :browser_admin do
     plug :accepts, ["html"]
     plug :fetch_session
+    plug InvoiceGoblinWeb.Plug.PutLocale
     plug :fetch_live_flash
     plug :put_root_layout, html: {Layout, :root_admin}
     plug :protect_from_forgery
