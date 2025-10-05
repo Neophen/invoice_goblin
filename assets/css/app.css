@@ -19,11 +19,6 @@
 }
 
 :root {
-  --earth-yellow: oklch(75.452% 0.10942 68.35);
-  --tigers-eye: oklch(60.63% 0.12975 56.993);
-  --pakistan-green: oklch(30.805% 0.05162 130.111);
-  --dark-moss-green: oklch(50.808% 0.07729 119.743);
-  --cornsilk: oklch(98.164% 0.0328 99.56);
   --background: 45 100% 97%;
   --foreground: 145 85% 15%;
   --card: 0 0% 100%;
@@ -166,32 +161,32 @@
   default: true;
   prefersdark: false;
   color-scheme: "light";
-  --color-base-100: oklch(98% 0 0);
-  --color-base-200: oklch(96% 0.001 286.375);
-  --color-base-300: oklch(92% 0.004 286.32);
-  --color-base-content: oklch(21% 0.006 285.885);
-  --color-primary: var(--dark-moss-green);
-  --color-primary-content: var(--cornsilk);
-  --color-secondary: var(--tigers-eye);
-  --color-secondary-content: var(--cornsilk);
-  --color-accent: var(--pakistan-green);
-  --color-accent-content: var(--cornsilk);
-  --color-neutral: oklch(44% 0.017 285.786);
+  --color-base-100: oklch(98% 0.02 140);
+  --color-base-200: oklch(95% 0.03 140);
+  --color-base-300: oklch(92% 0.04 140);
+  --color-base-content: oklch(21% 0.05 140);
+  --color-primary: oklch(45% 0.15 140);
+  --color-primary-content: oklch(98% 0.01 140);
+  --color-secondary: oklch(60% 0.15 280);
+  --color-secondary-content: oklch(98% 0.01 280);
+  --color-accent: oklch(60% 0.15 35);
+  --color-accent-content: oklch(98% 0.01 35);
+  --color-neutral: oklch(44% 0.017 140);
   --color-neutral-content: oklch(98% 0 0);
   --color-info: oklch(62% 0.214 259.815);
   --color-info-content: oklch(97% 0.014 254.604);
-  --color-success: oklch(70% 0.14 182.503);
-  --color-success-content: oklch(98% 0.014 180.72);
-  --color-warning: oklch(66% 0.179 58.318);
-  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-success: oklch(70% 0.14 140);
+  --color-success-content: oklch(98% 0.014 140);
+  --color-warning: oklch(66% 0.179 35);
+  --color-warning-content: oklch(98% 0.022 35);
   --color-error: oklch(58% 0.253 17.585);
   --color-error-content: oklch(96% 0.015 12.422);
-  --radius-selector: 0.25rem;
-  --radius-field: 0.25rem;
-  --radius-box: 0.5rem;
-  --size-selector: 0.21875rem;
-  --size-field: 0.21875rem;
-  --border: 1.5px;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 2px;
   --depth: 1;
   --noise: 0;
 }
