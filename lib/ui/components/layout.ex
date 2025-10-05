@@ -632,49 +632,41 @@ defmodule UI.Components.Layout do
 
   defp home_fonts(assigns) do
     ~H"""
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-
     <style>
       @font-face {
         font-family: 'Baloo 2';
         font-style: normal;
         font-weight: 400;
         font-display: swap;
-        src: url('fonts/baloo2-regular.woff2') format('woff2');
+        src: url({~p"/fonts/baloo2-regular.woff2"}) format('woff2');
       }
       @font-face {
         font-family: 'Baloo 2';
         font-style: normal;
         font-weight: 500;
         font-display: swap;
-        src: url('fonts/baloo2-medium.woff2') format('woff2');
+        src: url({~p"/fonts/baloo2-medium.woff2"}) format('woff2');
       }
       @font-face {
         font-family: 'Baloo 2';
         font-style: normal;
         font-weight: 600;
         font-display: swap;
-        src: url('fonts/baloo2-semibold.woff2') format('woff2');
+        src: url({~p"/fonts/baloo2-semibold.woff2"}) format('woff2');
       }
       @font-face {
         font-family: 'Baloo 2';
         font-style: normal;
         font-weight: 700;
         font-display: swap;
-        src: url('fonts/baloo2-bold.woff2') format('woff2');
+        src: url({~p"/fonts/baloo2-bold.woff2"}) format('woff2');
       }
       @font-face {
         font-family: 'Baloo 2';
         font-style: normal;
         font-weight: 800;
         font-display: swap;
-        src: url('fonts/baloo2-extrabold.woff2') format('woff2');
+        src: url({~p"/fonts/baloo2-extrabold.woff2"}) format('woff2');
       }
     </style>
     """
