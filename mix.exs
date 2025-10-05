@@ -41,6 +41,7 @@ defmodule InvoiceGoblin.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:timex, "~> 3.0"},
       {:usage_rules, "~> 0.1"},
       {:ex_money_sql, "~> 1.0"},
       {:ex_cldr_messages, "~> 1.0"},
@@ -92,7 +93,7 @@ defmodule InvoiceGoblin.MixProject do
        app: false,
        compile: false,
        depth: 1},
-      {:fluxon, "~> 2.0.0", repo: :fluxon},
+      # {:fluxon, "~> 2.0.0", repo: :fluxon},
       {:swoosh, "~> 1.16"},
       {:req, "~> 0.5"},
       {:telemetry_metrics, "~> 1.0"},

@@ -8,7 +8,6 @@ defmodule UI.Components.Layout do
   in regular views and live views.
   """
   use InvoiceGoblinWeb, :html
-  use Fluxon
   use InvoiceGoblinGettext
 
   use InvoiceGoblinCldr.VerifiedRoutes,
@@ -109,7 +108,7 @@ defmodule UI.Components.Layout do
       root_class={@root_class}
     >
       <:navigation>
-        <.navigation_list options={Navigation.main_nav()} />
+        <%!-- <.navigation_list options={Navigation.main_nav()} /> --%>
       </:navigation>
       {render_slot(@inner_block)}
     </.admin_base>
@@ -127,14 +126,14 @@ defmodule UI.Components.Layout do
 
   def admin_base(assigns) do
     ~H"""
-    <.sheet id="mobile-sidebar-nav" placement="left" class="w-full flex flex-col max-w-xs">
+    <%!-- <.sheet id="mobile-sidebar-nav" placement="left" class="w-full flex flex-col max-w-xs">
       <div class="flex mb-6 gap-4 items-center">
         <img src={Navigation.logo_path()} alt={Navigation.company_name()} class="h-7 w-auto" />
       </div>
 
       {render_slot(@navigation)}
       <.navigation_list class="mt-auto!" options={Navigation.settings_nav()} />
-    </.sheet>
+    </.sheet> --%>
 
     <div class={[
       "relative isolate flex w-full bg-base-100 max-md:flex-col md:bg-base-200",
@@ -153,11 +152,11 @@ defmodule UI.Components.Layout do
             </div>
 
             {render_slot(@navigation)}
-            <.navigation_list class="mt-auto!" options={Navigation.settings_nav()} />
+            <%!-- <.navigation_list class="mt-auto!" options={Navigation.settings_nav()} /> --%>
           </div>
 
           <div class="max-md:hidden flex flex-col border-t border-zinc-200 dark:border-white/10 p-4">
-            <.profile_menu current_user={@current_user} />
+            <%!-- <.profile_menu current_user={@current_user} /> --%>
           </div>
         </div>
       </div>
@@ -173,36 +172,36 @@ defmodule UI.Components.Layout do
     """
   end
 
-  attr :options, :map, required: true
-  attr :class, :string, default: nil
+  # attr :options, :map, required: true
+  # attr :class, :string, default: nil
 
-  def navigation_list(assigns) do
-    ~H"""
-    <.navlist heading={@options.title} class={@class}>
-      <div :for={item <- @options.items}>
-        <.navlink
-          navigate={item[:navigate]}
-          patch={item[:patch]}
-          active={item[:active?]}
-          phx-click={item[:children] && JS.toggle_attribute({"data-expanded", ""})}
-          class="flex items-center gap-1.5"
-        >
-          <Icon.icon
-            :if={item[:icon_name]}
-            name={item.icon_name}
-            class={["size-[1.2em]", item[:icon_class]]}
-          /> {item.label}
-          <Icon.icon
-            :if={item[:children]}
-            name="hero-chevron-right"
-            class="size-3 ml-auto in-data-expanded:rotate-90 transition-transform duration-200"
-          />
-        </.navlink>
-        <.navlist_children :if={item[:children]} options={item[:children]} />
-      </div>
-    </.navlist>
-    """
-  end
+  # def navigation_list(assigns) do
+  #   ~H"""
+  #   <.navlist heading={@options.title} class={@class}>
+  #     <div :for={item <- @options.items}>
+  #       <.navlink
+  #         navigate={item[:navigate]}
+  #         patch={item[:patch]}
+  #         active={item[:active?]}
+  #         phx-click={item[:children] && JS.toggle_attribute({"data-expanded", ""})}
+  #         class="flex items-center gap-1.5"
+  #       >
+  #         <Icon.icon
+  #           :if={item[:icon_name]}
+  #           name={item.icon_name}
+  #           class={["size-[1.2em]", item[:icon_class]]}
+  #         /> {item.label}
+  #         <Icon.icon
+  #           :if={item[:children]}
+  #           name="hero-chevron-right"
+  #           class="size-3 ml-auto in-data-expanded:rotate-90 transition-transform duration-200"
+  #         />
+  #       </.navlink>
+  #       <.navlist_children :if={item[:children]} options={item[:children]} />
+  #     </div>
+  #   </.navlist>
+  #   """
+  # end
 
   @doc """
   Renders a header with title.
@@ -461,7 +460,7 @@ defmodule UI.Components.Layout do
     ~H"""
     <div class="grid grid-rows-[0fr] [[data-expanded]+&]:grid-rows-[1fr] transition-all duration-200">
       <div class="overflow-hidden px-4 border-l border-zinc-200 ml-3">
-        <.navlist>
+        <%!-- <.navlist>
           <.navlink
             :for={item <- @options}
             navigate={item[:navigate]}
@@ -475,7 +474,7 @@ defmodule UI.Components.Layout do
               class={["size-[1.2em]", item[:icon_class]]}
             /> {item.label}
           </.navlink>
-        </.navlist>
+        </.navlist> --%>
       </div>
     </div>
     """
@@ -489,7 +488,7 @@ defmodule UI.Components.Layout do
       <div class="py-2.5">
         <span class="relative">
           <button
-            phx-click={Fluxon.open_dialog("mobile-sidebar-nav")}
+            phx-click={UI.open_dialog("mobile-sidebar-nav")}
             class="cursor-default relative flex min-w-0 items-center gap-3 rounded-lg p-2"
           >
             <Icon.icon name="hero-bars-3" class="size-6 text-base-content/80" />
@@ -499,7 +498,7 @@ defmodule UI.Components.Layout do
       <div class="min-w-0 flex-1">
         <nav class="flex flex-1 items-center gap-4 py-2.5">
           <div class="flex items-center gap-3 ml-auto">
-            <.dropdown placement="bottom-end">
+            <%!-- <.dropdown placement="bottom-end">
               <:toggle class="w-full flex items-center">
                 <button class="cursor-default">
                   <.user_avatar current_user={@current_user} />
@@ -509,7 +508,7 @@ defmodule UI.Components.Layout do
               <.dropdown_link :for={item <- Navigation.profile_nav()} navigate={item.navigate}>
                 {item.label}
               </.dropdown_link>
-            </.dropdown>
+            </.dropdown> --%>
           </div>
         </nav>
       </div>
@@ -517,43 +516,43 @@ defmodule UI.Components.Layout do
     """
   end
 
-  attr :current_user, User, required: true
+  # attr :current_user, User, required: true
 
-  defp profile_menu(assigns) do
-    ~H"""
-    <.dropdown class="w-56">
-      <:toggle class="w-full">
-        <button class="cursor-default flex w-full items-center gap-3 rounded-lg px-2 py-2.5">
-          <div class="flex min-w-0 items-center gap-3">
-            <.user_avatar current_user={@current_user} />
+  # defp profile_menu(assigns) do
+  #   ~H"""
+  #   <.dropdown class="w-56">
+  #     <:toggle class="w-full">
+  #       <button class="cursor-default flex w-full items-center gap-3 rounded-lg px-2 py-2.5">
+  #         <div class="flex min-w-0 items-center gap-3">
+  #           <.user_avatar current_user={@current_user} />
 
-            <div class="min-w-0 text-left">
-              <span class="block truncate text-sm font-medium text-zinc-800 dark:text-white">
-                {username(@current_user)}
-              </span>
-              <span class="block truncate text-xs font-normal text-zinc-500 dark:text-zinc-400">
-                {@current_user.email}
-              </span>
-            </div>
-          </div>
+  #           <div class="min-w-0 text-left">
+  #             <span class="block truncate text-sm font-medium text-zinc-800 dark:text-white">
+  #               {username(@current_user)}
+  #             </span>
+  #             <span class="block truncate text-xs font-normal text-zinc-500 dark:text-zinc-400">
+  #               {@current_user.email}
+  #             </span>
+  #           </div>
+  #         </div>
 
-          <Icon.icon
-            name="hero-chevron-up"
-            class="size-3 text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-200 ml-auto"
-          />
-        </button>
-      </:toggle>
+  #         <Icon.icon
+  #           name="hero-chevron-up"
+  #           class="size-3 text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-200 ml-auto"
+  #         />
+  #       </button>
+  #     </:toggle>
 
-      <.dropdown_link
-        :for={item <- Navigation.profile_nav()}
-        navigate={item.navigate}
-        id={"profile-link-desktop-#{item.id}"}
-      >
-        {item.label}
-      </.dropdown_link>
-    </.dropdown>
-    """
-  end
+  #     <.dropdown_link
+  #       :for={item <- Navigation.profile_nav()}
+  #       navigate={item.navigate}
+  #       id={"profile-link-desktop-#{item.id}"}
+  #     >
+  #       {item.label}
+  #     </.dropdown_link>
+  #   </.dropdown>
+  #   """
+  # end
 
   attr :class, :string, default: nil
 
@@ -681,26 +680,26 @@ defmodule UI.Components.Layout do
     """
   end
 
-  defp theme_script(assigns) do
-    ~H"""
-    <script>
-      (() => {
-        const setTheme = (theme) => {
-          if (theme === "system") {
-            localStorage.removeItem("phx:theme");
-            document.documentElement.removeAttribute("data-theme");
-          } else {
-            localStorage.setItem("phx:theme", theme);
-            document.documentElement.setAttribute("data-theme", theme);
-          }
-        };
-        if (!document.documentElement.hasAttribute("data-theme")) {
-          setTheme(localStorage.getItem("phx:theme") || "system");
-        }
-        window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
-        window.addEventListener("phx:set-theme", ({ detail: { theme } }) => setTheme(theme));
-      })();
-    </script>
-    """
-  end
+  # defp theme_script(assigns) do
+  #   ~H"""
+  #   <script>
+  #     (() => {
+  #       const setTheme = (theme) => {
+  #         if (theme === "system") {
+  #           localStorage.removeItem("phx:theme");
+  #           document.documentElement.removeAttribute("data-theme");
+  #         } else {
+  #           localStorage.setItem("phx:theme", theme);
+  #           document.documentElement.setAttribute("data-theme", theme);
+  #         }
+  #       };
+  #       if (!document.documentElement.hasAttribute("data-theme")) {
+  #         setTheme(localStorage.getItem("phx:theme") || "system");
+  #       }
+  #       window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
+  #       window.addEventListener("phx:set-theme", ({ detail: { theme } }) => setTheme(theme));
+  #     })();
+  #   </script>
+  #   """
+  # end
 end

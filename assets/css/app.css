@@ -9,8 +9,6 @@
 @plugin "./tailwind_plugins/plugin-lucide-icons";
 @source "../../lib/ui";
 @source "../../lib/invoice_goblin_web";
-@source "../../deps/fluxon/**/*.*ex";
-@import "../../deps/fluxon/priv/static/theme";
 
 
 /* daisyUI Tailwind Plugin. You can update this file by fetching the latest version with:

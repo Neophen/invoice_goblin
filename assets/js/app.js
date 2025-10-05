@@ -24,7 +24,6 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import {hooks as colocatedHooks} from "phoenix-colocated/invoice_goblin"
 import topbar from "../vendor/topbar"
-import { Hooks as FluxonHooks, DOM as FluxonDOM } from 'fluxon';
 
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
@@ -34,12 +33,7 @@ const liveSocket = new LiveSocket("/live", Socket, {
     _csrf_token: csrfToken,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   },
-  hooks: {...colocatedHooks, ...FluxonHooks},
-  dom: {
-    onBeforeElUpdated(from, to) {
-      FluxonDOM.onBeforeElUpdated(from, to);
-    },
-  },
+  hooks: {...colocatedHooks},
 })
 
 // Show progress bar on live navigation and form submits

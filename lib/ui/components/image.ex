@@ -11,7 +11,7 @@ defmodule UI.Components.Image do
       <Image.show src={~q"/images/goblinas-hero.png"} alt="A friendly goblin" class="w-full h-auto" />
 
   """
-  @moduledoc false
+
   use UI, :component
 
   attr :src, :string, required: true, doc: "Source path to the image"
