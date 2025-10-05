@@ -29,12 +29,12 @@ defmodule UI.Components.Image do
     ~H"""
     <picture class={@root_class}>
       <!-- AVIF source for modern browsers that support it -->
-      <source srcset={replace_ext(@src, "avif")} type="image/avif" />
+      <source srcset={static_path(@src, "avif")} type="image/avif" />
       <!-- WebP source as fallback -->
-      <source srcset={replace_ext(@src, "webp")} type="image/webp" />
+      <source srcset={static_path(@src, "webp")} type="image/webp" />
       <!-- Fallback img element -->
       <img
-        src={@src}
+        src={static_path(@src, nil)}
         alt={@alt}
         class={@class}
         loading={@loading}
@@ -44,7 +44,20 @@ defmodule UI.Components.Image do
     """
   end
 
-  defp replace_ext(path, new_ext) do
-    Path.rootname(path) <> "." <> new_ext
+  defp static_path(original_path, new_ext) do
+    # Get the base path without extension
+    base_path = Path.rootname(original_path)
+
+    # Create the new path with the specified extension
+    new_path =
+      if new_ext do
+        base_path <> "." <> new_ext
+      else
+        original_path
+      end
+
+    # Use the endpoint's static_path function to get the digested version in production
+    # This will automatically handle asset digesting
+    InvoiceGoblinWeb.Endpoint.static_path(new_path)
   end
 end
