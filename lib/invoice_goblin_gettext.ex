@@ -8,7 +8,7 @@ defmodule InvoiceGoblinGettext do
 
   defmacro __using__(_opts) do
     quote do
-      use InvoiceGoblinGettext
+      use Gettext, backend: InvoiceGoblinGettext.Backend
 
       import InvoiceGoblinGettext
 
@@ -23,13 +23,11 @@ defmodule InvoiceGoblinGettext do
   @spec get_locale() :: Gettext.locale()
   def get_locale, do: Gettext.get_locale(Backend)
 
-  defmacro dgettext_with_locale(locale, domain, message, bindings \\ []) do
-    quote do
-      if unquote(locale) in InvoiceGoblinCldr.known_locale_names() do
-        Gettext.with_locale(InvoiceGoblinGettext.Backend, to_string(unquote(locale)), fn ->
-          dgettext(unquote(domain), unquote(message), unquote(bindings))
-        end)
-      end
+  def dgettext_with_locale(locale, domain, message, bindings \\ []) do
+    if locale in InvoiceGoblinCldr.known_locale_names() do
+      Gettext.with_locale(InvoiceGoblinGettext.Backend, to_string(locale), fn ->
+        Gettext.dgettext(Backend, domain, message, bindings)
+      end)
     end
   end
 
