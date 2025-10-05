@@ -83,7 +83,7 @@ config :spark,
 config :invoice_goblin,
   ecto_repos: [InvoiceGoblin.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [InvoiceGoblin.Accounts, InvoiceGoblin.Finance, InvoiceGoblin.Ledger]
+  ash_domains: [InvoiceGoblin.Accounts, InvoiceGoblin.Finance]
 
 # Configures the endpoint
 config :invoice_goblin, InvoiceGoblinWeb.Endpoint,

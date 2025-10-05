@@ -38,6 +38,7 @@ defmodule UI do
       alias UI.Components.Field
       alias UI.Components.Flash
       alias UI.Components.Icon
+      alias UI.Components.Image
       alias UI.Components.Layout
       alias UI.Components.Modal
       alias UI.Components.RichText

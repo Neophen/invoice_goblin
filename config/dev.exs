@@ -60,7 +60,8 @@ config :invoice_goblin, InvoiceGoblinWeb.Endpoint,
     patterns: [
       ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/invoice_goblin_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$"
+      ~r"lib/invoice_goblin_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$",
+      ~r"lib/ui/.*\.ex$"
     ]
   ]
 
