@@ -35,7 +35,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
       # User already has a real organization, redirect to dashboard
       socket
       |> put_flash(:info, "Welcome back!")
-      |> push_navigate(to: ~q"/admin/:locale/dashboard")
+      |> push_navigate(to: ~p"/admin/dashboard")
       |> ok()
     end
   end
@@ -206,16 +206,36 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
                   <option value="">Select currency...</option>
                   <option value="EUR" selected={@selected_currency == "EUR"}>EUR - Euro</option>
                   <option value="USD" selected={@selected_currency == "USD"}>USD - US Dollar</option>
-                  <option value="GBP" selected={@selected_currency == "GBP"}>GBP - British Pound</option>
-                  <option value="PLN" selected={@selected_currency == "PLN"}>PLN - Polish Zloty</option>
-                  <option value="CZK" selected={@selected_currency == "CZK"}>CZK - Czech Koruna</option>
-                  <option value="SEK" selected={@selected_currency == "SEK"}>SEK - Swedish Krona</option>
-                  <option value="NOK" selected={@selected_currency == "NOK"}>NOK - Norwegian Krone</option>
-                  <option value="DKK" selected={@selected_currency == "DKK"}>DKK - Danish Krone</option>
-                  <option value="CHF" selected={@selected_currency == "CHF"}>CHF - Swiss Franc</option>
-                  <option value="JPY" selected={@selected_currency == "JPY"}>JPY - Japanese Yen</option>
-                  <option value="CAD" selected={@selected_currency == "CAD"}>CAD - Canadian Dollar</option>
-                  <option value="AUD" selected={@selected_currency == "AUD"}>AUD - Australian Dollar</option>
+                  <option value="GBP" selected={@selected_currency == "GBP"}>
+                    GBP - British Pound
+                  </option>
+                  <option value="PLN" selected={@selected_currency == "PLN"}>
+                    PLN - Polish Zloty
+                  </option>
+                  <option value="CZK" selected={@selected_currency == "CZK"}>
+                    CZK - Czech Koruna
+                  </option>
+                  <option value="SEK" selected={@selected_currency == "SEK"}>
+                    SEK - Swedish Krona
+                  </option>
+                  <option value="NOK" selected={@selected_currency == "NOK"}>
+                    NOK - Norwegian Krone
+                  </option>
+                  <option value="DKK" selected={@selected_currency == "DKK"}>
+                    DKK - Danish Krone
+                  </option>
+                  <option value="CHF" selected={@selected_currency == "CHF"}>
+                    CHF - Swiss Franc
+                  </option>
+                  <option value="JPY" selected={@selected_currency == "JPY"}>
+                    JPY - Japanese Yen
+                  </option>
+                  <option value="CAD" selected={@selected_currency == "CAD"}>
+                    CAD - Canadian Dollar
+                  </option>
+                  <option value="AUD" selected={@selected_currency == "AUD"}>
+                    AUD - Australian Dollar
+                  </option>
                 </select>
               </div>
 
@@ -367,7 +387,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
         {:ok, _new_org} ->
           socket
           |> put_flash(:info, "Welcome! Your organization has been set up successfully.")
-          |> push_navigate(to: ~q"/admin/:locale/dashboard")
+          |> push_navigate(to: ~p"/admin/dashboard")
           |> noreply()
 
         {:error, error} ->
@@ -385,7 +405,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
     # In a full implementation, you'd show a form to manually enter org details
     socket
     |> put_flash(:info, "You can set up your organization details later in settings.")
-    |> push_navigate(to: ~q"/admin/:locale/dashboard")
+    |> push_navigate(to: ~p"/admin/dashboard")
     |> noreply()
   end
 
@@ -393,7 +413,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
   def handle_event("skip_onboarding", _params, socket) do
     socket
     |> put_flash(:info, "You can upload your bank statement anytime from the dashboard.")
-    |> push_navigate(to: ~q"/admin/:locale/dashboard")
+    |> push_navigate(to: ~p"/admin/dashboard")
     |> noreply()
   end
 
@@ -446,18 +466,24 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
 
     payload_hash = "UNSIGNED-PAYLOAD"
 
-    canonical_headers = "content-type:#{content_type}\nhost:#{host}\nx-amz-content-sha256:#{payload_hash}\nx-amz-date:#{amz_date}\n"
+    canonical_headers =
+      "content-type:#{content_type}\nhost:#{host}\nx-amz-content-sha256:#{payload_hash}\nx-amz-date:#{amz_date}\n"
+
     signed_headers = "content-type;host;x-amz-content-sha256;x-amz-date"
 
-    canonical_request = "PUT\n#{canonical_uri}\n#{canonical_query}\n#{canonical_headers}\n#{signed_headers}\n#{payload_hash}"
+    canonical_request =
+      "PUT\n#{canonical_uri}\n#{canonical_query}\n#{canonical_headers}\n#{signed_headers}\n#{payload_hash}"
 
     credential_scope = "#{datestamp}/#{region}/s3/aws4_request"
-    string_to_sign = "AWS4-HMAC-SHA256\n#{amz_date}\n#{credential_scope}\n#{sha256_hex(canonical_request)}"
+
+    string_to_sign =
+      "AWS4-HMAC-SHA256\n#{amz_date}\n#{credential_scope}\n#{sha256_hex(canonical_request)}"
 
     signing_key = get_signature_key(secret_access_key, datestamp, region, "s3")
     signature = hmac_sha256_hex(signing_key, string_to_sign)
 
-    authorization = "AWS4-HMAC-SHA256 Credential=#{access_key_id}/#{credential_scope}, SignedHeaders=#{signed_headers}, Signature=#{signature}"
+    authorization =
+      "AWS4-HMAC-SHA256 Credential=#{access_key_id}/#{credential_scope}, SignedHeaders=#{signed_headers}, Signature=#{signature}"
 
     [
       {"Authorization", authorization},
@@ -511,7 +537,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
           # User already has a real org, shouldn't be here
           socket
           |> put_flash(:info, "You already have an organization set up!")
-          |> push_navigate(to: ~q"/admin/:locale/dashboard")
+          |> push_navigate(to: ~p"/admin/dashboard")
           |> noreply()
         end
 

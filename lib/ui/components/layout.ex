@@ -10,7 +10,7 @@ defmodule UI.Components.Layout do
   use InvoiceGoblinWeb, :html
   use InvoiceGoblinGettext
 
-  use InvoiceGoblinCldr.VerifiedRoutes,
+  use Phoenix.VerifiedRoutes,
     endpoint: InvoiceGoblinWeb.Endpoint,
     router: InvoiceGoblinWeb.Router,
     statics: InvoiceGoblinWeb.static_paths()
@@ -250,7 +250,7 @@ defmodule UI.Components.Layout do
         <li class="flex">
           <div class="flex items-center">
             <a
-              href={~q"/admin/:locale/dashboard"}
+              href={~p"/admin/dashboard"}
               class="text-base-content/60 hover:text-base-content"
             >
               <svg
@@ -389,7 +389,7 @@ defmodule UI.Components.Layout do
           <tr>
             <th :for={col <- @col} class="p-0 pb-4 pr-6 font-normal">{col[:label]}</th>
             <th :if={@action != []} class="relative p-0 pb-4">
-              <span class="sr-only">{gettext("Actions")}</span>
+              <span class="sr-only">{dgettext("layout", "Actions")}</span>
             </th>
           </tr>
         </thead>

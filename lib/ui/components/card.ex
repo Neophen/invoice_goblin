@@ -3,7 +3,7 @@ defmodule UI.Components.Card do
   use UI, :component
   use InvoiceGoblinGettext
 
-  use InvoiceGoblinCldr.VerifiedRoutes,
+  use Phoenix.VerifiedRoutes,
     endpoint: InvoiceGoblinWeb.Endpoint,
     router: InvoiceGoblinWeb.Router,
     statics: InvoiceGoblinWeb.static_paths()
@@ -13,11 +13,11 @@ defmodule UI.Components.Card do
   @doc """
   Render dropdown menu
   ## Examples:
-    <Card.default id={@user.id} action={[{:patch, ~q"/"}, {:sr_label, dgettext("admin", "Say hello") ]} >
+    <Card.default id={@user.id} action={[{:patch, ~p"/"}, {:sr_label, dgettext("admin", "Say hello") ]} >
       <Card.header>
         <Text.h4 class="card-text-primary" text="Title" />
         <Card.menu>
-          <Card.menu_action icon="lucide-settings" patch={~q"/"}>
+          <Card.menu_action icon="lucide-settings" patch={~p"/"}>
             <%= dgettext("admin", "Settings") %>
           </Card.menu_action>
         </Card.menu>

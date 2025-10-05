@@ -22,7 +22,7 @@ defmodule InvoiceGoblinWeb do
   def router do
     quote do
       use Phoenix.Router, helpers: false
-      use InvoiceGoblinCldr.Routes, helpers: false
+      use Cldr.Routes, helpers: false
 
       # Import common connection and controller functions to use in pipelines
       import Plug.Conn
@@ -106,7 +106,7 @@ defmodule InvoiceGoblinWeb do
 
   def verified_routes do
     quote do
-      use InvoiceGoblinCldr.VerifiedRoutes,
+      use Phoenix.VerifiedRoutes,
         endpoint: InvoiceGoblinWeb.Endpoint,
         router: InvoiceGoblinWeb.Router,
         statics: InvoiceGoblinWeb.static_paths()

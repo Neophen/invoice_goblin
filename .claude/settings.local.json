@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mix gettext.extract:*)",
+      "Bash(mix phx.server:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

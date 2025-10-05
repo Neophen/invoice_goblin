@@ -8,7 +8,7 @@ This is a web application written using the Phoenix web framework.
 ### Phoenix v1.8 guidelines
 
 - **Always** use the full name for aliasing `alias InvoiceGoblin.Accounts.Organisation`. **Never** use the shorthand syntax `alias InvoiceGoblin.Accounts.{Organisation, User}`
-- **Always** use ~q"" sigil for routes, where locale is needed put in the `:locale` for e.g. `~q"/admin/:locale/dashboard"
+- **Always** use ~p"" sigil for routes, where locale is needed put in the `:locale` for e.g. `~p"/admin/dashboard"
 - **Always** begin your LiveView templates with `<Layouts.app flash={@flash} ...>` which wraps all inner content
 - The `InvoiceGoblinWeb.Layouts` module is aliased in the `invoice_goblin_web.ex` file, so you can use it without needing to alias it again
 - Anytime you run into errors with no `current_scope` assign:

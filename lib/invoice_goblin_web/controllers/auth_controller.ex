@@ -8,9 +8,9 @@ defmodule InvoiceGoblinWeb.AuthController do
     # Check if user has only placeholder organization
     default_route =
       if Onboarding.has_only_placeholder_organization?(user.id) do
-        ~q"/admin/en/onboarding"
+        ~p"/admin/en/onboarding"
       else
-        ~q"/admin/en/dashboard"
+        ~p"/admin/en/dashboard"
       end
 
     return_to = get_session(conn, :return_to) || default_route
@@ -51,11 +51,11 @@ defmodule InvoiceGoblinWeb.AuthController do
 
     conn
     |> put_flash(:error, message)
-    |> redirect(to: ~q"/sign-in")
+    |> redirect(to: ~p"/sign-in")
   end
 
   def sign_out(conn, _params) do
-    return_to = get_session(conn, :return_to) || ~q"/"
+    return_to = get_session(conn, :return_to) || ~p"/"
 
     conn
     |> clear_session(:invoice_goblin)

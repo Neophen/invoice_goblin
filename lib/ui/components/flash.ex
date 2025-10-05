@@ -42,7 +42,11 @@ defmodule UI.Components.Flash do
           <p>{msg}</p>
         </div>
         <div class="flex-1" />
-        <button type="button" class="group self-start cursor-pointer" aria-label={gettext("close")}>
+        <button
+          type="button"
+          class="group self-start cursor-pointer"
+          aria-label={dgettext("global", "close")}
+        >
           <Icon.icon name="hero-x-mark" class="size-5 opacity-40 group-hover:opacity-70" />
         </button>
       </div>

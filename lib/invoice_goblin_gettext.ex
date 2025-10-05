@@ -12,7 +12,7 @@ defmodule InvoiceGoblinGettext do
 
       import InvoiceGoblinGettext
 
-      alias InvoiceGoblin.Types.Translated
+      # alias InvoiceGoblin.Types.Translated
     end
   end
 

@@ -7,8 +7,8 @@ defmodule UI.Components.Image do
 
   ## Examples
 
-      <Image.show src={~q"/images/goblinas-hero.png"} alt="A friendly goblin" />
-      <Image.show src={~q"/images/goblinas-hero.png"} alt="A friendly goblin" class="w-full h-auto" />
+      <Image.show src={~p"/images/goblinas-hero.png"} alt="A friendly goblin" />
+      <Image.show src={~p"/images/goblinas-hero.png"} alt="A friendly goblin" class="w-full h-auto" />
 
   """
 

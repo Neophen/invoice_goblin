@@ -137,9 +137,9 @@ defmodule InvoiceGoblinWeb.HomeLive do
           </div>
 
           <Image.show
-            src={~q"/images/goblinas-hero.png"}
-            src_avif={~q"/images/goblinas-hero.avif"}
-            src_webp={~q"/images/goblinas-hero.webp"}
+            src={~p"/images/goblinas-hero.png"}
+            src_avif={~p"/images/goblinas-hero.avif"}
+            src_webp={~p"/images/goblinas-hero.webp"}
             alt={dgettext("home_live", "Draugiškas goblinas, tvarkantis sąskaitas")}
             class="w-full animate-goblin-bounce"
           />
@@ -334,9 +334,9 @@ defmodule InvoiceGoblinWeb.HomeLive do
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <div class="flex justify-center lg:justify-start order-2 lg:order-1">
           <Image.show
-            src={~q"/images/goblin-welcome.png"}
-            src_avif={~q"/images/goblin-welcome.avif"}
-            src_webp={~q"/images/goblin-welcome.webp"}
+            src={~p"/images/goblin-welcome.png"}
+            src_avif={~p"/images/goblin-welcome.avif"}
+            src_webp={~p"/images/goblin-welcome.webp"}
             alt={dgettext("home_live", "Laimingas goblinas, švenčiantis sutvarkytas sąskaitas")}
             class="w-full max-w-lg animate-goblin-wiggle"
           />
@@ -453,9 +453,9 @@ defmodule InvoiceGoblinWeb.HomeLive do
   defp how_it_works_items() do
     [
       %{
-        img_src: ~q"/images/goblinas-dziaugiasi.png",
-        img_src_avif: ~q"/images/goblinas-dziaugiasi.avif",
-        img_src_webp: ~q"/images/goblinas-dziaugiasi.webp",
+        img_src: ~p"/images/goblinas-dziaugiasi.png",
+        img_src_avif: ~p"/images/goblinas-dziaugiasi.avif",
+        img_src_webp: ~p"/images/goblinas-dziaugiasi.webp",
         img_alt: dgettext("home_live", "Iliustracija: įkėlimas arba persiuntimas"),
         icon_name: "lucide-upload",
         title: dgettext("home_live", "1. Įkelkite sąskaitas ir banko išrašą"),
@@ -467,9 +467,9 @@ defmodule InvoiceGoblinWeb.HomeLive do
         flip?: false
       },
       %{
-        img_src: ~q"/images/goblinas-magija.png",
-        img_src_avif: ~q"/images/goblinas-magija.avif",
-        img_src_webp: ~q"/images/goblinas-magija.webp",
+        img_src: ~p"/images/goblinas-magija.png",
+        img_src_avif: ~p"/images/goblinas-magija.avif",
+        img_src_webp: ~p"/images/goblinas-magija.webp",
         img_alt: dgettext("home_live", "Iliustracija: magiškas suderinimas"),
         icon_name: "lucide-calculator",
         title: dgettext("home_live", "2. Goblinas viską sulygina"),
@@ -481,9 +481,9 @@ defmodule InvoiceGoblinWeb.HomeLive do
         flip?: true
       },
       %{
-        img_src: ~q"/images/goblinas-iesko.png",
-        img_src_avif: ~q"/images/goblinas-iesko.avif",
-        img_src_webp: ~q"/images/goblinas-iesko.webp",
+        img_src: ~p"/images/goblinas-iesko.png",
+        img_src_avif: ~p"/images/goblinas-iesko.avif",
+        img_src_webp: ~p"/images/goblinas-iesko.webp",
         img_alt: dgettext("home_live", "Iliustracija: aptikite klastinguosius"),
         icon_name: "lucide-search",
         title: dgettext("home_live", "3. Suranda praleistas sąskaitas"),
@@ -500,9 +500,9 @@ defmodule InvoiceGoblinWeb.HomeLive do
   defp feature_items() do
     [
       %{
-        img_src: ~q"/images/goblinas-visos-saskaitos.png",
-        img_src_avif: ~q"/images/goblinas-visos-saskaitos.avif",
-        img_src_webp: ~q"/images/goblinas-visos-saskaitos.webp",
+        img_src: ~p"/images/goblinas-visos-saskaitos.png",
+        img_src_avif: ~p"/images/goblinas-visos-saskaitos.avif",
+        img_src_webp: ~p"/images/goblinas-visos-saskaitos.webp",
         icon_name: "lucide-shield",
         icon_bg: "bg-gradient-primary text-white",
         title: dgettext("home_live", "Visos sąskaitos vienoje vietoje"),
@@ -513,9 +513,9 @@ defmodule InvoiceGoblinWeb.HomeLive do
           )
       },
       %{
-        img_src: ~q"/images/goblinas-automatinis-patikrinimas.png",
-        img_src_avif: ~q"/images/goblinas-automatinis-patikrinimas.avif",
-        img_src_webp: ~q"/images/goblinas-automatinis-patikrinimas.webp",
+        img_src: ~p"/images/goblinas-automatinis-patikrinimas.png",
+        img_src_avif: ~p"/images/goblinas-automatinis-patikrinimas.avif",
+        img_src_webp: ~p"/images/goblinas-automatinis-patikrinimas.webp",
         icon_name: "lucide-zap",
         icon_bg: "bg-gradient-secondary text-white",
         title: dgettext("home_live", "Automatinis sąskaitų patikrinimas"),
@@ -526,9 +526,9 @@ defmodule InvoiceGoblinWeb.HomeLive do
           )
       },
       %{
-        img_src: ~q"/images/goblinas-klaidu-aptikimas.png",
-        img_src_avif: ~q"/images/goblinas-klaidu-aptikimas.avif",
-        img_src_webp: ~q"/images/goblinas-klaidu-aptikimas.webp",
+        img_src: ~p"/images/goblinas-klaidu-aptikimas.png",
+        img_src_avif: ~p"/images/goblinas-klaidu-aptikimas.avif",
+        img_src_webp: ~p"/images/goblinas-klaidu-aptikimas.webp",
         icon_name: "lucide-target",
         icon_bg: "bg-gradient-accent text-white",
         title: dgettext("home_live", "Klaidų aptikimas"),
@@ -539,9 +539,9 @@ defmodule InvoiceGoblinWeb.HomeLive do
           )
       },
       %{
-        img_src: ~q"/images/goblinas-lengvas-pradetas.png",
-        img_src_avif: ~q"/images/goblinas-lengvas-pradetas.avif",
-        img_src_webp: ~q"/images/goblinas-lengvas-pradetas.webp",
+        img_src: ~p"/images/goblinas-lengvas-pradetas.png",
+        img_src_avif: ~p"/images/goblinas-lengvas-pradetas.avif",
+        img_src_webp: ~p"/images/goblinas-lengvas-pradetas.webp",
         icon_name: "lucide-brain",
         icon_bg: "bg-gradient-primary text-white",
         title: dgettext("home_live", "Lengva pradėti"),

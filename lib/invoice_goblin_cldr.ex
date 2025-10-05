@@ -23,7 +23,6 @@ defmodule InvoiceGoblinCldr do
     providers: [
       Cldr.LocaleDisplay,
       Cldr.Message,
-      Cldr.Number,
-      Cldr.Routes
+      Cldr.Number
     ]
 end

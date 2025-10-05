@@ -54,7 +54,7 @@ defmodule UI.Components.Modal do
                   phx-click={JS.exec("data-cancel", to: "##{@id}")}
                   type="button"
                   class="-m-3 flex-none p-3 opacity-20 hover:opacity-40"
-                  aria-label="close"
+                  aria-label={dgettext("global", "close")}
                 >
                   <Icon.icon name="hero-x-mark-solid" class="h-5 w-5" />
                 </button>

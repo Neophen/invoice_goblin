@@ -26,6 +26,7 @@ defmodule InvoiceGoblinWeb.Router do
     plug :put_root_layout, html: {Layout, :root_admin}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug InvoiceGoblinWeb.Plugs.PlausibleSessionPlug
     plug :load_from_session
   end
 
@@ -70,63 +71,61 @@ defmodule InvoiceGoblinWeb.Router do
         {InvoiceGoblinWeb.LiveUserAuth, :live_user_required},
         {InvoiceGoblinWeb.Hooks.CurrentPath, :current_path}
       ] do
-      localize do
-        live "/#{locale}/dashboard", DashboardLive
-        live "/#{locale}/onboarding", Admin.OnboardingUploadLive
+      live "/dashboard", DashboardLive
+      live "/onboarding", Admin.OnboardingUploadLive
 
-        # Finance routes
-        live "/#{locale}/invoices", InvoiceListLive
-        live "/#{locale}/invoices/upload", InvoiceUploadLive
-        live "/#{locale}/invoices/processing", InvoiceProcessingDashboardLive
-        live "/#{locale}/invoices/:id", InvoiceDetailLive
+      # Finance routes
+      live "/invoices", InvoiceListLive
+      live "/invoices/upload", InvoiceUploadLive
+      live "/invoices/processing", InvoiceProcessingDashboardLive
+      live "/invoices/:id", InvoiceDetailLive
 
-        live "/#{locale}/statements", StatementListLive
-        live "/#{locale}/statements/upload", BankStatementUploadLive
-        live "/#{locale}/statements/:id", StatementDetailLive
+      live "/statements", StatementListLive
+      live "/statements/upload", BankStatementUploadLive
+      live "/statements/:id", StatementDetailLive
 
-        live "/#{locale}/transactions", TransactionListLive
-        # live "/#{locale}/analytics", AnalyticsLive
-        # live "/#{locale}/posts", PostsLive
-        # live "/#{locale}/users", UsersLive
-        # live "/#{locale}/chat-room", ChatRoomLive.Index
-        # live "/#{locale}/chat-room/:id", ChatRoomLive.Index
-        # live "/#{locale}/chat-room/:id/edit", ChatRoomLive.EditRoom
+      live "/transactions", TransactionListLive
+      # live "/analytics", AnalyticsLive
+      # live "/posts", PostsLive
+      # live "/users", UsersLive
+      # live "/chat-room", ChatRoomLive.Index
+      # live "/chat-room/:id", ChatRoomLive.Index
+      # live "/chat-room/:id/edit", ChatRoomLive.EditRoom
 
-        # Posts
-        # Posts.Category
-        # live "/#{locale}/categories", CategoryLive.Index, :index
-        # live "/#{locale}/categories/new", CategoryLive.Form, :new
-        # live "/#{locale}/categories/:id/edit", CategoryLive.Form, :edit
-        # live "/#{locale}/categories/:id", CategoryLive.Show, :show
-        # live "/#{locale}/categories/:id/show/edit", CategoryLive.Show, :edit
+      # Posts
+      # Posts.Category
+      # live "/categories", CategoryLive.Index, :index
+      # live "/categories/new", CategoryLive.Form, :new
+      # live "/categories/:id/edit", CategoryLive.Form, :edit
+      # live "/categories/:id", CategoryLive.Show, :show
+      # live "/categories/:id/show/edit", CategoryLive.Show, :edit
 
-        # Posts.Tag
-        # live "/#{locale}/tags", TagLive.Index, :index
-        # live "/#{locale}/tags/new", TagLive.Form, :new
-        # live "/#{locale}/tags/:id/edit", TagLive.Form, :edit
-        # live "/#{locale}/tags/:id", TagLive.Show, :show
-        # live "/#{locale}/tags/:id/show/edit", TagLive.Show, :edit
+      # Posts.Tag
+      # live "/tags", TagLive.Index, :index
+      # live "/tags/new", TagLive.Form, :new
+      # live "/tags/:id/edit", TagLive.Form, :edit
+      # live "/tags/:id", TagLive.Show, :show
+      # live "/tags/:id/show/edit", TagLive.Show, :edit
 
-        # Posts.Article
-        # live "/#{locale}/articles", ArticleLive.Index, :index
-        # live "/#{locale}/articles/new", ArticleLive.Form, :new
-        # live "/#{locale}/articles/:id/edit", ArticleLive.Form, :edit
-        # live "/#{locale}/articles/:id", ArticleLive.Show, :show
-        # live "/#{locale}/articles/:id/show/edit", ArticleLive.Show, :edit
+      # Posts.Article
+      # live "/articles", ArticleLive.Index, :index
+      # live "/articles/new", ArticleLive.Form, :new
+      # live "/articles/:id/edit", ArticleLive.Form, :edit
+      # live "/articles/:id", ArticleLive.Show, :show
+      # live "/articles/:id/show/edit", ArticleLive.Show, :edit
 
-        # Accounts
-        # Accounts.Group
-        # live "/#{locale}/groups", GroupLive.Index
-        # live "/#{locale}/groups/:id", GroupLive.Show
+      # Accounts
+      # Accounts.Group
+      # live "/groups", GroupLive.Index
+      # live "/groups/:id", GroupLive.Show
 
-        # live "/#{locale}/profile", ProfileLive
-        # live "/#{locale}/settings", SettingsLive
-        # live "/#{locale}/notifications", NotificationsLive
-        # live "/#{locale}/billing-plans", BillingPlansLive
-        # live "/#{locale}/support", SupportLive
-        # live "/#{locale}/documentation", DocumentationLive
-        # live "/#{locale}/sign-out", SignOutLive
-      end
+      # live "/profile", ProfileLive
+      # live "/settings", SettingsLive
+      # live "/notifications", NotificationsLive
+      # live "/billing-plans", BillingPlansLive
+      # live "/support", SupportLive
+      # live "/documentation", DocumentationLive
+      # live "/sign-out", SignOutLive
     end
   end
 
@@ -134,6 +133,7 @@ defmodule InvoiceGoblinWeb.Router do
     pipe_through :browser
 
     live "/", HomeLive
+
     auth_routes AuthController, User, path: "/auth"
     sign_out_route AuthController
 

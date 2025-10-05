@@ -7,7 +7,7 @@
 # General application configuration
 import Config
 
-config :ex_cldr, default_backend: InvoiceGoblin.Cldr
+config :ex_cldr, default_backend: InvoiceGoblinCldr
 config :ash_oban, pro?: false
 
 config :invoice_goblin, Oban,
@@ -137,7 +137,7 @@ config :ex_cldr,
 
 config :invoice_goblin, InvoiceGoblinCldr,
   primary_locale: System.get_env("LOCALES_PRIMARY") || "en",
-  allowed_locales: String.split(System.get_env("LOCALES_ALLOWED") || "en", ",", trim: true)
+  allowed_locales: String.split(System.get_env("LOCALES_ALLOWED") || "en,lt", ",", trim: true)
 
 # Configures Elixir's Logger
 config :logger, :default_formatter,
