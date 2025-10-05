@@ -62,140 +62,6 @@ defmodule InvoiceGoblinWeb.HomeLive do
 
   attr :form, :any, required: true
 
-  def old(assigns) do
-    ~H"""
-    <div class="relative isolate overflow-hidden bg-white min-h-svh">
-      <svg
-        aria-hidden="true"
-        class="absolute inset-0 -z-10 size-full mask-[radial-gradient(100%_100%_at_top_right,white,transparent)] stroke-gray-200"
-      >
-        <defs>
-          <pattern
-            id="983e3e4c-de6d-4c3f-8d64-b9761d1534cc"
-            width="200"
-            height="200"
-            x="50%"
-            y="-1"
-            patternUnits="userSpaceOnUse"
-          >
-            <path d="M.5 200V.5H200" fill="none" />
-          </pattern>
-        </defs>
-        <svg x="50%" y="-1" class="overflow-visible fill-gray-50">
-          <path
-            d="M-200 0h201v201h-201Z M600 0h201v201h-201Z M-400 600h201v201h-201Z M200 800h201v201h-201Z"
-            stroke-width="0"
-          />
-        </svg>
-        <rect
-          width="100%"
-          height="100%"
-          fill="url(#983e3e4c-de6d-4c3f-8d64-b9761d1534cc)"
-          stroke-width="0"
-        />
-      </svg>
-      <div
-        aria-hidden="true"
-        class="absolute top-10 left-[calc(50%-4rem)] -z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:top-[calc(50%-30rem)] lg:left-48 xl:left-[calc(50%-24rem)]"
-      >
-        <div
-          style="clip-path: polygon(73.6% 51.7%, 91.7% 11.8%, 100% 46.4%, 97.4% 82.2%, 92.5% 84.9%, 75.7% 64%, 55.3% 47.5%, 46.5% 49.4%, 45% 62.9%, 50.3% 87.2%, 21.3% 64.1%, 0.1% 100%, 5.4% 51.1%, 21.4% 63.9%, 58.9% 0.2%, 73.6% 51.7%)"
-          class="aspect-1108/632 w-277 bg-linear-to-r from-[#80caff] to-[#4f46e5] opacity-20"
-        >
-        </div>
-      </div>
-      <div class="mx-auto max-w-7xl px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:px-8 lg:py-40">
-        <div class="mx-auto max-w-2xl shrink-0 lg:mx-0 lg:pt-8">
-          <img
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
-            class="h-11"
-          />
-          <div class="mt-24 sm:mt-32 lg:mt-16">
-            <a href="#" class="inline-flex space-x-6">
-              <span class="rounded-full bg-indigo-50 px-3 py-1 text-sm/6 font-semibold text-indigo-600 ring-1 ring-indigo-600/20 ring-inset">
-                {dgettext("home_live", "What's new")}
-              </span>
-              <span class="inline-flex items-center space-x-2 text-sm/6 font-medium text-gray-600">
-                <span>{dgettext("home_live", "Just shipped v1.0")}</span>
-                <svg
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  data-slot="icon"
-                  aria-hidden="true"
-                  class="size-5 text-gray-400"
-                >
-                  <path
-                    d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                    clip-rule="evenodd"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </a>
-          </div>
-          <h1 class="mt-10 text-5xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-7xl">
-            {dgettext("home_live", "Be the first to try Invoice Goblin!")}
-          </h1>
-          <p class="mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8">
-            {dgettext(
-              "home_live",
-              "Effortlessly match your bank statements to invoices and receipts. Save time, reduce errors, and streamline your finances. Sign up now to get early access."
-            )}
-          </p>
-          <div class="mt-10 flex items-center gap-x-6">
-            <FormUI.root for={@form} phx-change="validate" phx-submit="save" class="w-full max-w-md">
-              <div class="flex items-start gap-4">
-                <FormUI.simple_input
-                  type="email"
-                  field={@form[:email]}
-                  required
-                  placeholder={dgettext("home_live", "Enter your email")}
-                  autocomplete="email"
-                  class="flex-1"
-                />
-                <Action.button
-                  type="submit"
-                  class="btn-primary"
-                  text={dgettext("home_live", "Notify me")}
-                />
-              </div>
-              <p class="mt-4 text-sm/6 text-primary">
-                {dgettext("home_live", "We care about your data. Read our")} <a
-                  href="#"
-                  class="font-semibold whitespace-nowrap text-primary hover:text-primary"
-                >{dgettext("home_live", "privacy policy")}</a>.
-              </p>
-            </FormUI.root>
-          </div>
-          <div class="mt-8 flex items-center gap-x-6">
-            <Text.body text={dgettext("home_live", "Already have an account?")} />
-            <Action.button
-              href={~q"/sign-in"}
-              class="btn btn-link"
-            >
-              {dgettext("home_live", "Log in")}
-            </Action.button>
-          </div>
-        </div>
-        <div class="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:mt-0 lg:mr-0 lg:ml-10 lg:max-w-none lg:flex-none xl:ml-32">
-          <div class="max-w-3xl flex-none sm:max-w-5xl lg:max-w-none">
-            <img
-              width="2432"
-              height="1442"
-              src="https://tailwindcss.com/plus-assets/img/component-images/project-app-screenshot.webp"
-              alt="App screenshot"
-              class="w-304 rounded-md bg-gray-50 shadow-xl ring-1 ring-primary/10"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-    """
-  end
-
-  attr :form, :any, required: true
-
   defp hero(assigns) do
     ~H"""
     <section class="min-h-screen bg-gradient-hero flex items-center justify-center px-4 py-20">
@@ -221,7 +87,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
                 for={@form}
                 phx-change="validate"
                 phx-submit="save"
-                class="flex flex-wrap gap-3 md:gap-4"
+                class="flex flex-wrap gap-3 md:gap-4 plausible-event-name=Waitlist+Submit plausible-event-position=hero"
               >
                 <input
                   type="email"
@@ -437,80 +303,83 @@ defmodule InvoiceGoblinWeb.HomeLive do
 
   defp cta_form(assigns) do
     ~H"""
-    <section class="py-20 px-4 bg-background">
-      <div class="container mx-auto max-w-6xl">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <div class="flex justify-center lg:justify-start order-2 lg:order-1">
-            <div class="relative">
-              <Image.show
-                src={~q"/images/goblin-welcome.png"}
-                alt={dgettext("home_live", "Laimingas goblinas, švenčiantis sutvarkytas sąskaitas")}
-                class="w-full max-w-lg animate-goblin-wiggle"
+    <.section class="bg-background">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="flex justify-center lg:justify-start order-2 lg:order-1">
+          <Image.show
+            src={~q"/images/goblin-welcome.png"}
+            alt={dgettext("home_live", "Laimingas goblinas, švenčiantis sutvarkytas sąskaitas")}
+            class="w-full max-w-lg animate-goblin-wiggle"
+          />
+        </div>
+        <div class="text-center lg:text-left space-y-8 order-1 lg:order-2">
+          <div class="space-y-4 text-center lg:text-left">
+            <.section_header>
+              {dgettext("home_live", "Leiskite")}
+              <.section_header_highlight
+                class="bg-gradient-primary"
+                text={dgettext("home_live", "Goblinui")}
               />
-            </div>
+              {dgettext("home_live", "sutvarkyti visas sąskaitas")}
+            </.section_header>
+            <.section_subtitle text={
+              dgettext(
+                "home_live",
+                "Įrašykite savo el. paštą ir gaukite ankstyvą prieigą be jokios rizikos."
+              )
+            } />
           </div>
-          <div class="text-center lg:text-left space-y-8 order-1 lg:order-2">
-            <div class="space-y-4">
-              <h2 class="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                {dgettext("home_live", "Leiskite")}
-                <span class="text-transparent bg-gradient-primary bg-clip-text">
-                  {dgettext("home_live", "Goblinui")}
-                </span>
-                {dgettext("home_live", "sutvarkyti visas sąskaitas")}
-              </h2>
-              <p
-                class="text-xl text-muted-foreground max-w-2xl"
-                style="font-family: Inter, &quot;DejaVu Sans&quot;, &quot;Liberation Sans&quot;, system-ui, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif;"
+          <div class="space-y-6">
+            <FormUI.root
+              class="flex flex-wrap gap-3 md:gap-4 plausible-event-name=Waitlist+Submit plausible-event-position=cta_bottom"
+              for={@form}
+              phx-validate="validate"
+              phx-submit="save"
+            >
+              <input
+                type="email"
+                class="flex w-full bg-background py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-xl md:rounded-2xl border-2 border-primary/20 focus:border-primary shadow-card-goblin h-12 md:h-16 text-base md:text-lg px-4 md:px-6 min-w-[200px]"
+                placeholder={dgettext("home_live", "Įveskite savo el. paštą")}
+                value={@form[:email].value}
+                name={@form[:email].name}
+                autocomplete="email"
+              />
+              <button
+                class="block ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gradient-secondary text-white shadow-button-goblin hover:shadow-goblin hover:scale-105 transition-all duration-200 rounded-xl py-2 whitespace-nowrap font-bold h-12 md:h-16 text-lg md:text-xl px-5 md:px-7 md:rounded-2xl min-w-fit flex-1"
+                type="submit"
+                phx-disable-with={dgettext("home_live", "Siunčiama...")}
               >
-                {dgettext(
-                  "home_live",
-                  "Įrašykite savo el. paštą ir gaukite ankstyvą prieigą be jokios rizikos."
-                )}
-              </p>
-            </div>
-            <div class="space-y-6">
-              <form class="flex flex-col sm:flex-row gap-3 md:gap-4 max-w-2xl mx-auto items-stretch lg:mx-0">
-                <input
-                  type="email"
-                  class="flex w-full bg-background py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-xl md:rounded-2xl border-2 border-primary/20 focus:border-primary shadow-card-goblin h-12 md:h-16 text-base md:text-lg px-4 md:px-6"
-                  placeholder={dgettext("home_live", "Įveskite savo el. paštą")}
-                  value=""
-                />
-                <button
-                  class="inline-flex items-center justify-center gap-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-gradient-secondary text-white shadow-button-goblin hover:shadow-goblin hover:scale-105 transition-all duration-200 rounded-xl py-2 whitespace-nowrap font-bold h-12 md:h-16 text-lg md:text-xl px-5 md:px-7 md:rounded-2xl"
-                  type="submit"
-                >
-                  {dgettext("home_live", "🎯 Gauti ankstyvą prieigą")}
-                </button>
-              </form>
-              <div class="flex flex-wrap justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
-                <div class="flex items-center space-x-2">
-                  <span class="text-green-500">✓</span><span>{dgettext("home_live", "Išbandykite nemokamai")}</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <span class="text-green-500">✓</span><span>{dgettext("home_live", "Ankstyvųjų naudotojų privilegijos")}</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <span class="text-green-500">✓</span><span>{dgettext("home_live", "Pagaliau sąskaitos – nebe galvos skausmas")}</span>
-                </div>
+                {dgettext("home_live", "🎯 Gauti ankstyvą prieigą")}
+              </button>
+            </FormUI.root>
+            <div class="flex flex-wrap justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
+              <div class="flex items-center space-x-2">
+                <span class="text-green-500">✓</span><span>{dgettext("home_live", "Išbandykite nemokamai")}</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-green-500">✓</span><span>{dgettext("home_live", "Ankstyvųjų naudotojų privilegijos")}</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-green-500">✓</span><span>{dgettext("home_live", "Pagaliau sąskaitos – nebe galvos skausmas")}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </.section>
     """
   end
 
   attr :class, :string, required: true
-  slot :block_start, required: true
+
+  slot :block_start
   slot :inner_block, required: true
 
   defp section(assigns) do
     ~H"""
     <section class={["py-20 px-4", @class]}>
       <div class="container mx-auto max-w-6xl">
-        <div class="text-center space-y-4 mb-16">
+        <div :if={@block_start != []} class="text-center space-y-4 mb-16">
           {render_slot(@block_start)}
         </div>
         {render_slot(@inner_block)}
@@ -533,7 +402,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
 
   defp section_header(assigns) do
     ~H"""
-    <h2 class="text-4xl lg:text-5xl font-bold text-foreground">
+    <h2 class="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
       {render_slot(@inner_block)}
     </h2>
     """

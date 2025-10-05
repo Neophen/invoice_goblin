@@ -22,7 +22,7 @@ defmodule UI.Components.Layout do
   def root_app(assigns) do
     ~H"""
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="en" class="overscroll-contain min-h-svh">
       <head>
         {Application.get_env(:live_debugger, :live_debugger_tags)}
 
@@ -35,75 +35,14 @@ defmodule UI.Components.Layout do
         <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
         <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
         </script>
-        <script>
-          (() => {
-            const setTheme = (theme) => {
-              if (theme === "system") {
-                localStorage.removeItem("phx:theme");
-                document.documentElement.removeAttribute("data-theme");
-              } else {
-                localStorage.setItem("phx:theme", theme);
-                document.documentElement.setAttribute("data-theme", theme);
-              }
-            };
-            if (!document.documentElement.hasAttribute("data-theme")) {
-              setTheme(localStorage.getItem("phx:theme") || "system");
-            }
-            window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
-            window.addEventListener("phx:set-theme", ({ detail: { theme } }) => setTheme(theme));
-          })();
-        </script>
         
     <!-- Favicon -->
         <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-        
-    <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
 
-        <style>
-          @font-face {
-            font-family: 'Baloo 2';
-            font-style: normal;
-            font-weight: 400;
-            font-display: swap;
-            src: url('fonts/baloo2-regular.woff2') format('woff2');
-          }
-          @font-face {
-            font-family: 'Baloo 2';
-            font-style: normal;
-            font-weight: 500;
-            font-display: swap;
-            src: url('fonts/baloo2-medium.woff2') format('woff2');
-          }
-          @font-face {
-            font-family: 'Baloo 2';
-            font-style: normal;
-            font-weight: 600;
-            font-display: swap;
-            src: url('fonts/baloo2-semibold.woff2') format('woff2');
-          }
-          @font-face {
-            font-family: 'Baloo 2';
-            font-style: normal;
-            font-weight: 700;
-            font-display: swap;
-            src: url('fonts/baloo2-bold.woff2') format('woff2');
-          }
-          @font-face {
-            font-family: 'Baloo 2';
-            font-style: normal;
-            font-weight: 800;
-            font-display: swap;
-            src: url('fonts/baloo2-extrabold.woff2') format('woff2');
-          }
-        </style>
+        <.home_fonts />
+        <.plausible_analytics />
       </head>
-      <body>
+      <body class="overscroll-contain min-h-svh">
         {@inner_content}
       </body>
     </html>
@@ -676,5 +615,92 @@ defmodule UI.Components.Layout do
     |> String.split("@")
     |> List.first()
     |> String.capitalize()
+  end
+
+  defp plausible_analytics(assigns) do
+    ~H"""
+    <script
+      defer
+      data-domain="invoicegoblin.com"
+      src="https://plausible-octafest.themykolas.com/js/script.pageview-props.tagged-events.js"
+    >
+    </script>
+    <script>
+      window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }
+    </script>
+    """
+  end
+
+  defp home_fonts(assigns) do
+    ~H"""
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      @font-face {
+        font-family: 'Baloo 2';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('fonts/baloo2-regular.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Baloo 2';
+        font-style: normal;
+        font-weight: 500;
+        font-display: swap;
+        src: url('fonts/baloo2-medium.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Baloo 2';
+        font-style: normal;
+        font-weight: 600;
+        font-display: swap;
+        src: url('fonts/baloo2-semibold.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Baloo 2';
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url('fonts/baloo2-bold.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Baloo 2';
+        font-style: normal;
+        font-weight: 800;
+        font-display: swap;
+        src: url('fonts/baloo2-extrabold.woff2') format('woff2');
+      }
+    </style>
+    """
+  end
+
+  defp theme_script(assigns) do
+    ~H"""
+    <script>
+      (() => {
+        const setTheme = (theme) => {
+          if (theme === "system") {
+            localStorage.removeItem("phx:theme");
+            document.documentElement.removeAttribute("data-theme");
+          } else {
+            localStorage.setItem("phx:theme", theme);
+            document.documentElement.setAttribute("data-theme", theme);
+          }
+        };
+        if (!document.documentElement.hasAttribute("data-theme")) {
+          setTheme(localStorage.getItem("phx:theme") || "system");
+        }
+        window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
+        window.addEventListener("phx:set-theme", ({ detail: { theme } }) => setTheme(theme));
+      })();
+    </script>
+    """
   end
 end
