@@ -3,6 +3,7 @@ defmodule InvoiceGoblinWeb.HomeLive do
 
   alias InvoiceGoblin.Accounts.Waitlist
   alias AshPhoenix.Form
+  alias Plausible
 
   on_mount {InvoiceGoblinWeb.LiveUserAuth, :live_no_user}
 
@@ -20,9 +21,10 @@ defmodule InvoiceGoblinWeb.HomeLive do
   end
 
   @impl LiveView
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     socket
     |> assign(:submitted, false)
+    |> assign(:plausible_session, session["plausible_session"])
     |> assign_form(Form.for_create(Waitlist, :create))
     |> ok()
   end
@@ -35,10 +37,13 @@ defmodule InvoiceGoblinWeb.HomeLive do
   end
 
   @impl LiveView
-  def handle_event("save", %{"form" => params}, socket) do
+  def handle_event("save", %{"form" => params} = raw_params, socket) do
+    IO.inspect(raw_params, label: "__home:raw_params")
+
     case submit_form(socket, params) do
       {:ok, _waitlist} ->
         socket
+        |> track_waitlist_submit(Map.get(raw_params, "location", "unknown"))
         |> assign(:submitted, true)
         |> put_flash(:info, dgettext("home_live", "Thanks! You've been added to our waitlist."))
         |> noreply()
@@ -59,6 +64,21 @@ defmodule InvoiceGoblinWeb.HomeLive do
         end
     end
   end
+
+  defp track_waitlist_submit(socket, location) do
+    if plausible_session = socket.assigns.plausible_session do
+      Plausible.track_event("waitlist_submit", plausible_session,
+        props: %{
+          "location" => location,
+          "page" => "home"
+        }
+      )
+    end
+
+    socket
+  end
+
+  # Components ___________________________________________________________________________
 
   attr :form, :any, required: true
 
@@ -87,8 +107,9 @@ defmodule InvoiceGoblinWeb.HomeLive do
                 for={@form}
                 phx-change="validate"
                 phx-submit="save"
-                class="flex flex-wrap gap-3 md:gap-4 plausible-event-name=Waitlist+Submit plausible-event-position=hero"
+                class="flex flex-wrap gap-3 md:gap-4"
               >
+                <input type="hidden" name="location" value="hero" />
                 <input
                   type="email"
                   class="flex w-full bg-background py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-xl md:rounded-2xl border-2 border-primary/20 focus:border-primary shadow-card-goblin h-12 md:h-16 text-base md:text-lg px-4 md:px-6"
@@ -331,11 +352,12 @@ defmodule InvoiceGoblinWeb.HomeLive do
           </div>
           <div class="space-y-6">
             <FormUI.root
-              class="flex flex-wrap gap-3 md:gap-4 plausible-event-name=Waitlist+Submit plausible-event-position=cta_bottom"
+              class="flex flex-wrap gap-3 md:gap-4"
               for={@form}
               phx-validate="validate"
               phx-submit="save"
             >
+              <input type="hidden" name="location" value="cta_bottom" />
               <input
                 type="email"
                 class="flex w-full bg-background py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 rounded-xl md:rounded-2xl border-2 border-primary/20 focus:border-primary shadow-card-goblin h-12 md:h-16 text-base md:text-lg px-4 md:px-6 min-w-[200px]"

@@ -15,6 +15,7 @@ defmodule InvoiceGoblinWeb.Router do
     plug :put_root_layout, html: {Layout, :root_app}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug InvoiceGoblinWeb.Plugs.PlausibleSessionPlug
     plug :load_from_session
   end
 

@@ -85,6 +85,11 @@ config :invoice_goblin,
   generators: [timestamp_type: :utc_datetime],
   ash_domains: [InvoiceGoblin.Accounts, InvoiceGoblin.Finance]
 
+# Plausible Analytics configuration
+config :invoice_goblin, Plausible,
+  domain: "invoicegoblin.com",
+  endpoint: "https://plausible-octafest.themykolas.com"
+
 # Configures the endpoint
 config :invoice_goblin, InvoiceGoblinWeb.Endpoint,
   url: [host: "localhost"],
