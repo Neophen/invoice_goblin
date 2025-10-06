@@ -22,8 +22,6 @@ defmodule InvoiceGoblinWeb.HomeLive do
 
   @impl LiveView
   def mount(_params, session, socket) do
-    InvoiceGoblinGettext.put_locale(socket.assigns.locale)
-
     socket
     |> assign(:submitted, false)
     |> assign(:plausible_session, session["plausible_session"])
@@ -33,8 +31,6 @@ defmodule InvoiceGoblinWeb.HomeLive do
 
   @impl LiveView
   def handle_event("validate", %{"form" => params}, socket) do
-    InvoiceGoblinGettext.put_locale(socket.assigns.locale)
-
     socket
     |> validate_form(params)
     |> noreply()
@@ -42,8 +38,6 @@ defmodule InvoiceGoblinWeb.HomeLive do
 
   @impl LiveView
   def handle_event("save", %{"form" => params} = raw_params, socket) do
-    InvoiceGoblinGettext.put_locale(socket.assigns.locale)
-
     case submit_form(socket, params) do
       {:ok, _waitlist} ->
         socket
@@ -131,7 +125,6 @@ defmodule InvoiceGoblinWeb.HomeLive do
                   {dgettext("home_live", "🧙‍♂️ Summon the Goblin")}
                 </button>
               </FormUI.root>
-
               <p class="text-sm text-base-content">
                 {dgettext(
                   "home_live",

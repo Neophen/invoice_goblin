@@ -62,7 +62,8 @@ defmodule InvoiceGoblinWeb.LiveUserAuth do
 
   defp assign_locale(socket, session) do
     # Get locale from session (Cldr.Plug.PutSession stores it as "cldr_locale")
-    locale_string = Map.get(session, "cldr_locale", InvoiceGoblinCldr.default_locale().cldr_locale_name)
+    locale_string =
+      Map.get(session, "cldr_locale", InvoiceGoblinCldr.default_locale().cldr_locale_name)
 
     # Set the CLDR locale (this will normalize "lt" to "lt-LT" etc.)
     {:ok, cldr_locale} = InvoiceGoblinCldr.put_locale(locale_string)
