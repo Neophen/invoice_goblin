@@ -10,11 +10,6 @@ defmodule UI.Components.Layout do
   use InvoiceGoblinWeb, :html
   use InvoiceGoblinGettext
 
-  use Phoenix.VerifiedRoutes,
-    endpoint: InvoiceGoblinWeb.Endpoint,
-    router: InvoiceGoblinWeb.Router,
-    statics: InvoiceGoblinWeb.static_paths()
-
   alias InvoiceGoblin.Accounts.User
   alias InvoiceGoblinWeb.Navigation
 
@@ -34,7 +29,7 @@ defmodule UI.Components.Layout do
         <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
         <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
         </script>
-        
+
     <!-- Favicon -->
         <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
@@ -514,106 +509,6 @@ defmodule UI.Components.Layout do
       </div>
     </header>
     """
-  end
-
-  # attr :current_user, User, required: true
-
-  # defp profile_menu(assigns) do
-  #   ~H"""
-  #   <.dropdown class="w-56">
-  #     <:toggle class="w-full">
-  #       <button class="cursor-default flex w-full items-center gap-3 rounded-lg px-2 py-2.5">
-  #         <div class="flex min-w-0 items-center gap-3">
-  #           <.user_avatar current_user={@current_user} />
-
-  #           <div class="min-w-0 text-left">
-  #             <span class="block truncate text-sm font-medium text-zinc-800 dark:text-white">
-  #               {username(@current_user)}
-  #             </span>
-  #             <span class="block truncate text-xs font-normal text-zinc-500 dark:text-zinc-400">
-  #               {@current_user.email}
-  #             </span>
-  #           </div>
-  #         </div>
-
-  #         <Icon.icon
-  #           name="hero-chevron-up"
-  #           class="size-3 text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-200 ml-auto"
-  #         />
-  #       </button>
-  #     </:toggle>
-
-  #     <.dropdown_link
-  #       :for={item <- Navigation.profile_nav()}
-  #       navigate={item.navigate}
-  #       id={"profile-link-desktop-#{item.id}"}
-  #     >
-  #       {item.label}
-  #     </.dropdown_link>
-  #   </.dropdown>
-  #   """
-  # end
-
-  attr :class, :string, default: nil
-
-  defp theme_toggle(assigns) do
-    ~H"""
-    <div class={["flex justify-center", @class]}>
-      <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full">
-        <div class="absolute w-1/3 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme=light]_&]:left-1/3 [[data-theme=dark]_&]:left-2/3 transition-[left]" />
-
-        <button
-          phx-click={JS.dispatch("phx:set-theme", detail: %{theme: "system"})}
-          class="flex p-2 cursor-pointer w-1/3"
-        >
-          <Icon.icon name="hero-computer-desktop-micro" class="size-4 opacity-75 hover:opacity-100" />
-        </button>
-
-        <button
-          phx-click={JS.dispatch("phx:set-theme", detail: %{theme: "light"})}
-          class="flex p-2 cursor-pointer w-1/3"
-        >
-          <Icon.icon name="hero-sun-micro" class="size-4 opacity-75 hover:opacity-100" />
-        </button>
-
-        <button
-          phx-click={JS.dispatch("phx:set-theme", detail: %{theme: "dark"})}
-          class="flex p-2 cursor-pointer w-1/3"
-        >
-          <Icon.icon name="hero-moon-micro" class="size-4 opacity-75 hover:opacity-100" />
-        </button>
-      </div>
-    </div>
-    """
-  end
-
-  attr :current_user, User, required: true
-
-  defp user_avatar(assigns) do
-    ~H"""
-    <div class="avatar avatar-placeholder">
-      <div class="bg-neutral text-neutral-content w-8 rounded-full">
-        <span class="text-xs">
-          {user_avatar_username(@current_user)}
-        </span>
-      </div>
-    </div>
-    """
-  end
-
-  defp user_avatar_username(%{email: email}) do
-    email
-    |> to_string()
-    |> String.slice(0, 1)
-    |> String.upcase()
-  end
-
-  defp username(%User{} = user) do
-    user.email
-    |> to_string()
-    |> String.split("@")
-    |> List.first()
-    |> String.capitalize()
   end
 
   defp plausible_analytics(assigns) do

@@ -23,41 +23,41 @@ defmodule InvoiceGoblinWeb.DashboardLive do
             description="Upload a bank statement to see transactions"
           />
         </button>
-        <.link navigate={~p"/statements"}>
+        <%!-- <.link navigate={~p"/statements"}>
           <.action_card
             icon="hero-document-text"
             title="Bank Statements"
             description="View and manage uploaded bank statements"
           />
-        </.link>
-        <.link navigate={~p"/transactions"}>
+        </.link> --%>
+        <%!-- <.link navigate={~p"/transactions"}>
           <.action_card
             icon="hero-banknotes"
             title="Manage Transactions"
             description="View, filter, and link transactions to invoices"
           />
-        </.link>
-        <.link navigate={~p"/invoices/upload"}>
+        </.link> --%>
+        <%!-- <.link navigate={~p"/invoices/upload"}>
           <.action_card
             icon="hero-document-arrow-up"
             title="Upload Invoice"
             description="Upload and parse invoice documents"
           />
-        </.link>
-        <.link navigate={~p"/invoices"}>
+        </.link> --%>
+        <%!-- <.link navigate={~p"/invoices"}>
           <.action_card
             icon="hero-document-duplicate"
             title="View Invoices"
             description="View and manage all uploaded invoices"
           />
-        </.link>
-        <.link navigate={~p"/invoices/processing"}>
+        </.link> --%>
+        <%!-- <.link navigate={~p"/invoices/processing"}>
           <.action_card
             icon="hero-cog"
             title="Processing Dashboard"
             description="Monitor bulk invoice processing status"
           />
-        </.link>
+        </.link> --%>
       </div>
 
       <.empty_state />

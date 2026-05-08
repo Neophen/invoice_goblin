@@ -436,19 +436,19 @@ defmodule InvoiceGoblinWeb.InvoiceUploadLive do
                   else: "Upload #{length(@uploads.invoice_file.entries)} Invoice(s)"}
               </button>
 
-              <.link
+              <%!-- <.link
                 navigate={~p"/invoices"}
                 class="py-2 px-4 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
               >
                 View All Invoices
-              </.link>
+              </.link> --%>
 
-              <.link
+              <%!-- <.link
                 navigate={~p"/invoices/processing"}
                 class="py-2 px-4 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
               >
                 Processing Dashboard
-              </.link>
+              </.link> --%>
             </div>
           </form>
         </div>
@@ -473,19 +473,19 @@ defmodule InvoiceGoblinWeb.InvoiceUploadLive do
                   {invoice.status}
                 </span>
               </p>
-              <.link
+              <%!-- <.link
                 navigate={~p"/invoices/#{invoice.id}"}
                 class="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-block"
               >
                 View Details →
-              </.link>
+              </.link> --%>
             </div>
           </div>
 
           <div :if={length(@uploaded_files) > 6} class="mt-4 text-center">
-            <.link navigate={~p"/invoices"} class="text-blue-600 hover:text-blue-800">
+            <%!-- <.link navigate={~p"/invoices"} class="text-blue-600 hover:text-blue-800">
               View all {length(@uploaded_files)} uploaded invoices →
-            </.link>
+            </.link> --%>
           </div>
         </div>
       </div>

@@ -352,8 +352,7 @@ defmodule InvoiceGoblinWeb.Admin.OnboardingUploadLive do
       statement_id: statement_id,
       placeholder_org_id: placeholder_org_id,
       current_user: current_user,
-      has_vat_id: has_vat_id,
-      selected_currency: selected_currency
+      has_vat_id: has_vat_id
     } = socket.assigns
 
     # Add VAT ID to org_data if provided

@@ -36,14 +36,14 @@ defmodule InvoiceGoblinWeb.StatementListLive do
     <Layout.admin flash={@flash} current_user={@current_user}>
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
-          <.link
+          <%!-- <.link
             navigate={~p"/dashboard"}
             class="inline-flex items-center text-gray-500 hover:text-gray-700"
           >
             <Icon.icon name="hero-arrow-left" class="h-5 w-5 mr-1" /> Back to Dashboard
-          </.link>
+          </.link> --%>
         </div>
-        
+
     <!-- Header -->
         <div class="sm:flex sm:items-center sm:justify-between">
           <div>
@@ -60,7 +60,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
             </Action.button>
           </div>
         </div>
-        
+
     <!-- Statements List -->
         <div class="bg-white shadow rounded-lg">
           <div class="px-4 py-5 sm:p-6">
@@ -123,12 +123,12 @@ defmodule InvoiceGoblinWeb.StatementListLive do
                       </div>
                     </div>
                     <div class="flex space-x-2">
-                      <.link
+                      <%!-- <.link
                         navigate={~p"/statements/#{statement.id}"}
                         class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       >
                         View Details
-                      </.link>
+                      </.link> --%>
                       <.link
                         href={Statement.download_url(statement)}
                         target="_blank"
@@ -141,7 +141,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
                 </div>
               </div>
             </div>
-            
+
     <!-- Pagination -->
             <div :if={!@loading && !Enum.empty?(@statements)} class="mt-6">
               <.pagination_controls
@@ -153,7 +153,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
           </div>
         </div>
       </div>
-      
+
     <!-- Upload Modal -->
       <Modal.root
         :if={@upload_modal_open}
@@ -211,20 +211,20 @@ defmodule InvoiceGoblinWeb.StatementListLive do
     ~H"""
     <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       <div class="flex flex-1 justify-between sm:hidden">
-        <.link
+        <%!-- <.link
           :if={@page > 1}
           patch={~p"/statements?page=#{@page - 1}"}
           class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           Previous
-        </.link>
-        <.link
+        </.link> --%>
+        <%!-- <.link
           :if={@total_count == @page_size}
           patch={~p"/statements?page=#{@page + 1}"}
           class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           Next
-        </.link>
+        </.link> --%>
       </div>
       <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
@@ -236,25 +236,25 @@ defmodule InvoiceGoblinWeb.StatementListLive do
         </div>
         <div>
           <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-            <.link
+            <%!-- <.link
               :if={@page > 1}
               patch={~p"/statements?page=#{@page - 1}"}
               class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
               <span class="sr-only">Previous</span>
               <Icon.icon name="hero-chevron-left" class="h-5 w-5" aria-hidden="true" />
-            </.link>
+            </.link> --%>
             <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
               {@page}
             </span>
-            <.link
+            <%!-- <.link
               :if={@total_count == @page_size}
               patch={~p"/statements?page=#{@page + 1}"}
               class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
               <span class="sr-only">Next</span>
               <Icon.icon name="hero-chevron-right" class="h-5 w-5" aria-hidden="true" />
-            </.link>
+            </.link> --%>
           </nav>
         </div>
       </div>

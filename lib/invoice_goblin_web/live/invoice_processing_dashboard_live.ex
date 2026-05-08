@@ -163,14 +163,14 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
       <div class="container mx-auto px-4 py-8">
         <div class="mb-6 flex items-center justify-between">
           <h1 class="text-3xl font-bold">Invoice Processing Dashboard</h1>
-          <.link
+          <%!-- <.link
             navigate={~p"/invoices/upload"}
             class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
           >
             Upload More Invoices
-          </.link>
+          </.link> --%>
         </div>
-        
+
     <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div class="bg-white rounded-lg shadow p-6">
@@ -277,7 +277,7 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
             </div>
           </div>
         </div>
-        
+
     <!-- Currently Processing -->
         <div :if={@processing_invoices != []} class="mb-8">
           <div class="flex items-center justify-between mb-4">
@@ -360,7 +360,7 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
             </div>
           </div>
         </div>
-        
+
     <!-- Recent Errors -->
         <div :if={@recent_errors != []} class="mb-8">
           <h2 class="text-xl font-semibold mb-4">Recent Errors</h2>
@@ -404,19 +404,19 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
                       Retry
                     </button>
                     <span class="mx-2">|</span>
-                    <.link
+                    <%!-- <.link
                       navigate={~p"/invoices/#{invoice.id}"}
                       class="text-blue-600 hover:text-blue-800"
                     >
                       View
-                    </.link>
+                    </.link> --%>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-        
+
     <!-- Recently Parsed -->
         <div :if={@recent_parsed != []} class="mb-8">
           <h2 class="text-xl font-semibold mb-4">Recently Parsed</h2>
@@ -460,12 +460,12 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
                     {if invoice.invoice_date, do: Calendar.strftime(invoice.invoice_date, "%B %d, %Y")}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    <.link
+                    <%!-- <.link
                       navigate={~p"/invoices/#{invoice.id}"}
                       class="text-blue-600 hover:text-blue-800"
                     >
                       Match Transaction
-                    </.link>
+                    </.link> --%>
                   </td>
                 </tr>
               </tbody>

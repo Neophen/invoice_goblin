@@ -124,12 +124,12 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
       <div class="container mx-auto px-4 py-8" id="invoice-list" phx-hook="Download">
         <div class="mb-6 flex items-center justify-between">
           <h1 class="text-3xl font-bold">Invoices</h1>
-          <.link
+          <%!-- <.link
             navigate={~p"/invoices/upload"}
             class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
           >
             Upload Invoice
-          </.link>
+          </.link> --%>
         </div>
 
         <div class="bg-white rounded-lg shadow-md">
@@ -235,12 +235,12 @@ defmodule InvoiceGoblinWeb.InvoiceListLive do
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    <.link
+                    <%!-- <.link
                       navigate={~p"/invoices/#{invoice.id}"}
                       class="text-blue-600 hover:text-blue-800"
                     >
                       View
-                    </.link>
+                    </.link> --%>
                   </td>
                 </tr>
               </tbody>

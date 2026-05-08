@@ -28,13 +28,13 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
       {:error, %Ash.Error.Query.NotFound{}} ->
         socket
         |> put_flash(:error, "Statement not found")
-        |> push_navigate(to: ~p"/statements")
+        # |> push_navigate(to: ~p"/statements")
         |> ok()
 
       {:error, _error} ->
         socket
         |> put_flash(:error, "Failed to load statement")
-        |> push_navigate(to: ~p"/statements")
+        # |> push_navigate(to: ~p"/statements")
         |> ok()
     end
   end
@@ -55,14 +55,14 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
     <Layout.admin flash={@flash} current_user={@current_user}>
       <!-- Header -->
       <div class="flex items-center space-x-4">
-        <.link
+        <%!-- <.link
           navigate={~p"/statements"}
           class="inline-flex items-center text-gray-500 hover:text-gray-700"
         >
           <Icon.icon name="hero-arrow-left" class="h-5 w-5 mr-1" /> Back to Statements
-        </.link>
+        </.link> --%>
       </div>
-      
+
     <!-- Statement Info -->
       <div class="bg-white shadow rounded-lg">
         <div class="px-4 py-5 sm:p-6">
@@ -121,7 +121,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
               </a>
             </div>
           </div>
-          
+
     <!-- Statement Metadata -->
           <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
             <div class="bg-gray-50 rounded-lg p-4">
@@ -171,7 +171,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
           </div>
         </div>
       </div>
-      
+
     <!-- Transactions List -->
       <div :if={@loading} class="text-center py-8">
         <Icon.icon name="hero-arrow-path" class="h-8 w-8 animate-spin mx-auto text-gray-400" />
@@ -258,15 +258,15 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
           </tbody>
         </table>
       </div>
-      
+
     <!-- Pagination -->
       <div :if={!@loading && !Enum.empty?(@transactions)} class="mt-6">
-        <.pagination_controls
+        <%!-- <.pagination_controls
           page={@page}
           page_size={@page_size}
           total_count={length(@transactions)}
           base_path={~p"/statements/#{@statement.id}"}
-        />
+        /> --%>
       </div>
     </Layout.admin>
     """
@@ -362,65 +362,65 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
 
   defp format_datetime(_), do: "Unknown"
 
-  attr :page, :integer, required: true
-  attr :page_size, :integer, required: true
-  attr :total_count, :integer, required: true
-  attr :base_path, :string, required: true
+  # attr :page, :integer, required: true
+  # attr :page_size, :integer, required: true
+  # attr :total_count, :integer, required: true
+  # attr :base_path, :string, required: true
 
-  defp pagination_controls(assigns) do
-    ~H"""
-    <div class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
-      <div class="flex flex-1 justify-between sm:hidden">
-        <.link
-          :if={@page > 1}
-          patch={"#{@base_path}?page=#{@page - 1}"}
-          class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Previous
-        </.link>
-        <.link
-          :if={@total_count == @page_size}
-          patch={"#{@base_path}?page=#{@page + 1}"}
-          class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Next
-        </.link>
-      </div>
-      <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p class="text-sm text-gray-700">
-            Showing <span class="font-medium">{(@page - 1) * @page_size + 1}</span>
-            to <span class="font-medium">{@page * @page_size}</span>
-            results
-          </p>
-        </div>
-        <div>
-          <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-            <.link
-              :if={@page > 1}
-              patch={"#{@base_path}?page=#{@page - 1}"}
-              class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              <span class="sr-only">Previous</span>
-              <Icon.icon name="hero-chevron-left" class="h-5 w-5" aria-hidden="true" />
-            </.link>
-            <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
-              {@page}
-            </span>
-            <.link
-              :if={@total_count == @page_size}
-              patch={"#{@base_path}?page=#{@page + 1}"}
-              class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              <span class="sr-only">Next</span>
-              <Icon.icon name="hero-chevron-right" class="h-5 w-5" aria-hidden="true" />
-            </.link>
-          </nav>
-        </div>
-      </div>
-    </div>
-    """
-  end
+  # defp pagination_controls(assigns) do
+  #   ~H"""
+  #   <div class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
+  #     <div class="flex flex-1 justify-between sm:hidden">
+  #       <.link
+  #         :if={@page > 1}
+  #         patch={"#{@base_path}?page=#{@page - 1}"}
+  #         class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+  #       >
+  #         Previous
+  #       </.link>
+  #       <.link
+  #         :if={@total_count == @page_size}
+  #         patch={"#{@base_path}?page=#{@page + 1}"}
+  #         class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+  #       >
+  #         Next
+  #       </.link>
+  #     </div>
+  #     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+  #       <div>
+  #         <p class="text-sm text-gray-700">
+  #           Showing <span class="font-medium">{(@page - 1) * @page_size + 1}</span>
+  #           to <span class="font-medium">{@page * @page_size}</span>
+  #           results
+  #         </p>
+  #       </div>
+  #       <div>
+  #         <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+  #           <.link
+  #             :if={@page > 1}
+  #             patch={"#{@base_path}?page=#{@page - 1}"}
+  #             class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+  #           >
+  #             <span class="sr-only">Previous</span>
+  #             <Icon.icon name="hero-chevron-left" class="h-5 w-5" aria-hidden="true" />
+  #           </.link>
+  #           <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
+  #             {@page}
+  #           </span>
+  #           <.link
+  #             :if={@total_count == @page_size}
+  #             patch={"#{@base_path}?page=#{@page + 1}"}
+  #             class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+  #           >
+  #             <span class="sr-only">Next</span>
+  #             <Icon.icon name="hero-chevron-right" class="h-5 w-5" aria-hidden="true" />
+  #           </.link>
+  #         </nav>
+  #       </div>
+  #     </div>
+  #   </div>
+  #   """
+  # end
 
   defp get_tenant(socket) do
     # Get the first organisation from the current user

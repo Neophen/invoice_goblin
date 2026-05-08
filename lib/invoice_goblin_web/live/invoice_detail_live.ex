@@ -18,10 +18,8 @@ defmodule InvoiceGoblinWeb.InvoiceDetailLive do
          |> assign(:available_transactions, [])}
 
       {:error, _} ->
-        {:ok,
-         socket
-         |> put_flash(:error, "Invoice not found")
-         |> redirect(to: ~p"/invoices")}
+        #  |> redirect(to: ~p"/invoices")
+        {:ok, socket }
     end
   end
 
@@ -98,9 +96,9 @@ defmodule InvoiceGoblinWeb.InvoiceDetailLive do
       <div class="container mx-auto px-4 py-8">
         <div class="mb-6 flex items-center justify-between">
           <h1 class="text-3xl font-bold">Invoice Details</h1>
-          <.link navigate={~p"/invoices"} class="text-blue-600 hover:text-blue-800">
+          <%!-- <.link navigate={~p"/invoices"} class="text-blue-600 hover:text-blue-800">
             ← Back to Invoices
-          </.link>
+          </.link> --%>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

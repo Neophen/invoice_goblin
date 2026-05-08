@@ -153,7 +153,7 @@ defmodule InvoiceGoblinWeb.Components.StatementFormComponent do
 
         socket
         |> put_flash(:info, "Statement uploaded successfully. Processed #{created} transactions.")
-        |> push_navigate(to: ~p"/statements/#{statement.id}")
+        # |> push_navigate(to: ~p"/statements/#{statement.id}")
         |> noreply()
 
       {:error, error} ->
