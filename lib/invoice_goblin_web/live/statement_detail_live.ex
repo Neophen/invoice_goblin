@@ -62,7 +62,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
           <Icon.icon name="hero-arrow-left" class="h-5 w-5 mr-1" /> Back to Statements
         </.link> --%>
       </div>
-
+      
     <!-- Statement Info -->
       <div class="bg-white shadow rounded-lg">
         <div class="px-4 py-5 sm:p-6">
@@ -121,7 +121,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
               </a>
             </div>
           </div>
-
+          
     <!-- Statement Metadata -->
           <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
             <div class="bg-gray-50 rounded-lg p-4">
@@ -171,7 +171,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
           </div>
         </div>
       </div>
-
+      
     <!-- Transactions List -->
       <div :if={@loading} class="text-center py-8">
         <Icon.icon name="hero-arrow-path" class="h-8 w-8 animate-spin mx-auto text-gray-400" />
@@ -258,7 +258,7 @@ defmodule InvoiceGoblinWeb.StatementDetailLive do
           </tbody>
         </table>
       </div>
-
+      
     <!-- Pagination -->
       <div :if={!@loading && !Enum.empty?(@transactions)} class="mt-6">
         <%!-- <.pagination_controls

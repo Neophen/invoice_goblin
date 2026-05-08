@@ -19,7 +19,7 @@ defmodule InvoiceGoblinWeb.InvoiceDetailLive do
 
       {:error, _} ->
         #  |> redirect(to: ~p"/invoices")
-        {:ok, socket }
+        {:ok, socket}
     end
   end
 

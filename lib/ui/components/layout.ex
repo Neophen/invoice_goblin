@@ -29,7 +29,7 @@ defmodule UI.Components.Layout do
         <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
         <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
         </script>
-
+        
     <!-- Favicon -->
         <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 

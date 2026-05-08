@@ -170,7 +170,7 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
             Upload More Invoices
           </.link> --%>
         </div>
-
+        
     <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div class="bg-white rounded-lg shadow p-6">
@@ -277,7 +277,7 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
             </div>
           </div>
         </div>
-
+        
     <!-- Currently Processing -->
         <div :if={@processing_invoices != []} class="mb-8">
           <div class="flex items-center justify-between mb-4">
@@ -360,7 +360,7 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
             </div>
           </div>
         </div>
-
+        
     <!-- Recent Errors -->
         <div :if={@recent_errors != []} class="mb-8">
           <h2 class="text-xl font-semibold mb-4">Recent Errors</h2>
@@ -416,7 +416,7 @@ defmodule InvoiceGoblinWeb.InvoiceProcessingDashboardLive do
             </table>
           </div>
         </div>
-
+        
     <!-- Recently Parsed -->
         <div :if={@recent_parsed != []} class="mb-8">
           <h2 class="text-xl font-semibold mb-4">Recently Parsed</h2>

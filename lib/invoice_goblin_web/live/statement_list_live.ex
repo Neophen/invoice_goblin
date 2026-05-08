@@ -43,7 +43,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
             <Icon.icon name="hero-arrow-left" class="h-5 w-5 mr-1" /> Back to Dashboard
           </.link> --%>
         </div>
-
+        
     <!-- Header -->
         <div class="sm:flex sm:items-center sm:justify-between">
           <div>
@@ -60,7 +60,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
             </Action.button>
           </div>
         </div>
-
+        
     <!-- Statements List -->
         <div class="bg-white shadow rounded-lg">
           <div class="px-4 py-5 sm:p-6">
@@ -141,7 +141,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
                 </div>
               </div>
             </div>
-
+            
     <!-- Pagination -->
             <div :if={!@loading && !Enum.empty?(@statements)} class="mt-6">
               <.pagination_controls
@@ -153,7 +153,7 @@ defmodule InvoiceGoblinWeb.StatementListLive do
           </div>
         </div>
       </div>
-
+      
     <!-- Upload Modal -->
       <Modal.root
         :if={@upload_modal_open}
